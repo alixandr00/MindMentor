@@ -1,5 +1,12 @@
+import { ToastContainer } from 'react-toastify'
+
 function App() {
-   return <div>Hello Ali</div>
+   return (
+      <div>
+         <ToastContainer />
+         Hello world
+      </div>
+   )
 }
 
 export default App
