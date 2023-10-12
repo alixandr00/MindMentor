@@ -1,5 +1,11 @@
+import TableStudents from './components/UI/table/TableStudents'
+
 function App() {
-   return <div>Hello Ali</div>
+   return (
+      <div>
+         <TableStudents />
+      </div>
+   )
 }
 
 export default App
