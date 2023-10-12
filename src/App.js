@@ -1,10 +1,9 @@
-import { ToastContainer } from 'react-toastify'
+import { Interns } from './components/Interns/Interns'
 
 function App() {
    return (
       <div>
-         <ToastContainer />
-         Hello world
+         <Interns />
       </div>
    )
 }
