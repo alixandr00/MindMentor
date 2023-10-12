@@ -1,11 +1,5 @@
-import { Interns } from './components/Interns/Interns'
-
 function App() {
-   return (
-      <div>
-         <Interns />
-      </div>
-   )
+   return <div>Hello world</div>
 }
 
 export default App

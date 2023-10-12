@@ -196,7 +196,7 @@ const DownIconStyled = styled(DownIcon)((props) => ({
 
 const SelectIcon = styled('div')({
    position: 'absolute',
-   right: '1rem',
+   right: '0.5rem',
    top: '50%',
    transform: 'translateY(-50%)',
    cursor: 'pointer',
