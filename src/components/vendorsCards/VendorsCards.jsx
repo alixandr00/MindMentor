@@ -1,6 +1,7 @@
 import React from 'react'
 import { styled } from '@mui/material'
-import { vendorsCards } from '../../../utils/general'
+import { vendorsCards } from '../../utils/general'
+import { GmailIcon, LocationIcon, PhoneIcon } from '../../assets/icons'
 
 export const VendorsCards = () => {
    return (
@@ -11,6 +12,20 @@ export const VendorsCards = () => {
                   <ImageCards imageUrl={card.img} />
                   <CompanyName>{card.companyName}</CompanyName>
                </CardHead>
+               <CardMain>
+                  <MainContainers>
+                     <GmailIcon />
+                     <CardsTexts>{card.gmail}</CardsTexts>
+                  </MainContainers>
+                  <MainContainers>
+                     <PhoneIcon />
+                     <CardsTexts>{card.phone}</CardsTexts>
+                  </MainContainers>
+                  <MainContainers>
+                     <LocationIcon />
+                     <CardsTexts>{card.address}</CardsTexts>
+                  </MainContainers>
+               </CardMain>
             </ContainerCards>
          ))}
       </Container>
@@ -18,7 +33,6 @@ export const VendorsCards = () => {
 }
 
 const Container = styled('div')(() => ({
-   backgroundColor: 'red',
    width: '100%',
    height: '100%',
    display: 'flex',
@@ -49,3 +63,20 @@ const CompanyName = styled('div')(() => ({
    fontSize: '1rem',
    fontWeight: '600',
 }))
+const CardMain = styled('div')({
+   display: 'flex',
+   flexDirection: 'column',
+   gap: '0.63rem',
+})
+const MainContainers = styled('div')({
+   display: 'flex',
+   gap: '0.25rem',
+   alignItems: 'center',
+})
+const CardsTexts = styled('div')({
+   fontSize: '0.8125rem',
+   fontStyle: 'normal',
+   fontWeight: '500',
+   lineHeight: 'normal',
+   color: '#FFF',
+})
