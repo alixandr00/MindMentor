@@ -45,6 +45,11 @@ const ContainerCards = styled('div')(() => ({
    borderRadius: '0.625rem',
    border: '1px solid #FFF',
    padding: '1rem 1rem',
+   transition: 'transform 0.3s, background 0.3s',
+   '&:hover': {
+      background: 'linear-gradient(7.1875deg, #49318C, #3F5FB0)',
+      transform: 'scale(1.05)',
+   },
 }))
 const CardHead = styled('div')(() => ({
    display: 'flex',
@@ -67,6 +72,7 @@ const CardMain = styled('div')({
    display: 'flex',
    flexDirection: 'column',
    gap: '0.63rem',
+   marginTop: '0.56rem',
 })
 const MainContainers = styled('div')({
    display: 'flex',
