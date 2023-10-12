@@ -45,8 +45,9 @@ export const SideBar = () => {
 const Container = styled('div')`
    width: 18rem;
    height: 100vh;
-
    background: linear-gradient(#252335, #5447aa);
+   display: flex;
+   flex-direction: column;
 `
 const TitleContainer = styled('div')`
    display: flex;
@@ -95,11 +96,10 @@ const BlockLogOut = styled('div')`
 `
 const SettingsAndLogOut = styled('div')`
    display: flex;
-   position: relative;
-   top: 10.5rem;
-   width: 13rem;
-   align-items: center;
+   align-items: flex-start;
    flex-direction: column;
+   margin-top: auto;
+   padding: 0 0 2rem 1.93rem;
 `
 
 const LogOutStyled = styled(LogOut)`
@@ -108,7 +108,6 @@ const LogOutStyled = styled(LogOut)`
 `
 const Link = styled(NavLink)`
    display: flex;
-   margin-top: 1.88rem;
 `
 const LinkChilde = styled('div')`
    display: flex;
@@ -119,7 +118,6 @@ const LinkChilde = styled('div')`
       color: #fff;
       font-size: 1rem;
       font-weight: 400;
-      gap: 2.12rem;
       margin-left: 0.69rem;
       &:hover {
          color: #afafaf;
