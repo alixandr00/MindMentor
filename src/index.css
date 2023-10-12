@@ -16,5 +16,16 @@ a {
 }
 
 body {
+
    font-family: Bai Jamjuree;
+
+   width: 100%;
+   height: 100vh;
+   font-family: Bai Jamjuree;
+   background: linear-gradient(
+      176deg,
+      #252335 26.77%,
+      rgba(84, 71, 170, 0.93) 97.4%
+   );
+
 }
