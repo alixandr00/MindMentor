@@ -4,5 +4,18 @@ import { ReactComponent as LocationIcon } from './locationIcon.svg'
 import { ReactComponent as SearchIcon } from './search-normal.svg'
 import { ReactComponent as DownIcon } from './arrow-down.svg'
 import { ReactComponent as UpIcon } from './up.svg'
+import { ReactComponent as ProgressIcon } from './progressIcon.svg'
+import { ReactComponent as NotesIcon } from './notesIcon.svg'
+import { ReactComponent as PeopleIcon } from './peopleIcon.svg'
 
-export { GmailIcon, PhoneIcon, LocationIcon, SearchIcon, DownIcon, UpIcon }
+export {
+   GmailIcon,
+   PhoneIcon,
+   LocationIcon,
+   ProgressIcon,
+   NotesIcon,
+   PeopleIcon,
+   SearchIcon,
+   DownIcon,
+   UpIcon,
+}
