@@ -13,7 +13,7 @@ export const SideBar = () => {
                <Title>MindeMento</Title>
             </TitleContainer>
          </div>
-         <NavigateContainer>
+         <DescriptionContainer>
             {sideBarArray.map((el) => (
                <Link
                   key={el.title}
@@ -26,7 +26,7 @@ export const SideBar = () => {
                   </LinkChilde>
                </Link>
             ))}
-         </NavigateContainer>
+         </DescriptionContainer>
 
          <SettingsAndLogOut>
             <BlockLogOut>
@@ -59,7 +59,7 @@ const Title = styled('p')`
    font-size: 2rem;
    margin-top: 2.44rem;
 `
-const NavigateContainer = styled('div')`
+const DescriptionContainer = styled('div')`
    margin-top: 2.81rem;
    cursor: pointer;
 
