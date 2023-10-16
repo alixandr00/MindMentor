@@ -48,9 +48,13 @@ export const UiInput = forwardRef(
 const MyStyledInput = styled(TextField)(({ ...props }) => ({
    input: {
       padding: props.padding || 0,
+      color: props.color || 'white',
       width: props.width || '11.25rem',
       backgroundColor: props.backgroundColor || '',
+      backgroundColor: props.backgroundColor || 'transparent',
+      background: props.background || 'transparent !important',
       border: props.border || '1px solid transparent',
+
       paddingLeft: props.paddingLeft || '15px',
       ...props.placeholderStyles,
    },
@@ -59,9 +63,12 @@ const MyStyledInput = styled(TextField)(({ ...props }) => ({
       fontSize: '1.2rem',
       fontWeight: '400',
    },
+   '& input::placeholder': {
+      color: props.placeholderColor || 'gray',
+   },
    '& label': {
       fontSize: '1rem',
-      fontFamily: 'CarePro',
+      fontFamily: 'Bai Jamjuree',
    },
    '& .MuiOutlinedInput-root': {
       color: '#fff',
@@ -76,5 +83,13 @@ const MyStyledInput = styled(TextField)(({ ...props }) => ({
          borderColor: props.focusBorderColor || '1px solid green',
          border: props.border || '1px solid #fff',
       },
+   },
+   '& .css-1pysi21-MuiFormLabel-root-MuiInputLabel-root': {
+      fontFamily: 'Bai Jamjuree',
+      color: 'white',
+   },
+   '& .css-1jy569b-MuiFormLabel-root-MuiInputLabel-root.Mui-focused': {
+      fontFamily: 'Bai Jamjuree',
+      color: 'white',
    },
 }))

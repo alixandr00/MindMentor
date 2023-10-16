@@ -1,10 +1,9 @@
-import { ToastContainer } from 'react-toastify'
+import { AdminLayout } from './layout/AdminLayout'
 
 function App() {
    return (
       <div>
-         <ToastContainer />
-         Hello world
+         <AdminLayout />
       </div>
    )
 }
