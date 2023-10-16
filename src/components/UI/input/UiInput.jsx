@@ -43,7 +43,7 @@ const MyStyledInput = styled(TextField)(({ ...props }) => ({
    },
    '& label': {
       fontSize: '1rem',
-      fontFamily: 'CarePro',
+      fontFamily: 'Bai Jamjuree',
    },
    '& .MuiOutlinedInput-root': {
       '& fieldset': {
@@ -57,5 +57,13 @@ const MyStyledInput = styled(TextField)(({ ...props }) => ({
          borderColor: props.focusBorderColor || '1px solid green',
          border: props.border || '1px solid #000000',
       },
+   },
+   '& .css-1pysi21-MuiFormLabel-root-MuiInputLabel-root': {
+      fontFamily: 'Bai Jamjuree',
+      color: 'white',
+   },
+   '& .css-1jy569b-MuiFormLabel-root-MuiInputLabel-root.Mui-focused': {
+      fontFamily: 'Bai Jamjuree',
+      color: 'white',
    },
 }))

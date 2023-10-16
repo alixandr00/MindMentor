@@ -7,6 +7,8 @@ import { ReactComponent as UpIcon } from './up.svg'
 import { ReactComponent as ProgressIcon } from './progressIcon.svg'
 import { ReactComponent as NotesIcon } from './notesIcon.svg'
 import { ReactComponent as PeopleIcon } from './peopleIcon.svg'
+import { ReactComponent as ShowIcon } from './showIcon.svg'
+import { ReactComponent as HideIcon } from './hideIcon.svg'
 
 export {
    GmailIcon,
@@ -18,4 +20,6 @@ export {
    SearchIcon,
    DownIcon,
    UpIcon,
+   ShowIcon,
+   HideIcon,
 }
