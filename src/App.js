@@ -1,12 +1,9 @@
-import { ToastContainer } from 'react-toastify'
-import { SignInPage } from './components/signIn/SignInPage'
+import { AdminLayout } from './layout/AdminLayout'
 
 function App() {
    return (
       <div>
-         <ToastContainer />
-         Hello world
-         <SignInPage />
+         <AdminLayout />
       </div>
    )
 }
