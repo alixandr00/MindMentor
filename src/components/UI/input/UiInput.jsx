@@ -50,7 +50,6 @@ const MyStyledInput = styled(TextField)(({ ...props }) => ({
       padding: props.padding || 0,
       color: props.color || 'white',
       width: props.width || '11.25rem',
-      backgroundColor: props.backgroundColor || '',
       backgroundColor: props.backgroundColor || 'transparent',
       background: props.background || 'transparent !important',
       border: props.border || '1px solid transparent',
