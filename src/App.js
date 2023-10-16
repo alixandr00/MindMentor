@@ -1,5 +1,11 @@
+import { AdminLayout } from './layout/AdminLayout'
+
 function App() {
-   return <div>Hello world</div>
+   return (
+      <div>
+         <AdminLayout />
+      </div>
+   )
 }
 
 export default App
