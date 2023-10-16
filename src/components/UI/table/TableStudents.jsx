@@ -279,7 +279,7 @@ const StyleTableBody = styled(TableBody)({
 
 const StyledTableContainer = styled(TableContainer)`
    width: 100%;
-   border-radius: 20px;
+   border-radius: 10px;
    margin-top: 17%;
 `
 const StyledTableRowOne = styled(TableRow)`

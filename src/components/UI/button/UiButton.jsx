@@ -40,7 +40,7 @@ const ButtonStyle = styled(ReusableButton)(({ ...props }) => ({
    alignItems: props.alignItems || 'center',
    padding: props.padding || '0.5rem 1rem',
    //    alignItems: 'flex-start',
-   border: props.border || '1px solid grey',
+   border: props.border || 'none',
    width: props.width || '7.5rem',
    height: props.height || '2rem',
    '&:hover': {

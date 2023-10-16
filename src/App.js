@@ -1,11 +1,9 @@
-import { ToastContainer } from 'react-toastify'
-import { TableStudents } from './components/UI/table/TableStudents'
+import { AdminLayout } from './layout/AdminLayout'
 
 function App() {
    return (
       <div>
-         <ToastContainer />
-         <TableStudents />
+         <AdminLayout />
       </div>
    )
 }
