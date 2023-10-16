@@ -49,7 +49,7 @@ const MyStyledInput = styled(TextField)(({ ...props }) => ({
    input: {
       padding: props.padding || 0,
       width: props.width || '11.25rem',
-      backgroundColor: props.backgroundColor || 'white',
+      backgroundColor: props.backgroundColor || '',
       border: props.border || '1px solid transparent',
       paddingLeft: props.paddingLeft || '15px',
       ...props.placeholderStyles,

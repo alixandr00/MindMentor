@@ -1,19 +1,19 @@
 import { styled } from '@mui/material/styles'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
-import { DatePicker } from '@mui/x-date-pickers/DatePicker'
+import { TimePicker } from '@mui/x-date-pickers/TimePicker'
 import { forwardRef } from 'react'
 
-export const Calendar = forwardRef(function CalendarComponent(
+export const Time = forwardRef(function TimerComponent(
    { placeholder, value, onChange, onBlur, name, error, ...props },
    ref
 ) {
    return (
       <div>
          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <StyledDatePicker
+            <StyledTimePicker
                label={placeholder}
-               value={value === undefined || null ? '' : value}
+               value={value || null}
                onChange={onChange}
                name={name}
                error={error}
@@ -26,19 +26,18 @@ export const Calendar = forwardRef(function CalendarComponent(
    )
 })
 
-const StyledDatePicker = styled(DatePicker)(
+const StyledTimePicker = styled(TimePicker)(
    ({ fontSize, width, height, marginTop, error, borderRadius }) => ({
       '& label': {
          color: '#fff',
          marginTop,
          fontSize,
-         marginLeft: '25px',
+         textAlign: 'center',
       },
-
       '& .MuiOutlinedInput-notchedOutline': {
          borderColor: `${
             error === true ? '#ff0000 !important' : '#fff !important'
-         } `,
+         }`,
       },
       '& .MuiOutlinedInput-input': {
          color: '#fff',
@@ -47,13 +46,11 @@ const StyledDatePicker = styled(DatePicker)(
          width,
          borderRadius,
          height,
-         fontSize: '12px',
-         fontWeight: '600',
+         fontSize: fontSize || '0.8rem',
+         fontWeight: '400',
       },
       '& .MuiSvgIcon-root': {
-         color: '#fff',
-         fontSize: '1rem',
-         marginTop: '0.5rem',
+         display: 'none',
       },
       '& label.Mui-focused': {
          display: 'none',

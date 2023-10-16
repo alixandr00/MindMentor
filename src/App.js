@@ -1,12 +1,10 @@
 import { ToastContainer } from 'react-toastify'
-import { Modal } from './components/modal/Modal'
 
 function App() {
    return (
       <div>
-         <Modal />
          <ToastContainer />
-         {/* Hello world */}
+         Hello world
       </div>
    )
 }
