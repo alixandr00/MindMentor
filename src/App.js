@@ -1,10 +1,11 @@
 import { ToastContainer } from 'react-toastify'
+import { VendorsModal } from './components/vendorsModal/VendorsModal'
 
 function App() {
    return (
       <div>
+         <VendorsModal />
          <ToastContainer />
-         Hello world
       </div>
    )
 }
