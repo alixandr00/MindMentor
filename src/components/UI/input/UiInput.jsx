@@ -89,44 +89,6 @@ const InputOutlained = styled(OutlinedInput)(
       '.MuiInputBase-input': {
          color: colors,
          padding: props.classpadding === 'true' && '3px 14px',
-const MyStyledInput = styled(TextField)(({ ...props }) => ({
-   input: {
-      padding: props.padding || 0,
-      color: props.color || 'white',
-      width: props.width || '11.25rem',
-      backgroundColor: props.backgroundColor || 'transparent',
-      background: props.background || 'transparent !important',
-      border: props.border || '1px solid transparent',
-
-      paddingLeft: props.paddingLeft || '15px',
-      ...props.placeholderStyles,
-   },
-   '& .MuiInputBase-input': {
-      height: props.height || '2.25rem',
-      fontSize: '1.2rem',
-      fontWeight: '400',
-   },
-   '& input::placeholder': {
-      color: props.placeholderColor || 'gray',
-   },
-   '& label': {
-      fontSize: '1rem',
-      fontFamily: 'Bai Jamjuree',
-   },
-   '& .MuiOutlinedInput-root': {
-      color: '#fff',
-
-      '& fieldset': {
-         border: props.border || '1px solid transparent',
-         borderRadius: props.borderRadius || '5px',
-      },
-      '&:hover fieldset': {
-         borderColor: props.hoverBorderColor || '1px solid #fff',
-         border: props.border || '1px solid transparent',
-      },
-      '&.Mui-focused fieldset': {
-         borderColor: props.focusBorderColor || '1px solid green',
-         border: props.border || '1px solid transparent',
       },
    })
 )
