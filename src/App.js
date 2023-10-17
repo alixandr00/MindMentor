@@ -1,11 +1,11 @@
-import { ToastContainer } from 'react-toastify'
-import { VendorsModal } from './components/vendorsModal/VendorsModal'
+import { NewVendorModal } from './components/vendorsModal/NewVendorModal'
+import { AdminLayout } from './layout/AdminLayout'
 
 function App() {
    return (
       <div>
-         <VendorsModal />
-         <ToastContainer />
+         <NewVendorModal />
+         <AdminLayout />
       </div>
    )
 }

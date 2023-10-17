@@ -12,7 +12,6 @@ export const UiInput = forwardRef(
          id,
          placeholder,
          value,
-         border,
          onChange,
          onBlur,
          padding,
@@ -43,7 +42,6 @@ export const UiInput = forwardRef(
                placeholder={placeholder}
                id={id}
                ref={ref}
-               border={border}
                padding={padding}
                onBlur={handleBlur}
                type={type === 'password' ? passwordType : type}
@@ -77,6 +75,7 @@ const InputOutlained = styled(OutlinedInput)(
       background,
       borderradius,
       border,
+      colors,
       borderColor,
       ...props
    }) => ({
@@ -88,13 +87,13 @@ const InputOutlained = styled(OutlinedInput)(
       borderRadius: borderradius,
       border: `1px solid ${borderColor}`,
       '.MuiInputBase-input': {
+         color: colors,
          padding: props.classpadding === 'true' && '3px 14px',
       },
    })
 )
 
 const StyleIconButton = styled(IconButton)`
-   /* position: absolute;
-   left: 26.25rem; */
-   display: flex;
+   position: absolute;
+   left: 26.25rem;
 `
