@@ -71,16 +71,18 @@ const MyStyledInput = styled(TextField)(({ ...props }) => ({
    },
    '& .MuiOutlinedInput-root': {
       color: '#fff',
+
       '& fieldset': {
-         border: props.border || '1px solid #fff',
+         border: props.border || '1px solid transparent',
          borderRadius: props.borderRadius || '5px',
       },
       '&:hover fieldset': {
          borderColor: props.hoverBorderColor || '1px solid #fff',
+         border: props.border || '1px solid transparent',
       },
       '&.Mui-focused fieldset': {
          borderColor: props.focusBorderColor || '1px solid green',
-         border: props.border || '1px solid #fff',
+         border: props.border || '1px solid transparent',
       },
    },
    '& .css-1pysi21-MuiFormLabel-root-MuiInputLabel-root': {
