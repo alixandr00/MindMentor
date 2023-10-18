@@ -10,7 +10,7 @@ export const SideBar = () => {
       <Container>
          <div>
             <TitleContainer>
-               <Title>MindeMento</Title>
+               <Title>MindMento</Title>
             </TitleContainer>
          </div>
          <DescriptionContainer>
