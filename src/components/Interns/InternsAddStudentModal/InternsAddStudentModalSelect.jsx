@@ -1,8 +1,22 @@
+/* eslint-disable react/no-unstable-nested-components */
 import { FormControl, MenuItem, Select, styled } from '@mui/material'
 import React, { useState } from 'react'
+import { DownIcon, UpIcon } from '../../../assets/icons'
 
-export const InternsAddStudentModalSelect = ({ dataMenuItem, name }) => {
-   const [value, setValue] = useState('')
+export const InternsAddStudentModalSelect = ({
+   dataMenuItem,
+   name,
+   defaultName,
+}) => {
+   const [isSelectOpen, setIsSelectOpen] = useState(false)
+   const [value, setValue] = useState(defaultName)
+
+   const handleSelectClose = () => {
+      setIsSelectOpen(false)
+   }
+   const handleSelectOpen = () => {
+      setIsSelectOpen(true)
+   }
 
    const handleChange = (e) => {
       setValue(e.target.value)
@@ -11,18 +25,36 @@ export const InternsAddStudentModalSelect = ({ dataMenuItem, name }) => {
    return (
       <Container>
          <FormControlStyle
-            fullWidth
             sx={{
-               background: '#252335 !important',
+               '& .css-6hp17o-MuiList-root-MuiMenu-list': {
+                  paddingTop: '0 !important',
+                  paddingBottom: '0 !important',
+               },
             }}
          >
             <SelectStyle
-               sx={{
-                  padding: 0,
-               }}
                name={name}
                value={value}
+               onClose={handleSelectClose}
+               onOpen={handleSelectOpen}
                onChange={handleChange}
+               open={isSelectOpen}
+               MenuProps={{
+                  MenuListProps: {
+                     disablePadding: true,
+                  },
+               }}
+               IconComponent={() => (
+                  <SelectIcon
+                     onClick={(e) => {
+                        e.stopPropagation()
+                        setIsSelectOpen(!isSelectOpen)
+                     }}
+                  >
+                     <UpIconStyled isOpen={isSelectOpen} />
+                     <DownIconStyled isOpen={isSelectOpen} />
+                  </SelectIcon>
+               )}
             >
                {dataMenuItem.map((item) => (
                   <MenuItemStyle key={item.id} value={item.name}>
@@ -37,10 +69,14 @@ export const InternsAddStudentModalSelect = ({ dataMenuItem, name }) => {
 
 const Container = styled('div')(() => ({}))
 
-const FormControlStyle = styled(FormControl)(() => ({}))
+const FormControlStyle = styled(FormControl)(() => ({
+   ul: {
+      border: '1px solid #fff',
+   },
+}))
 
 const SelectStyle = styled(Select)(() => ({
-   width: '120px',
+   width: '8.4vw',
 
    '& .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input':
       {
@@ -48,13 +84,23 @@ const SelectStyle = styled(Select)(() => ({
       },
 
    backgroundColor: '#252335',
+   border: '1px solid #fff',
+   borderRadius: '0.625rem',
 
    color: '#FFF',
    fontFamily: 'Bai Jamjuree',
-   fontSize: '1rem',
+   fontSize: '1.125rem',
    fontStyle: 'normal',
    fontWeight: '500',
    lineHeight: 'normal',
+
+   '& .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input':
+      {
+         paddingLeft: 0,
+         paddingRight: 0,
+         paddingTop: 0,
+         paddingBottom: 0,
+      },
 }))
 
 const MenuItemStyle = styled(MenuItem)`
@@ -66,4 +112,24 @@ const MenuItemStyle = styled(MenuItem)`
    font-style: normal;
    font-weight: 500;
    line-height: normal;
+
+   :hover {
+      background-color: #28263a !important;
+   }
 `
+
+const SelectIcon = styled('div')({
+   position: 'absolute',
+   right: '0.5rem',
+   top: '50%',
+   transform: 'translateY(-50%)',
+   cursor: 'pointer',
+})
+
+const UpIconStyled = styled(UpIcon)((props) => ({
+   display: props.isOpen ? 'block' : 'none',
+}))
+
+const DownIconStyled = styled(DownIcon)((props) => ({
+   display: props.isOpen ? 'none' : 'block',
+}))

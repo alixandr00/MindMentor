@@ -1,23 +1,19 @@
 import { styled } from '@mui/material'
-import React from 'react'
 import { UiInput } from '../../UI/input/UiInput'
 import { InternsAddStudentModalSelect } from './InternsAddStudentModalSelect'
+import { UiButton } from '../../UI/button/UiButton'
 
 export const InternsAddStudentModal = () => {
    return (
       <MainContainer>
          <Container>
-            <HeadIconContainer>
-               <span>Del</span>
-               <span>Edt</span>
-            </HeadIconContainer>
-
             <MainFormContainer>
                <div>
                   <FormContainer>
                      <InputBox>
                         <label htmlFor="name">Name</label>
                         <UiInputStyle
+                           fontsize="1rem"
                            background="#252335"
                            width="32vw"
                            borderradius="0.625rem"
@@ -30,6 +26,7 @@ export const InternsAddStudentModal = () => {
                      <InputBox>
                         <label htmlFor="surname">Surname</label>
                         <UiInputStyle
+                           fontsize="1rem"
                            background="#252335"
                            width="32vw"
                            borderradius="0.625rem"
@@ -42,6 +39,7 @@ export const InternsAddStudentModal = () => {
                      <InputBox>
                         <label htmlFor="email">Email</label>
                         <UiInputStyle
+                           fontsize="1rem"
                            background="#252335"
                            width="32vw"
                            borderradius="0.625rem"
@@ -54,6 +52,7 @@ export const InternsAddStudentModal = () => {
                      <InputBox>
                         <label htmlFor="phone">Phone number</label>
                         <UiInputStyle
+                           fontsize="1rem"
                            background="#252335"
                            width="32vw"
                            borderradius="0.625rem"
@@ -75,38 +74,88 @@ export const InternsAddStudentModal = () => {
                               { id: 2, name: 'Java' },
                               { id: 3, name: 'Javascript' },
                            ]}
+                           defaultName="Python"
                         />
-                        {/* <select name="dd">
-                           <option value="Java">Java</option>
-                           <option value="Java Script">Java Script</option>
-                        </select> */}
                      </BoxSelect>
 
                      <BoxSelect>
-                        <label htmlFor="dd">Status</label>
-                        <select name="dd">
-                           <option value="Java">Java</option>
-                           <option value="Java Script">Java Script</option>
-                        </select>
+                        <label htmlFor="status">Status</label>
+                        <InternsAddStudentModalSelect
+                           name="status"
+                           dataMenuItem={[
+                              { id: 1, name: 'In progress' },
+                              { id: 2, name: 'Hired' },
+                              { id: 3, name: 'Graduate' },
+                           ]}
+                           defaultName="In progress"
+                        />
                      </BoxSelect>
                   </ContainerSelect>
-                  <div>
-                     <button type="button">Mentor</button>
-                     <span>Mark Avans</span>
-                  </div>
-                  <div>
-                     <div>
-                        <p>Payment cost</p>
-                     </div>
-                     <div>
-                        <input type="text" />
+                  <ContainerAddMentorAndGroup>
+                     <BoxAddMentorAndGroup>
+                        <UiButton
+                           backgroundColor="#252335"
+                           backgroundhover="#28263a"
+                           border="1px solid #fff"
+                           fontsize="1.25rem"
+                           type="button"
+                        >
+                           Mentor
+                        </UiButton>
+                        <span>Daniel Kubanychbecov</span>
+                     </BoxAddMentorAndGroup>
+
+                     <BoxAddMentorAndGroup>
+                        <UiButton
+                           backgroundColor="#252335"
+                           backgroundhover="#28263a"
+                           border="1px solid #fff"
+                           fontsize="1.25rem"
+                           type="button"
+                        >
+                           Group
+                        </UiButton>
+                        <span>Java Script</span>
+                     </BoxAddMentorAndGroup>
+                  </ContainerAddMentorAndGroup>
+                  <ContainerPayment>
+                     <p>Payment cost</p>
+
+                     <div className="box">
+                        <UiInputStyle
+                           fontsize="1rem"
+                           background="#252335"
+                           width="7.4vw"
+                           borderradius="0.625rem"
+                           colors="#fff"
+                           bordercolor="#fff"
+                           type="number"
+                        />
+
                         <span>som</span>
                      </div>
-                  </div>
-                  <div>
-                     <button type="button">Delete</button>
-                     <button type="button">Save</button>
-                  </div>
+                  </ContainerPayment>
+
+                  <FooterButtonContainer>
+                     <UiButton
+                        backgroundColor="#252335"
+                        backgroundhover="#28263a"
+                        border="1px solid #fff"
+                        fontsize="1.25rem"
+                        type="button"
+                     >
+                        Cancel
+                     </UiButton>
+                     <UiButton
+                        backgroundColor="#252335"
+                        backgroundhover="#28263a"
+                        border="1px solid #fff"
+                        fontsize="1.25rem"
+                        type="button"
+                     >
+                        Save
+                     </UiButton>
+                  </FooterButtonContainer>
                </div>
             </MainFormContainer>
          </Container>
@@ -121,10 +170,10 @@ const MainContainer = styled('div')`
 `
 
 const Container = styled('div')`
-   margin: 3.625rem 0 1.25rem 0;
-   padding: 1.75rem 2.25rem 2.4375rem 2.25rem;
+   margin: 3rem 0 1.25rem 0;
+   padding: 2.4375rem 2.25rem 2.4375rem 2.25rem;
 
-   width: 63vw;
+   width: 52vw;
 
    background-color: #1e1f22;
    border-radius: 0.625rem;
@@ -140,12 +189,6 @@ const Container = styled('div')`
    display: flex;
    flex-direction: column;
    gap: 0.375rem;
-`
-
-const HeadIconContainer = styled('div')`
-   display: flex;
-   justify-content: flex-end;
-   gap: 2.4375rem;
 `
 
 const MainFormContainer = styled('div')`
@@ -174,9 +217,7 @@ const ContainerSelect = styled('div')`
 `
 
 const UiInputStyle = styled(UiInput)`
-   input {
-      padding: 0.4375rem 1rem;
-   }
+   padding: 0;
 `
 
 const BoxSelect = styled('div')`
@@ -185,77 +226,33 @@ const BoxSelect = styled('div')`
    gap: 0.6875rem;
 `
 
-/*
+const ContainerAddMentorAndGroup = styled('div')`
+   display: flex;
+   flex-direction: column;
+   gap: 1rem;
+`
 
-import { styled } from '@mui/material/styles' 
-import TextField from '@mui/material/TextField' 
-import React, { forwardRef } from 'react'
+const BoxAddMentorAndGroup = styled('div')`
+   display: flex;
+   gap: 1.125rem;
+`
 
-export const UiInput = forwardRef((
-	{label,type,id,value,onChange,border,placeholder,...other},ref) => {
-		const placeholderStyles = {}
-		if (placeholder === 'Description') {
-			placeholderStyles['::placeholder'] = {
-				color: '#fff',
-				transform: 'translateY(-65px)',
-				fontSize: '1.25rem',
-				fontWeight: '500',
-			}}
-			
-			return (
-				<MyStyledInput size="small" label={label} type={type} id={id}
-					value={value}
-					onChange={onChange}
-					border={border}
-					placeholder={placeholder}
-					placeholderstyles={placeholderStyles}
-					ref={ref}
-					{...other} />
-					)})
-					
-const MyStyledInput = styled(TextField)(({ ...props }) => ({
-	input:{padding: props.padding || 0,color: props.color || 'white',
-	width: props.width || '11.25rem',
-	backgroundColor: props.backgroundcolor || 'transparent',
-	background: props.background || 'transparent !important',
-	border: props.border || '1px solid transparent',
-	paddingLeft: props.paddingleft || '15px',
-	...props.placeholderstyles,    },
-	
-	'& .MuiInputBase-input': {
-		height: props.height || '2.25rem',
-		fontSize: '1.2rem',
-		fontWeight: '400',
-	},
-	
-	'& input::placeholder': {
-		color: props.placeholdercolor || 'gray',
-	},
-	'& label': {
-		fontSize: '1rem',
-		fontFamily: 'Bai Jamjuree',
-	},
-	'& .MuiOutlinedInput-root': {
-		color: '#fff',
-		'& fieldset': {
-			border: props.border || '1px solid #fff',
-			borderRadius: props.borderradius || '5px',
-		},
-		'&:hover fieldset': {
-			borderColor: props.hoverbordercolor || '1px solid #fff',
-		},
-		'&.Mui-focused fieldset': {
-			borderColor: props.focusbordercolor || '1px solid green',
-			border: props.border || '1px solid #fff',
-		},
-	},
-	'& .css-1pysi21-MuiFormLabel-root-MuiInputLabel-root': {
-		fontFamily: 'Bai Jamjuree',
-		color: 'white',
-	},
-	'& .css-1jy569b-MuiFormLabel-root-MuiInputLabel-root.Mui-focused': {
-		fontFamily: 'Bai Jamjuree',
-		color: 'white',
-	},}))
+const ContainerPayment = styled('div')`
+   margin-top: 0.75rem;
 
-*/
+   p {
+      margin: 0;
+   }
+
+   .box {
+      display: flex;
+      gap: 1.25rem;
+      margin-top: 0.5rem;
+   }
+`
+
+const FooterButtonContainer = styled('div')`
+   display: flex;
+   justify-content: flex-end;
+   gap: 2.375rem;
+`

@@ -28,6 +28,27 @@ body {
    );
 }
 
-ul#r7.muilist-root.MuiList-padding.MuiMenu-List.css-6hp17o-MuiList-root-MuiMenu-list {
-   padding: 0;
+/* HTML: <div class="loader"></div> */
+.loader {
+   --d: 80px;
+   width: 24px;
+   height: 24px;
+   border-radius: 50%;
+   color: #000000;
+   box-shadow:
+      calc(1 * var(--d)) calc(0 * var(--d)) 0 0,
+      calc(0.707 * var(--d)) calc(0.707 * var(--d)) 0 4px,
+      calc(0 * var(--d)) calc(1 * var(--d)) 0 5px,
+      calc(-0.707 * var(--d)) calc(0.707 * var(--d)) 0 6px,
+      calc(-1 * var(--d)) calc(0 * var(--d)) 0 7px,
+      calc(-0.707 * var(--d)) calc(-0.707 * var(--d)) 0 8px,
+      calc(0 * var(--d)) calc(-1 * var(--d)) 0 9px,
+      calc(0.707 * var(--d)) calc(-0.62 * var(--d)) 0 -2px;
+   animation: loader 1s infinite steps(8);
+}
+
+@keyframes loader {
+   100% {
+      transform: rotate(1turn);
+   }
 }
