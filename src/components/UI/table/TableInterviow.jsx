@@ -11,14 +11,13 @@ import {
    IconButton,
    styled,
 } from '@mui/material'
-import { ReactComponent as History } from '../../../assets/icons/History.svg'
 import { ReactComponent as DeleteIcon } from '../../../assets/icons/deleteicon.svg'
 import { ReactComponent as EditIcon } from '../../../assets/icons/editIcon.svg'
-import { ReactComponent as CommentIcon } from '../../../assets/icons/Comment.svg'
 import { ReactComponent as NextIcon } from '../../../assets/icons/NextIcon.svg'
 import { ReactComponent as PrevIcon } from '../../../assets/icons/PrevIcon.svg'
+import ProfileImage from '../../../assets/images/profileImage.jpg'
 
-export const TableStudents = ({ array, headerArray }) => {
+export const TableInterviow = ({ array, headerArray }) => {
    const [data, setData] = useState([])
    const [loading, setLoading] = useState(true)
    const [currentPage, setCurrentPage] = useState(1)
@@ -48,7 +47,7 @@ export const TableStudents = ({ array, headerArray }) => {
             setCurrentPage(currentPage - 1)
          }
          setLoading(false) // Set loading state to false after loading is done
-      }, 1500)
+      }, 500)
    }
 
    function nextPage() {
@@ -58,7 +57,7 @@ export const TableStudents = ({ array, headerArray }) => {
             setCurrentPage(currentPage + 1)
          }
          setLoading(false) // Set loading state to false after loading is done
-      }, 1500)
+      }, 500)
    }
 
    return (
@@ -68,26 +67,26 @@ export const TableStudents = ({ array, headerArray }) => {
                <TableHead>
                   <TableRow>
                      <StyledTableCell align="left" colSpan={7}>
-                        All interns
+                        Total candidates
                      </StyledTableCell>
                   </TableRow>
                   {headerArray.map((headerArray) => (
                      <TableRow>
                         <StyledTableCell>{headerArray.name}</StyledTableCell>
                         <StyledTableCell align="center">
-                           {headerArray.group}
+                           {headerArray.email}
                         </StyledTableCell>
                         <StyledTableCell align="center">
                            {headerArray.techStack}
                         </StyledTableCell>
                         <StyledTableCell align="center">
-                           {headerArray.status}
+                           {headerArray.interviewTime}
                         </StyledTableCell>
                         <StyledTableCell align="center">
-                           {headerArray.mentor}
+                           {headerArray.interviewDate}
                         </StyledTableCell>
                         <StyledTableCell align="center">
-                           {headerArray.pay}
+                           {headerArray.location}
                         </StyledTableCell>
                         <StyledTableCell align="center">
                            {headerArray.action}
@@ -148,10 +147,20 @@ export const TableStudents = ({ array, headerArray }) => {
                      records.map((item) => (
                         <StyledTableRow key={item.id}>
                            <StyledTableCellForData>
-                              {item.name}
+                              <StyledContainerImageName>
+                                 <StyledImage
+                                    src={
+                                       item.image !== 'null'
+                                          ? item.image
+                                          : ProfileImage
+                                    }
+                                    alt="photo"
+                                 />
+                                 <p>{item.name}</p>
+                              </StyledContainerImageName>
                            </StyledTableCellForData>
                            <StyledTableCellForData align="center">
-                              <p className={item.group}>{item.group}</p>
+                              <p>{item.email}</p>
                            </StyledTableCellForData>
                            <StyledTableCellForData
                               align="center"
@@ -168,23 +177,13 @@ export const TableStudents = ({ array, headerArray }) => {
                               </p>
                            </StyledTableCellForData>
                            <StyledTableCellForData align="center">
-                              <p
-                                 className={
-                                    item.status === 'in progress'
-                                       ? 'inprogress'
-                                       : item.status
-                                 }
-                              >
-                                 {item.status}
-                              </p>
+                              <p>{item.time}</p>
                            </StyledTableCellForData>
                            <StyledTableCellForData align="center">
-                              {item.mentor}
+                              {item.date}
                            </StyledTableCellForData>
                            <StyledTableCellForData align="center">
-                              <IconButton>
-                                 <CommentIcon />
-                              </IconButton>
+                              {item.location}
                            </StyledTableCellForData>
                            <StyledTableCellForData align="center">
                               <IconButton>
@@ -192,9 +191,6 @@ export const TableStudents = ({ array, headerArray }) => {
                               </IconButton>
                               <IconButton>
                                  <DeleteIcon />
-                              </IconButton>
-                              <IconButton>
-                                 <History />
                               </IconButton>
                            </StyledTableCellForData>
                         </StyledTableRow>
@@ -307,7 +303,6 @@ const StyledTableRow = styled(TableRow)`
       width: 100px;
    }
    border: none;
-
    :hover {
       background: linear-gradient(
          to bottom,
@@ -340,4 +335,15 @@ const StyledContainer = styled('div')`
    display: flex;
    justify-content: end;
    margin-right: 15px;
+`
+const StyledImage = styled('img')`
+   width: 40px;
+   height: 40px;
+   border-radius: 100%;
+`
+
+const StyledContainerImageName = styled('div')`
+   display: flex;
+   align-items: center;
+   gap: 10px;
 `
