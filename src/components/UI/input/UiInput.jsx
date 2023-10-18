@@ -37,7 +37,7 @@ export const UiInput = forwardRef(
             onChange={onChange}
             border={border}
             placeholder={placeholder}
-            placeholderStyles={placeholderStyles}
+            placeholderstyles={placeholderStyles}
             ref={ref}
             {...other}
          />
@@ -50,12 +50,12 @@ const MyStyledInput = styled(TextField)(({ ...props }) => ({
       padding: props.padding || 0,
       color: props.color || 'white',
       width: props.width || '11.25rem',
-      backgroundColor: props.backgroundColor || 'transparent',
+      backgroundColor: props.backgroundcolor || 'transparent',
       background: props.background || 'transparent !important',
       border: props.border || '1px solid transparent',
 
-      paddingLeft: props.paddingLeft || '15px',
-      ...props.placeholderStyles,
+      paddingLeft: props.paddingleft || '15px',
+      ...props.placeholderstyles,
    },
    '& .MuiInputBase-input': {
       height: props.height || '2.25rem',
@@ -63,7 +63,7 @@ const MyStyledInput = styled(TextField)(({ ...props }) => ({
       fontWeight: '400',
    },
    '& input::placeholder': {
-      color: props.placeholderColor || 'gray',
+      color: props.placeholdercolor || 'gray',
    },
    '& label': {
       fontSize: '1rem',
@@ -73,13 +73,13 @@ const MyStyledInput = styled(TextField)(({ ...props }) => ({
       color: '#fff',
       '& fieldset': {
          border: props.border || '1px solid #fff',
-         borderRadius: props.borderRadius || '5px',
+         borderRadius: props.borderradius || '5px',
       },
       '&:hover fieldset': {
-         borderColor: props.hoverBorderColor || '1px solid #fff',
+         borderColor: props.hoverbordercolor || '1px solid #fff',
       },
       '&.Mui-focused fieldset': {
-         borderColor: props.focusBorderColor || '1px solid green',
+         borderColor: props.focusbordercolor || '1px solid green',
          border: props.border || '1px solid #fff',
       },
    },

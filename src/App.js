@@ -1,9 +1,12 @@
-import { AdminLayout } from './layout/AdminLayout'
+import { InternsAddStudentModal } from './components/Interns/InternsAddStudentModal'
+// import { AdminLayout } from './layout/AdminLayout'
 
 function App() {
    return (
       <div>
-         <AdminLayout />
+         {/* <AdminLayout /> */}
+
+         <InternsAddStudentModal />
       </div>
    )
 }
