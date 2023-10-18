@@ -1,39 +1,20 @@
-import { styled, IconButton } from '@mui/material'
-import React, { useState } from 'react'
+import { styled } from '@mui/material'
+import React from 'react'
 import { UiInput } from '../UI/input/UiInput'
 import { UiButton } from '../UI/button/UiButton'
-import { HideIcon, ShowIcon } from '../../assets/icons'
 
 export const SignInPage = () => {
-   const [showPassword, setShowPassword] = useState(false)
-   const handleTogglePasswordVisibility = () => {
-      setShowPassword((prev) => !prev)
-   }
    return (
       <WrapperContainer>
-         <Container>
+         <ContainerForm>
             <SignInText>MindMento</SignInText>
+
             <ContainerInputs>
-               <InputStyle placeholder="LOGIN" label="LOGIN" />
-               <InputStyle
-                  placeholder="PASSWORD"
-                  label="PASSWORD"
-                  type={showPassword ? 'text' : 'password'}
-                  InputProps={{
-                     endAdornment: (
-                        <IconButton onClick={handleTogglePasswordVisibility}>
-                           {showPassword ? (
-                              <ShowIcon fill="white" />
-                           ) : (
-                              <HideIcon fill="white" />
-                           )}
-                        </IconButton>
-                     ),
-                  }}
-               />
+               <InputStyle placeholder="LOGIN" />
+               <InputStyle placeholder="PASSWORD" type="password" />
             </ContainerInputs>
             <ButtonStyled>LOGIN</ButtonStyled>
-         </Container>
+         </ContainerForm>
       </WrapperContainer>
    )
 }
@@ -45,7 +26,7 @@ const WrapperContainer = styled('div')({
    width: '100%',
    height: '97vh',
 })
-const Container = styled('div')({
+const ContainerForm = styled('form')({
    width: '40.75rem',
    height: '36.125rem',
    border: '1px solid white',
@@ -57,17 +38,15 @@ const Container = styled('div')({
 })
 
 const InputStyle = styled(UiInput)({
-   '& .MuiInputBase-input': {
-      background: 'transparent',
-      width: '27.6875rem',
-      height: '2.5rem',
-      fontFamily: 'Bai Jamjuree',
-   },
+   width: '27.6875rem',
+   height: '2.5rem',
+   borderRadius: '0.625rem',
+   border: '1px solid #FFF',
 
-   '& .css-1n4twyu-MuiInputBase-input-MuiOutlinedInput-input:-webkit-autofill':
-      {
-         width: '100%',
-      },
+   background: '#1E1F22',
+   '& .MuiInputBase-input': {
+      color: '#fff',
+   },
 })
 
 const SignInText = styled('h1')({
