@@ -7,7 +7,6 @@ import {
 } from '@mui/material'
 import React, { useState } from 'react'
 import 'react-calendar/dist/Calendar.css'
-// import dayjs from 'dayjs'
 import { DownIcon, LeftIcon, UpIcon } from '../../assets/icons'
 import { WeekCalendar } from './WeekCalendar'
 import { UiButton } from '../UI/button/UiButton'
@@ -17,7 +16,6 @@ export const MyCalendar = () => {
    const [isSelectOpen, setIsSelectOpen] = useState(false)
    const [selectedValue, setSelectedValue] = useState('')
    const [date, setDate] = useState(null)
-   console.log('date: ', date)
 
    const monthNames = [
       'January',
@@ -36,10 +34,6 @@ export const MyCalendar = () => {
    const currentMonthIndex = date?.$M
    const currentMonth = monthNames[currentMonthIndex]
    const currentYear = date?.$y
-   console.log('currentYear: ', currentYear)
-   console.log('currentMonth: ', currentMonth)
-   // const currentYear = date?.$H ? date?.$H.padStart(2, '0') : ''
-   // console.log('currentYear: ', currentYear)
 
    const handleSelectClose = () => {
       setIsSelectOpen(false)

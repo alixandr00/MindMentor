@@ -21,7 +21,6 @@ export const WeekCalendar = ({ month }) => {
    }
 
    const selectedWeeks = weekNumbers[month] || []
-   console.log('selectedWeeks: ', selectedWeeks)
 
    const timeBefore12 = [
       '01:00',
