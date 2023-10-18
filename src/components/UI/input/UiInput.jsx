@@ -50,9 +50,6 @@ export const UiInput = forwardRef(
                   type === 'password' ? (
                      <StyleIconButton onClick={handleClickShowPassword}>
                         {showPassword ? (
-
-                 
-
                            <VisibilityIcon sx={{ color: '#fff' }} />
                         ) : (
                            <VisibilityOffIcon sx={{ color: '#fff' }} />
@@ -89,7 +86,6 @@ const InputOutlained = styled(OutlinedInput)(
       background,
       borderRadius: borderradius,
       border: `1px solid ${bordercolor}`,
-      border: ` 1px solid ${bordercolor}`,
       '.MuiInputBase-input': {
          color: colors,
          padding: props.classpadding === 'true' && '3px 14px',
