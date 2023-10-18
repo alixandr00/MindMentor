@@ -10,7 +10,7 @@ import { UiInput } from '../UI/input/UiInput'
 import { UiButton } from '../UI/button/UiButton'
 import { Time } from '../UI/time/Time'
 
-export const Modal = () => {
+export const EventsModal = () => {
    const [close, setClose] = useState(true)
 
    const onClose = () => {

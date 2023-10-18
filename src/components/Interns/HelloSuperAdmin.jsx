@@ -10,7 +10,7 @@ import { UiButton } from '../UI/button/UiButton'
 import { UiInput } from '../UI/input/UiInput'
 import { DownIcon, SearchIcon, UpIcon } from '../../assets/icons'
 
-export const Interns = () => {
+export const HelloSuperAdmin = ({ children }) => {
    const [isSelectOpen, setIsSelectOpen] = useState(false)
    const [selectedValue, setSelectedValue] = useState('')
 
@@ -88,6 +88,7 @@ export const Interns = () => {
                </InputBox>
             </div>
          </ContIntern>
+         {children}
       </Container>
    )
 }
@@ -97,6 +98,7 @@ const Container = styled('div')({
    height: '100vh',
    background: '#1E1F22',
    padding: '1rem',
+   paddingTop: '3rem',
 })
 
 const ContIntern = styled('div')({

@@ -34,10 +34,24 @@ export const VendorsCards = () => {
 
 const Container = styled('div')(() => ({
    width: '100%',
-   height: '100%',
    display: 'flex',
    flexWrap: 'wrap',
-   gap: '1.19rem',
+   gap: '1.20rem',
+   marginTop: '2rem',
+   maxHeight: '30rem',
+   overflowY: 'auto',
+   scrollbarWidth: 'thin',
+   scrollbarColor: ' #b3b3b30 transparent',
+   '&::-webkit-scrollbar ': {
+      width: '0.3rem',
+   },
+   '&::-webkit-scrollbar-track': {
+      backgroundColor: ' #fff white',
+   },
+   '&::-webkit-scrollbar-thumb ': {
+      backgroundColor: ' #fff',
+      borderRadius: '0.25rem',
+   },
 }))
 const ContainerCards = styled('div')(() => ({
    width: '14.375rem',
