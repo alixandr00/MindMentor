@@ -22,7 +22,7 @@ export const UiButton = ({
          disabled={disabled}
          backgroundColor={backgroundColor}
          color={color}
-         //  borderColor={borderColor} // Передаем prop для цвета границы
+         // borderColor={borderColor} // Передаем prop для цвета границы
          {...rest}
       >
          {children}
