@@ -12,6 +12,7 @@ import { ReactComponent as LeftIcon } from './Vector (3).svg'
 import { ReactComponent as ShowIcon } from './showIcon.svg'
 import { ReactComponent as HideIcon } from './hideIcon.svg'
 import { ReactComponent as ExitIcon } from './exit.svg'
+import { ReactComponent as DownLoadResumeIcon } from './downloadResumeIcon.svg'
 
 export {
    GmailIcon,
@@ -28,4 +29,5 @@ export {
    ShowIcon,
    HideIcon,
    ExitIcon,
+   DownLoadResumeIcon,
 }
