@@ -49,24 +49,19 @@ const WrapperContainer = styled('div')({
    height: '100vh',
 })
 const InputStyle = styled(UiInput)({
+   width: '12.9375rem',
+   height: '2.0625rem',
+   borderRadius: '0.625rem',
+   border: ' 1px solid #F9F9F9',
+   boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.25)',
+   background: '#1E1F22',
    '& .MuiInputBase-input': {
-      width: '12.9375rem',
-      height: '2.0625rem',
-      fontFamily: 'Bai Jamjuree',
-      borderRadius: '0.625rem',
-      border: ' 1px solid #F9F9F9',
-      backgroundColor: 'red',
-      boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.25)',
+      color: '#fff',
    },
-
-   '& .css-1n4twyu-MuiInputBase-input-MuiOutlinedInput-input:-webkit-autofill':
-      {
-         width: '100%',
-      },
 })
 const ContainerModal = styled('div')({
-   width: '55.4375rem',
-   height: '40.1875rem',
+   width: '55rem ',
+   height: '40rem',
    borderRadius: ' 0.625rem',
    border: '1px solid #FFF',
    background: ' #1E1F22',
