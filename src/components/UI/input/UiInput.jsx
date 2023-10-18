@@ -71,25 +71,61 @@ const InputOutlained = styled(OutlinedInput)(
       width,
       height,
       padding,
-      fontSize,
+      fontsize,
       background,
       borderradius,
       border,
       colors,
-      borderColor,
+      bordercolor,
       ...props
    }) => ({
       width,
       height,
       padding,
-      fontSize,
+      fontSize: fontsize,
       background,
       borderRadius: borderradius,
-      border: `1px solid ${borderColor}`,
+      border: `1px solid ${bordercolor}`,
       '.MuiInputBase-input': {
          color: colors,
          padding: props.classpadding === 'true' && '3px 14px',
       },
+
+      // '& .MuiInputBase-input': {
+      //    height: props.height || '2.25rem',
+      //    fontSize: '1.2rem',
+      //    fontWeight: '400',
+      // },
+
+      // '& input::placeholder': {
+      //    color: props.placeholdercolor || 'gray',
+      // },
+      // '& label': {
+      //    fontSize: '1rem',
+      //    fontFamily: 'Bai Jamjuree',
+      // },
+      // '& .MuiOutlinedInput-root': {
+      //    color: '#fff',
+      //    '& fieldset': {
+      //       border: props.border || '1px solid #fff',
+      //       borderRadius: props.borderradius || '5px',
+      //    },
+      //    '&:hover fieldset': {
+      //       borderColor: props.hoverbordercolor || '1px solid #fff',
+      //    },
+      //    '&.Mui-focused fieldset': {
+      //       borderColor: props.focusbordercolor || '1px solid green',
+      //       border: props.border || '1px solid #fff',
+      //    },
+      // },
+      // '& .css-1pysi21-MuiFormLabel-root-MuiInputLabel-root': {
+      //    fontFamily: 'Bai Jamjuree',
+      //    color: 'white',
+      // },
+      // '& .css-1jy569b-MuiFormLabel-root-MuiInputLabel-root.Mui-focused': {
+      //    fontFamily: 'Bai Jamjuree',
+      //    color: 'white',
+      // },
    })
 )
 

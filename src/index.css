@@ -16,7 +16,6 @@ a {
 }
 
 body {
-
    font-family: Bai Jamjuree;
 
    width: 100%;
@@ -27,5 +26,8 @@ body {
       #252335 26.77%,
       rgba(84, 71, 170, 0.93) 97.4%
    );
+}
 
+ul#r7.muilist-root.MuiList-padding.MuiMenu-List.css-6hp17o-MuiList-root-MuiMenu-list {
+   padding: 0;
 }
