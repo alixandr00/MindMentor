@@ -28,10 +28,25 @@ export const MentorsCards = () => {
 
 const Container = styled('div')(() => ({
    width: '100%',
-   height: '100%',
+   // height: '100%',
+   marginTop: '2rem',
    display: 'flex',
    flexWrap: 'wrap',
    gap: '1.31rem',
+   maxHeight: '30rem',
+   overflowY: 'auto',
+   scrollbarWidth: 'thin',
+   scrollbarColor: ' #b3b3b30 transparent',
+   '&::-webkit-scrollbar ': {
+      width: '0.3rem',
+   },
+   '&::-webkit-scrollbar-track': {
+      backgroundColor: ' #fff white',
+   },
+   '&::-webkit-scrollbar-thumb ': {
+      backgroundColor: ' #fff',
+      borderRadius: '0.25rem',
+   },
 }))
 
 const ContainerCards = styled('div')(() => ({
