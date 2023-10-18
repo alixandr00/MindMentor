@@ -66,7 +66,6 @@ const InputStyle = styled(UiInput)({
 
    '& .css-1n4twyu-MuiInputBase-input-MuiOutlinedInput-input:-webkit-autofill':
       {
-         backgroundColor: 'red !important',
          width: '100%',
       },
 })
