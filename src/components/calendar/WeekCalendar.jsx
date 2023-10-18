@@ -1,9 +1,28 @@
 import { styled } from '@mui/material'
 import React from 'react'
 
-export const WeekCalendar = () => {
+export const WeekCalendar = ({ month }) => {
    const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-   const numbersOfWeek = ['1', '2', '3', '4', '5', '6', '7']
+   const DefaulWeeks = ['1', '2', '3', '4', '5', '6', '7']
+
+   const weekNumbers = {
+      January: ['1', '2', '3', '4', '5', '6', '7'],
+      February: ['5', '6', '7', '8', '9', '10', '11'],
+      March: ['1', '2', '3', '4', '5', '6', '7'],
+      April: ['4', '5', '6', '7', '8', '9', '10'],
+      May: ['2', '3', '4', '5', '6', '7', '8'],
+      June: ['7', '8', '9', '10', '11', '12', '13'],
+      July: ['3', '4', '5', '6', '7', '8', '9'],
+      August: ['1', '2', '3', '4', '5', '6', '7'],
+      September: ['7', '8', '9', '10', '11', '12', '13'],
+      October: ['1', '2', '3', '4', '5', '6', '7'],
+      November: ['5', '6', '7', '8', '9', '10', '11'],
+      December: ['3', '4', '5', '6', '7', '8', '9'],
+   }
+
+   const selectedWeeks = weekNumbers[month] || []
+   console.log('selectedWeeks: ', selectedWeeks)
+
    const timeBefore12 = [
       '01:00',
       '02:00',
@@ -40,6 +59,7 @@ export const WeekCalendar = () => {
       bottom: '1rem',
       fontSize: '2.25rem',
    }
+
    return (
       <>
          <TimeStyled>
@@ -59,11 +79,17 @@ export const WeekCalendar = () => {
                </tr>
                <tr>
                   <th>{}</th>
-                  {numbersOfWeek.map((day) => (
-                     <th key={day} style={numberStyle}>
-                        {day}
-                     </th>
-                  ))}
+                  {selectedWeeks?.length === 0
+                     ? DefaulWeeks.map((day) => (
+                          <th key={day} style={numberStyle}>
+                             {day}
+                          </th>
+                       ))
+                     : selectedWeeks.map((day) => (
+                          <th key={day} style={numberStyle}>
+                             {day}
+                          </th>
+                       ))}
                </tr>
             </thead>
             {timeBefore123.map((hour) => (
@@ -71,7 +97,7 @@ export const WeekCalendar = () => {
                   <td>{}</td>
                   {daysOfWeek.map((day, index) => (
                      <td key={day + index} style={cellStyle}>
-                        {/* Здесь можно вставить содержимое для каждой ячейки */}
+                        {/* Insert content for each cell here */}
                      </td>
                   ))}
                </tr>
@@ -92,9 +118,9 @@ const TimeStyled = styled('div')({
    position: 'absolute',
    display: 'flex',
    flexDirection: 'column',
-   gap: '1rem',
-   left: '27rem',
-   top: '13.3rem',
+   gap: '1.07rem',
+   left: '24rem',
+   top: '12.3rem',
    color: '#FFFF',
    fontSize: '1.1rem',
    fontWeight: '500',

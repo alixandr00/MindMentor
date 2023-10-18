@@ -9,6 +9,9 @@ import { ReactComponent as NotesIcon } from './notesIcon.svg'
 import { ReactComponent as PeopleIcon } from './peopleIcon.svg'
 import { ReactComponent as RightIcon } from './Vector (2).svg'
 import { ReactComponent as LeftIcon } from './Vector (3).svg'
+import { ReactComponent as ShowIcon } from './showIcon.svg'
+import { ReactComponent as HideIcon } from './hideIcon.svg'
+import { ReactComponent as ExitIcon } from './exit.svg'
 
 export {
    GmailIcon,
@@ -22,4 +25,7 @@ export {
    SearchIcon,
    DownIcon,
    UpIcon,
+   ShowIcon,
+   HideIcon,
+   ExitIcon,
 }

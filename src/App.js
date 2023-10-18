@@ -1,9 +1,9 @@
-import { MyCalendar } from './components/calendar/Calendar'
+import { AdminLayout } from './layout/AdminLayout'
 
 function App() {
    return (
       <div>
-         <MyCalendar />
+         <AdminLayout />
       </div>
    )
 }

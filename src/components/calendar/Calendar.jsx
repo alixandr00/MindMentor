@@ -6,31 +6,40 @@ import {
    styled,
 } from '@mui/material'
 import React, { useState } from 'react'
-import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css'
-import { DownIcon, LeftIcon, RightIcon, UpIcon } from '../../assets/icons'
+// import dayjs from 'dayjs'
+import { DownIcon, LeftIcon, UpIcon } from '../../assets/icons'
 import { WeekCalendar } from './WeekCalendar'
+import { UiButton } from '../UI/button/UiButton'
+import { BasicDateCalendar } from './DateCalendar'
 
 export const MyCalendar = () => {
-   const [date, setDate] = useState(new Date())
    const [isSelectOpen, setIsSelectOpen] = useState(false)
    const [selectedValue, setSelectedValue] = useState('')
+   const [date, setDate] = useState(null)
+   console.log('date: ', date)
 
-   const onChange = (newDate) => {
-      setDate(newDate)
-   }
-
-   const nextMonth = () => {
-      const newDate = new Date(date)
-      newDate.setMonth(newDate.getMonth() + 1)
-      setDate(newDate)
-   }
-
-   const prevMonth = () => {
-      const newDate = new Date(date)
-      newDate.setMonth(newDate.getMonth() - 1)
-      setDate(newDate)
-   }
+   const monthNames = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+   ]
+   const currentMonthIndex = date?.$M
+   const currentMonth = monthNames[currentMonthIndex]
+   const currentYear = date?.$y
+   console.log('currentYear: ', currentYear)
+   console.log('currentMonth: ', currentMonth)
+   // const currentYear = date?.$H ? date?.$H.padStart(2, '0') : ''
+   // console.log('currentYear: ', currentYear)
 
    const handleSelectClose = () => {
       setIsSelectOpen(false)
@@ -42,23 +51,6 @@ export const MyCalendar = () => {
       setSelectedValue(event.target.value)
    }
 
-   const tileContent = ({ view }) => {
-      if (view === 'month') {
-         return (
-            <div>
-               <style>
-                  {`
-                .react-calendar__month-view__days__day--neighboringMonth {
-                  display: none;
-                }
-              `}
-               </style>
-            </div>
-         )
-      }
-      return null
-   }
-
    return (
       <Container>
          <div>
@@ -68,7 +60,17 @@ export const MyCalendar = () => {
                   <p className="textCalendarAndToday">Today</p>
                   <LeftIconStyledd />
                </div>
-               <p className="textMonth">September 2023</p>
+               {currentMonth ? (
+                  <div className="textMonth">
+                     <p className="currents">
+                        <span>{currentMonth}</span>
+                        <span>{currentYear}</span>
+                     </p>
+                  </div>
+               ) : (
+                  <p className="textMonth">October 2023</p>
+               )}
+
                <div className="sortText">
                   <p>sort by</p>
                   <FormControlStyled size="medium">
@@ -103,28 +105,19 @@ export const MyCalendar = () => {
                         id="demo-select-small"
                         label="status"
                      >
+                        <MenuItem value="Month">Month</MenuItem>
                         <MenuItem value="Week">Week</MenuItem>
                         <MenuItem value="Day">Day</MenuItem>
                      </SelectStyled>
                   </FormControlStyled>
                </div>
             </Header>
-            <CalendarStyled
-               key={date.toISOString()}
-               onChange={onChange}
-               value={date}
-               prevLabel={null}
-               prev2Label={null}
-               next2Label={null}
-               nextLabel={null}
-               tileContent={tileContent}
-            />
-            <IconCont>
-               <LeftIconStyled onClick={prevMonth} />
-               <RightIconStyled onClick={nextMonth} />
-            </IconCont>
+            <div>
+               <BasicDateCalendar date={date} setDate={setDate} />
+            </div>
+            <UiButtonStyled>Create +</UiButtonStyled>
          </div>
-         <WeekCalendar />
+         <WeekCalendar month={currentMonth} />
       </Container>
    )
 }
@@ -134,74 +127,21 @@ const Container = styled('div')({
    height: '100vh',
    position: 'relative',
    display: 'flex',
-   paddingTop: '2rem',
-   background: 'black',
+   paddingTop: '1rem',
 })
 
-const CalendarStyled = styled(Calendar)({
-   padding: '1rem',
-   width: '23.75rem',
-   marginLeft: '1rem',
-   height: 'fit-content',
-   borderRadius: '1.875rem',
-   marginTop: '6rem',
-   backgroundColor: '#252335',
-   border: 'none',
-   '& .react-calendar__tile': {
-      color: 'white',
-      fontSize: '1.25rem',
-      lineHeight: '1.5625rem',
-      borderRadius: '50%',
-      background: 'transparent',
-
-      '&:hover': {
-         background: 'none !important',
-         borderRadius: '50%',
-         color: 'red',
-      },
-   },
-   '& .react-calendar__month-view__weekdays__weekday': {
-      color: 'white',
-      fontSize: '1.25rem',
-      lineHeight: '1.5625rem',
-      textDecoration: 'underline',
-   },
-   '& .react-calendar__tile--active': {
-      background: '#5447AA !important',
-      borderRadius: '50%',
-   },
-   '& .react-calendar__navigation__label': {
-      color: 'white',
-      fontSize: '1.5rem',
-      fontWeight: '700',
-      marginRight: '3rem',
-      background: 'transparent !important',
-   },
-})
-
-const IconCont = styled('div')({
-   position: 'absolute',
-   display: 'flex',
-   justifyContent: 'center',
-   alignItems: 'center',
-   left: '18rem',
-   gap: '1rem',
-   top: '10rem',
-})
-
-const LeftIconStyled = styled(LeftIcon)({
-   cursor: 'pointer',
-})
-
-const RightIconStyled = styled(RightIcon)({
-   cursor: 'pointer',
-})
 const Header = styled('div')({
    position: 'absolute',
    width: '100%',
    height: '3.125rem',
    display: 'flex',
    color: 'white',
+   '.currents': {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      gap: '0.5rem',
+   },
    '.textCalendarAndToday': {
       fontSize: '2rem',
    },
@@ -270,4 +210,18 @@ const LeftIconStyledd = styled(LeftIcon)({
    position: 'relative',
    right: '2.5rem',
    top: '0.8rem',
+})
+
+const UiButtonStyled = styled(UiButton)({
+   width: '20.75rem',
+   height: '6rem',
+   borderRadius: '1.875rem',
+   background: '#252335',
+   marginLeft: '0.5rem',
+   marginTop: '1rem',
+   fontSize: '2.25rem',
+   fontWeight: 700,
+   '&:hover': {
+      background: '#252335',
+   },
 })
