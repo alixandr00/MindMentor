@@ -1,13 +1,9 @@
-// import { AdminLayout } from './layout/AdminLayout'
-// import { SignInPage } from './components/signIn/SignInPage'
-import { MentorModalResume } from './components/mentorsCards/MentorModalResume'
+import { AdminLayout } from './layout/AdminLayout'
 
 function App() {
    return (
       <div>
-         {/* <AdminLayout /> */}
-         {/* <SignInPage /> */}
-         <MentorModalResume />
+         <AdminLayout />
       </div>
    )
 }
