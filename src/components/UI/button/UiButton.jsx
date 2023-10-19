@@ -20,7 +20,7 @@ export const UiButton = ({
          startIcon={startIcon}
          icon={icon}
          disabled={disabled}
-         background={backgroundColor}
+         backgroundColor={backgroundColor}
          color={color}
          // borderColor={borderColor} // Передаем prop для цвета границы
          {...rest}
@@ -38,14 +38,13 @@ const ButtonStyle = styled(ReusableButton)(({ ...props }) => ({
    display: 'flex',
    justifyContent: props.justifyContent || 'center',
    alignItems: props.alignItems || 'center',
-   fontSize: props.fontsize,
    padding: props.padding || '0.5rem 1rem',
    //    alignItems: 'flex-start',
    border: props.border || 'none',
    width: props.width || '7.5rem',
    height: props.height || '2rem',
    '&:hover': {
-      background: props.backgroundhover,
+      background: props.background,
       color: props.color,
    },
    '&:disabled': {
