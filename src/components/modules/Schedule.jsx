@@ -1,21 +1,21 @@
 import React from 'react'
 import { styled } from '@mui/material'
-import { HelloSuperAdmin } from '../Interns/HelloSuperAdmin'
 import { TableInterviow } from '../UI/table/TableInterviow'
 import {
    arrayInterviow,
    headerArrayInterview,
 } from '../../utils/table-students'
+import { NewInterviews } from '../UI/table/NewTableInterviows'
 
 export const Schedule = () => {
    return (
       <Container>
-         <HelloSuperAdmin>
+         <NewInterviews>
             <TableInterviow
                array={arrayInterviow}
                headerArray={headerArrayInterview}
             />
-         </HelloSuperAdmin>
+         </NewInterviews>
       </Container>
    )
 }

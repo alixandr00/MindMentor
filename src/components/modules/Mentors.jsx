@@ -1,13 +1,11 @@
 import React from 'react'
-import { HelloSuperAdmin } from '../Interns/HelloSuperAdmin'
 import { MentorsCards } from '../mentors/MentorsCards'
+import { NewMentors } from '../mentors/NewMentors'
 
 export const Mentors = () => {
    return (
-      <div>
-         <HelloSuperAdmin>
-            <MentorsCards />
-         </HelloSuperAdmin>
-      </div>
+      <NewMentors>
+         <MentorsCards />
+      </NewMentors>
    )
 }

@@ -1,6 +1,6 @@
 import {
    FormControl,
-   InputLabel,
+   IconButton,
    MenuItem,
    Select,
    styled,
@@ -10,9 +10,9 @@ import { UiButton } from '../UI/button/UiButton'
 import { UiInput } from '../UI/input/UiInput'
 import { DownIcon, SearchIcon, UpIcon } from '../../assets/icons'
 
-export const HelloSuperAdmin = ({ children }) => {
+export const NewGroups = ({ children }) => {
    const [isSelectOpen, setIsSelectOpen] = useState(false)
-   const [selectedValue, setSelectedValue] = useState('')
+   const [selectedValue, setSelectedValue] = useState('Status')
 
    const handleSelectOpen = () => {
       setIsSelectOpen(true)
@@ -34,29 +34,23 @@ export const HelloSuperAdmin = ({ children }) => {
             </AdminCont>
             <div>
                <InternBox>
-                  <p className="Interns">Interns</p>
-                  <UiButton>+ New intern</UiButton>
+                  <p className="Interns">Groups</p>
+                  <UiButton>+ New group</UiButton>
                </InternBox>
                <InputBox>
-                  <UiInputStyled
-                     placeholder="search name"
-                     type="text"
-                     InputProps={{
-                        startAdornment: <SearchIcon />,
-                     }}
-                  />
+                  <Input>
+                     <UiInputStyled
+                        colors="#FFFF"
+                        placeholder="search name"
+                        type="text"
+                     />
+                     <Icons>
+                        <SearchIcon />
+                     </Icons>
+                  </Input>
                   <div className="contsort">
                      <p className="sort">Sort by</p>
                      <FormControlStyled size="medium">
-                        <InputLabel
-                           className="status"
-                           id="demo-select-small-label"
-                           style={{
-                              marginTop: selectedValue ? '0px' : '-12px',
-                           }}
-                        >
-                           Status
-                        </InputLabel>
                         <SelectStyled
                            open={isSelectOpen}
                            onClose={handleSelectClose}
@@ -75,10 +69,8 @@ export const HelloSuperAdmin = ({ children }) => {
                                  <DownIconStyled isOpen={isSelectOpen} />
                               </SelectIcon>
                            )}
-                           labelId="demo-select-small-label"
-                           id="demo-select-small"
-                           label="status"
                         >
+                           <MenuItem value="Status">Status</MenuItem>
                            <MenuItem value={10}>Ten</MenuItem>
                            <MenuItem value={20}>Twenty</MenuItem>
                            <MenuItem value={30}>Thirty</MenuItem>
@@ -93,12 +85,21 @@ export const HelloSuperAdmin = ({ children }) => {
    )
 }
 
+const Input = styled('div')`
+   display: flex;
+`
+const Icons = styled(IconButton)`
+   position: relative;
+   right: 190px;
+   bottom: 3px;
+`
+
 const Container = styled('div')({
    width: '100%',
    height: '100vh',
    background: '#1E1F22',
    padding: '1rem',
-   paddingTop: '3rem',
+   paddingTop: '1rem',
 })
 
 const ContIntern = styled('div')({
@@ -113,6 +114,8 @@ const AdminCont = styled('div')({
    display: 'flex',
    justifyContent: 'end',
    paddingBottom: '2rem',
+   paddingTop: '1rem',
+
    '.adminText': {
       width: '18.1875rem',
       height: '2.5rem',
@@ -160,6 +163,10 @@ const UiInputStyled = styled(UiInput)({
          background: 'transparent',
       },
    },
+   border: '1px solid #FFFF',
+   borderRadius: '0.625rem',
+   paddingLeft: '2rem',
+   colors: '#FFFFFF',
 })
 
 const FormControlStyled = styled(FormControl)({
