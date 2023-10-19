@@ -1,32 +1,15 @@
 import styled from '@emotion/styled'
-import React, { useState } from 'react'
-import { HelloSuperAdmin } from '../Interns/HelloSuperAdmin'
+import React from 'react'
+import { NewInterns } from '../Interns/NewInterns'
 import { TableStudents } from '../UI/table/TableStudents'
 import { array, headerArray } from '../../utils/table-students'
 
 export const Interns = () => {
-   const [openPayModal, setOpenPayModal] = useState(false)
-
-   const onOpenPayModalHandler = () => {
-      setOpenPayModal(true)
-   }
-   const onClosePayModalHandler = () => {
-      setOpenPayModal(false)
-   }
    return (
       <Container>
-         <div>
-            <HelloSuperAdmin
-               onClosePayModalHandler={onClosePayModalHandler}
-               openPayModal={openPayModal}
-            >
-               <TableStudents
-                  onOpenPayModalHandler={onOpenPayModalHandler}
-                  array={array}
-                  headerArray={headerArray}
-               />
-            </HelloSuperAdmin>
-         </div>
+         <NewInterns>
+            <TableStudents array={array} headerArray={headerArray} />
+         </NewInterns>
       </Container>
    )
 }

@@ -18,7 +18,29 @@ const DateCalendarStyled = styled(DateCalendar)({
    background: '#252335',
    borderRadius: '1rem',
    color: '#FFFFFF',
-   marginTop: '5rem',
+   marginTop: '6rem',
+   marginLeft: '1rem',
+   width: '23.75rem',
+   marginBottom: '3rem',
+   '& .css-1vs7z2v-MuiYearCalendar-root': {
+      width: '23.75rem',
+      '&::-webkit-scrollbar ': {
+         width: '0.3rem',
+      },
+      '&::-webkit-scrollbar-track': {
+         backgroundColor: ' #fff white',
+      },
+      '&::-webkit-scrollbar-thumb ': {
+         backgroundColor: ' #fff',
+         borderRadius: '0.25rem',
+      },
+   },
+   '& .css-i5q14k-MuiDayCalendar-header': {
+      justifyContent: 'space-evenly',
+   },
+   '& .css-flbe84-MuiDayCalendar-weekContainer': {
+      justifyContent: 'space-evenly',
+   },
    '& .css-1u23akw-MuiButtonBase-root-MuiPickersDay-root': {
       color: '#FFFFFF !important',
    },
