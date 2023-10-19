@@ -13,7 +13,6 @@ export const InternsAddStudentModal = () => {
                      <InputBox>
                         <label htmlFor="name">Name</label>
                         <UiInputStyle
-                           fontsize="1rem"
                            background="#252335"
                            width="32vw"
                            borderradius="0.625rem"
@@ -26,7 +25,6 @@ export const InternsAddStudentModal = () => {
                      <InputBox>
                         <label htmlFor="surname">Surname</label>
                         <UiInputStyle
-                           fontsize="1rem"
                            background="#252335"
                            width="32vw"
                            borderradius="0.625rem"
@@ -39,7 +37,6 @@ export const InternsAddStudentModal = () => {
                      <InputBox>
                         <label htmlFor="email">Email</label>
                         <UiInputStyle
-                           fontsize="1rem"
                            background="#252335"
                            width="32vw"
                            borderradius="0.625rem"
@@ -52,7 +49,6 @@ export const InternsAddStudentModal = () => {
                      <InputBox>
                         <label htmlFor="phone">Phone number</label>
                         <UiInputStyle
-                           fontsize="1rem"
                            background="#252335"
                            width="32vw"
                            borderradius="0.625rem"
@@ -97,7 +93,7 @@ export const InternsAddStudentModal = () => {
                            backgroundColor="#252335"
                            backgroundhover="#28263a"
                            border="1px solid #fff"
-                           fontsize="1.25rem"
+                           fontSize="1.25rem"
                            type="button"
                         >
                            Mentor
@@ -110,7 +106,7 @@ export const InternsAddStudentModal = () => {
                            backgroundColor="#252335"
                            backgroundhover="#28263a"
                            border="1px solid #fff"
-                           fontsize="1.25rem"
+                           fontSize="1.25rem"
                            type="button"
                         >
                            Group
@@ -123,7 +119,6 @@ export const InternsAddStudentModal = () => {
 
                      <div className="box">
                         <UiInputStyle
-                           fontsize="1rem"
                            background="#252335"
                            width="7.4vw"
                            borderradius="0.625rem"
@@ -141,7 +136,7 @@ export const InternsAddStudentModal = () => {
                         backgroundColor="#252335"
                         backgroundhover="#28263a"
                         border="1px solid #fff"
-                        fontsize="1.25rem"
+                        fontSize="1.25rem"
                         type="button"
                      >
                         Cancel
@@ -150,7 +145,7 @@ export const InternsAddStudentModal = () => {
                         backgroundColor="#252335"
                         backgroundhover="#28263a"
                         border="1px solid #fff"
-                        fontsize="1.25rem"
+                        fontSize="1.25rem"
                         type="button"
                      >
                         Save
@@ -218,6 +213,7 @@ const ContainerSelect = styled('div')`
 
 const UiInputStyle = styled(UiInput)`
    padding: 0;
+   font-size: 1rem;
 `
 
 const BoxSelect = styled('div')`

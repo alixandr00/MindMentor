@@ -1,11 +1,7 @@
 import { AdminLayout } from './layout/AdminLayout'
 
 function App() {
-   return (
-      <div>
-         <AdminLayout />
-      </div>
-   )
+   return <AdminLayout />
 }
 
 export default App

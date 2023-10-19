@@ -1,9 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@200;300;400;500;600;700&family=Poppins:wght@400;500;600;700&family=Raleway:wght@700&display=swap');
+
 * {
    margin: 0;
    padding: 0;
    box-sizing: border-box;
 }
+
 li {
    list-style: none;
 }
@@ -28,21 +30,20 @@ body {
    );
 }
 
-/* HTML: <div class="loader"></div> */
 .loader {
-   --d: 80px;
-   width: 24px;
-   height: 24px;
+   --d: 60px;
+   width: 10px;
+   height: 10px;
    border-radius: 50%;
-   color: #000000;
+   color: rgba(84, 71, 170, 0.93);
    box-shadow:
       calc(1 * var(--d)) calc(0 * var(--d)) 0 0,
-      calc(0.707 * var(--d)) calc(0.707 * var(--d)) 0 4px,
-      calc(0 * var(--d)) calc(1 * var(--d)) 0 5px,
-      calc(-0.707 * var(--d)) calc(0.707 * var(--d)) 0 6px,
-      calc(-1 * var(--d)) calc(0 * var(--d)) 0 7px,
-      calc(-0.707 * var(--d)) calc(-0.707 * var(--d)) 0 8px,
-      calc(0 * var(--d)) calc(-1 * var(--d)) 0 9px,
+      calc(0.707 * var(--d)) calc(0.707 * var(--d)) 0 1px,
+      calc(0 * var(--d)) calc(1 * var(--d)) 0 2px,
+      calc(-0.707 * var(--d)) calc(0.707 * var(--d)) 0 3px,
+      calc(-1 * var(--d)) calc(0 * var(--d)) 0 4px,
+      calc(-0.707 * var(--d)) calc(-0.707 * var(--d)) 0 5px,
+      calc(0 * var(--d)) calc(-1 * var(--d)) 0 6px,
       calc(0.707 * var(--d)) calc(-0.62 * var(--d)) 0 -2px;
    animation: loader 1s infinite steps(8);
 }
