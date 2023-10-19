@@ -34,6 +34,11 @@ export const InternsAddStudentModalSelect = ({
          >
             <SelectStyle
                name={name}
+               sx={{
+                  '.MuiOutlinedInput-notchedOutline': {
+                     border: '0 !important',
+                  },
+               }}
                value={value}
                onClose={handleSelectClose}
                onOpen={handleSelectOpen}
@@ -51,8 +56,8 @@ export const InternsAddStudentModalSelect = ({
                         setIsSelectOpen(!isSelectOpen)
                      }}
                   >
-                     <UpIconStyled isOpen={isSelectOpen} />
-                     <DownIconStyled isOpen={isSelectOpen} />
+                     <UpIconStyled open={isSelectOpen} />
+                     <DownIconStyled open={isSelectOpen} />
                   </SelectIcon>
                )}
             >
@@ -70,9 +75,8 @@ export const InternsAddStudentModalSelect = ({
 const Container = styled('div')(() => ({}))
 
 const FormControlStyle = styled(FormControl)(() => ({
-   ul: {
-      border: '1px solid #fff',
-   },
+   border: '1px solid #fff',
+   borderRadius: '0.625rem',
 }))
 
 const SelectStyle = styled(Select)(() => ({
@@ -84,7 +88,6 @@ const SelectStyle = styled(Select)(() => ({
       },
 
    backgroundColor: '#252335',
-   border: '1px solid #fff',
    borderRadius: '0.625rem',
 
    color: '#FFF',
@@ -93,14 +96,6 @@ const SelectStyle = styled(Select)(() => ({
    fontStyle: 'normal',
    fontWeight: '500',
    lineHeight: 'normal',
-
-   '& .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input':
-      {
-         paddingLeft: 0,
-         paddingRight: 0,
-         paddingTop: 0,
-         paddingBottom: 0,
-      },
 }))
 
 const MenuItemStyle = styled(MenuItem)`
@@ -127,9 +122,9 @@ const SelectIcon = styled('div')({
 })
 
 const UpIconStyled = styled(UpIcon)((props) => ({
-   display: props.isOpen ? 'block' : 'none',
+   display: props.open ? 'block' : 'none',
 }))
 
 const DownIconStyled = styled(DownIcon)((props) => ({
-   display: props.isOpen ? 'none' : 'block',
+   display: props.open ? 'none' : 'block',
 }))

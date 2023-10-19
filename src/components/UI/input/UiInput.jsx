@@ -34,7 +34,11 @@ export const UiInput = forwardRef(
       return (
          <div>
             <InputOutlained
-               {...props}
+               sx={{
+                  '.MuiOutlinedInput-notchedOutline': {
+                     border: '0 !important',
+                  },
+               }}
                value={value}
                onChange={onChange}
                error={error}

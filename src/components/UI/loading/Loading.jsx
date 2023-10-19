@@ -12,7 +12,7 @@ export const Loading = () => {
 const Container = styled('div')`
    height: 100vh;
    position: fixed;
-   z-index: 9999;
+   z-index: 999;
    right: 0;
    bottom: 0;
    top: 0;
