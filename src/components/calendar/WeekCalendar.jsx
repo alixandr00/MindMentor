@@ -109,7 +109,7 @@ export const WeekCalendar = ({ month }) => {
 }
 
 const TabelStyled = styled('table')({
-   width: '49rem',
+   width: '43.2rem',
    maxHeight: '40rem',
    overflowY: 'scroll',
    marginLeft: '7rem',

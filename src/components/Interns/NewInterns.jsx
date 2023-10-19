@@ -135,13 +135,10 @@ const InternBox = styled('div')({
       lineHeight: '2.5rem',
    },
 })
-
 const InputBox = styled('div')({
    display: 'flex',
    justifyContent: 'space-between',
-   '.sort': {
-      color: '#FFFFFF',
-   },
+   '.sort': { color: '#FFFFFF' },
    '.contsort': {
       display: 'flex',
       justifyContent: 'center',
@@ -149,7 +146,6 @@ const InputBox = styled('div')({
       gap: '1rem',
    },
 })
-
 const UiInputStyled = styled(UiInput)({
    width: '12.25rem',
    '& .MuiInputBase-input': {
@@ -157,50 +153,36 @@ const UiInputStyled = styled(UiInput)({
       background: 'transparent',
    },
    '& .Mui-focused': {
-      '& .MuiInputBase-input': {
-         background: 'transparent',
-      },
+      '& .MuiInputBase-input': { background: 'transparent' },
    },
    border: '1px solid #FFFF',
    borderRadius: '0.625rem',
    paddingLeft: '2rem',
    colors: '#FFFFFF',
 })
-
 const FormControlStyled = styled(FormControl)({
    position: 'relative',
-   '& label': {
-      color: 'white',
-      marginTop: '-12px',
-   },
+   '& label': { color: 'white', marginTop: '-12px' },
 })
-
 const SelectStyled = styled(Select)({
    '&.MuiOutlinedInput-root': {
       width: '6.375rem',
       height: '1.875rem',
       borderRadius: '0.5rem',
       color: 'white',
-      fieldset: {
-         borderColor: '#D0D0D0',
-      },
+      fieldset: { borderColor: '#D0D0D0' },
       '&:hover fieldset': {
          borderColor: '#8d8c8c',
       },
-      '&.Mui-focused fieldset': {
-         borderColor: '#0079BF',
-      },
+      '&.Mui-focused fieldset': { borderColor: '#0079BF' },
    },
 })
-
 const UpIconStyled = styled(UpIcon)((props) => ({
    display: props.isOpen ? 'block' : 'none',
 }))
-
 const DownIconStyled = styled(DownIcon)((props) => ({
    display: props.isOpen ? 'none' : 'block',
 }))
-
 const SelectIcon = styled('div')({
    position: 'absolute',
    right: '0.5rem',
