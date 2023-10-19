@@ -9,10 +9,24 @@ import { useState } from 'react'
 import { UiButton } from '../UI/button/UiButton'
 import { UiInput } from '../UI/input/UiInput'
 import { DownIcon, SearchIcon, UpIcon } from '../../assets/icons'
+import { HistoryModal } from './internsModal/HistoryModal'
+import { PayModal } from './internsModal/PayModal'
 
-export const HelloSuperAdmin = ({ children }) => {
+export const HelloSuperAdmin = ({
+   children,
+   onClosePayModalHandler,
+   openPayModal,
+}) => {
    const [isSelectOpen, setIsSelectOpen] = useState(false)
    const [selectedValue, setSelectedValue] = useState('')
+   const [openModal, setOpenModal] = useState(false)
+
+   const onOpenModalHandler = () => {
+      setOpenModal(true)
+   }
+   const onCloseModalHandler = () => {
+      setOpenModal(false)
+   }
 
    const handleSelectOpen = () => {
       setIsSelectOpen(true)
@@ -35,7 +49,7 @@ export const HelloSuperAdmin = ({ children }) => {
             <div>
                <InternBox>
                   <p className="Interns">Interns</p>
-                  <UiButton>+ New intern</UiButton>
+                  <UiButton onClick={onOpenModalHandler}>+ New intern</UiButton>
                </InternBox>
                <InputBox>
                   <UiInputStyled
@@ -89,6 +103,16 @@ export const HelloSuperAdmin = ({ children }) => {
             </div>
          </ContIntern>
          {children}
+         {openModal ? (
+            <HistoryModal onCloseModalHandler={onCloseModalHandler} />
+         ) : (
+            ''
+         )}
+         {openPayModal ? (
+            <PayModal onClosePayModalHandler={onClosePayModalHandler} />
+         ) : (
+            ''
+         )}
       </Container>
    )
 }
