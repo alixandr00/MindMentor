@@ -30,7 +30,7 @@ export const TableStudents = ({ array, headerArray }) => {
             const mockData = array
             setData(mockData)
             setLoading(false)
-         }, 1500) // Simulated delay of 2 seconds
+         }, 1000) // Simulated delay of 2 seconds
       }
       fetchData()
    }, [])

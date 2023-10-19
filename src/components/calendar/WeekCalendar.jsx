@@ -33,8 +33,10 @@ export const WeekCalendar = ({ month }) => {
       '08:00',
       '09:00',
       '10:00',
+      '11:00',
+      '12:00',
    ]
-   const timeBefore123 = Array.from({ length: 10 })
+   const timeBefore123 = Array.from({ length: 12 })
 
    const cellStyle = {
       border: '1px solid white',
@@ -107,8 +109,9 @@ export const WeekCalendar = ({ month }) => {
 }
 
 const TabelStyled = styled('table')({
-   width: '33rem',
-   height: '30rem',
+   width: '49rem',
+   maxHeight: '40rem',
+   overflowY: 'scroll',
    marginLeft: '7rem',
    marginTop: '5rem',
 })
@@ -117,8 +120,8 @@ const TimeStyled = styled('div')({
    position: 'absolute',
    display: 'flex',
    flexDirection: 'column',
-   gap: '1.07rem',
-   left: '24rem',
+   gap: '1.5rem',
+   left: '27rem',
    top: '12.3rem',
    color: '#FFFF',
    fontSize: '1.1rem',

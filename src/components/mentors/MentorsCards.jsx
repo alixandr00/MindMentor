@@ -33,7 +33,7 @@ const Container = styled('div')(() => ({
    display: 'flex',
    flexWrap: 'wrap',
    gap: '1.31rem',
-   maxHeight: '30rem',
+   maxHeight: '67vh',
    overflowY: 'auto',
    scrollbarWidth: 'thin',
    scrollbarColor: ' #b3b3b30 transparent',
