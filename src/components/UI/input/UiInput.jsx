@@ -92,7 +92,7 @@ const InputOutlained = styled(OutlinedInput)(
       border: `1px solid ${bordercolor}`,
       '.MuiInputBase-input': {
          color: colors,
-         padding: props.classpadding === 'true' && '3px 14px',
+         padding: props.classpadding === 'true' && '3px 1.5rem 3px 10px',
       },
 
       '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': {
@@ -104,6 +104,6 @@ const InputOutlained = styled(OutlinedInput)(
 
 const StyleIconButton = styled(IconButton)`
    position: absolute;
-   left: 26.25rem;
+   left: 25rem;
    right: 0.4rem;
 `

@@ -1,16 +1,28 @@
 import { styled } from '@mui/material'
 import React from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import { ReactComponent as Settings } from '../../../assets/icons/setting-2.svg'
 import { ReactComponent as LogOut } from '../../../assets/icons/login.svg'
 import { sideBarArray } from '../../../utils/sidebar'
+import { logOut } from '../../../store/auth/auth.thunk'
 
 export const SideBar = () => {
+   const dispatch = useDispatch()
+   const navigate = useNavigate()
+
+   const onLogOutHandler = () => {
+      navigate('/')
+
+      dispatch(logOut())
+      window.location.reload()
+   }
+
    return (
       <Container>
          <div>
             <TitleContainer>
-               <Title>MindMento</Title>
+               <Title>MindMentor</Title>
             </TitleContainer>
          </div>
          <DescriptionContainer>
@@ -29,7 +41,7 @@ export const SideBar = () => {
          </DescriptionContainer>
 
          <SettingsAndLogOut>
-            <BlockLogOut>
+            <BlockLogOut onClick={onLogOutHandler}>
                <LogOutStyled />
                <p>Log Out</p>
             </BlockLogOut>

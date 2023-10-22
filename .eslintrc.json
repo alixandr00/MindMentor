@@ -21,6 +21,7 @@
       "consistent-return": "off",
       "no-param-reassign": "off",
       "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+      "import/no-cycle": "off",
       "react/jsx-props-no-spreading": "off",
       "react/prop-types": "off",
       "react/react-in-jsx-scope": "off",
