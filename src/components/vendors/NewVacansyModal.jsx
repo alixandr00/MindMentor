@@ -1,10 +1,53 @@
+import React, { useState } from 'react'
 import { styled } from '@mui/material'
-import React from 'react'
+import { useDispatch } from 'react-redux'
 import { UiInput } from '../UI/input/UiInput'
 import { UiModal } from '../UI/modal/UiModal'
 import { UiButton } from '../UI/button/UiButton'
+import { addNewCartThunk } from '../../store/vendors/vendors.thunk'
 
 export const VendorsModal = ({ onCloseModalHandler }) => {
+   const dispatch = useDispatch()
+   const [valueName, setValueName] = useState('')
+   const [valueEmail, setValueEmail] = useState('')
+   const [valueAdress, setValueAdress] = useState('')
+   const [valueNum, setValueNum] = useState('')
+   const [valueDesc, setValueDesc] = useState('')
+
+   const onChangeValue = (e) => {
+      setValueName(e.target.value)
+   }
+   const onChangeEmail = (e) => {
+      setValueEmail(e.target.value)
+   }
+   const onChangeAdress = (e) => {
+      setValueAdress(e.target.value)
+   }
+   const onChangeNum = (e) => {
+      setValueNum(e.target.value)
+   }
+   const onChangeDesc = (e) => {
+      setValueDesc(e.target.value)
+   }
+
+   const addNewUserCards = () => {
+      const data = {
+         name: valueName,
+         address: valueAdress,
+         email: valueEmail,
+         contact_number: valueNum,
+         about_company: 'njknkj',
+         vacancy: 1,
+         user: 1,
+      }
+      dispatch(addNewCartThunk(data))
+      setValueName('')
+      setValueEmail('')
+      setValueAdress('')
+      setValueNum('')
+      setValueDesc('')
+   }
+
    return (
       <ModalComponent
          open
@@ -21,6 +64,8 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
             <div>
                <InputTitle>Company Name</InputTitle>
                <UiInput
+                  value={valueName}
+                  onChange={onChangeValue}
                   background="#252335"
                   width="30.8125rem"
                   height="2.0625rem"
@@ -33,6 +78,8 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
             <div>
                <InputTitle>Email</InputTitle>
                <UiInput
+                  value={valueEmail}
+                  onChange={onChangeEmail}
                   background="#252335"
                   width="30.8125rem"
                   height="2.0625rem"
@@ -45,6 +92,8 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
             <div>
                <InputTitle>Address</InputTitle>
                <UiInput
+                  value={valueAdress}
+                  onChange={onChangeAdress}
                   background="#252335"
                   width="30.8125rem"
                   height="2.0625rem"
@@ -57,6 +106,8 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
             <div>
                <InputTitle>Phone Number</InputTitle>
                <UiInput
+                  value={valueNum}
+                  onChange={onChangeNum}
                   background="#252335"
                   width="30.8125rem"
                   height="2.0625rem"
@@ -69,6 +120,8 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
             <div>
                <InputTitle>More about company</InputTitle>
                <UiInput
+                  value={valueDesc}
+                  onChange={onChangeDesc}
                   className="custom-width-input"
                   multiline
                   rows={3.5}
@@ -86,10 +139,12 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
                   border="1px solid #F9F9F9"
                   borderRadius="0.625rem"
                   background="#252335"
+                  onClick={onCloseModalHandler}
                >
-                  Delete
+                  Close
                </UiButton>
                <UiButton
+                  onClick={addNewUserCards}
                   width="5.375rem"
                   height="2.0625rem"
                   border="1px solid #F9F9F9"

@@ -68,8 +68,9 @@ export const NewVendorModal = ({ onCloseModalHandlerVacansy }) => {
                   border="1px solid #F9F9F9"
                   borderRadius="0.625rem"
                   background="#252335"
+                  onClick={onCloseModalHandlerVacansy}
                >
-                  Delete
+                  Close
                </UiButton>
                <UiButton
                   width="5.375rem"
