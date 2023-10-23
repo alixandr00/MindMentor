@@ -4,10 +4,11 @@ import { UiInput } from '../UI/input/UiInput'
 import { UiModal } from '../UI/modal/UiModal'
 import { UiButton } from '../UI/button/UiButton'
 
-export const VendorsModal = () => {
+export const VendorsModal = ({ onCloseModalHandler }) => {
    return (
       <ModalComponent
          open
+         onClose={onCloseModalHandler}
          width="60.4375rem"
          height="47.1875rem"
          border="1px solid #fff"

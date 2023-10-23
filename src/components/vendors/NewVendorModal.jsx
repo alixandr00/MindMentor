@@ -5,10 +5,11 @@ import { UiInput } from '../UI/input/UiInput'
 import { UiButton } from '../UI/button/UiButton'
 import { ReactComponent as Icon } from '../../assets/images/Ellipse 5 (1).svg'
 
-export const NewVendorModal = () => {
+export const NewVendorModal = ({ onCloseModalHandlerVacansy }) => {
    return (
       <ModalComponent
          open
+         onClose={onCloseModalHandlerVacansy}
          width="60.4375rem"
          height="47.1875rem"
          border="1px solid #fff"

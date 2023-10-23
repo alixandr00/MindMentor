@@ -12,32 +12,32 @@ const CustomCalendarIcon = styled(ScheduleIcon)({
 
 export const sideBarArray = [
    {
-      path: '/interns',
+      path: '/admin/interns',
       icons: <Interns />,
       title: 'Interns',
    },
    {
-      path: '/vendors',
+      path: '/admin/vendors',
       icons: <Bag />,
       title: 'Vendors',
    },
    {
-      path: '/groups',
+      path: '/admin/groups',
       icons: <Arrange />,
       title: 'Groups',
    },
    {
-      path: '/mentors',
+      path: '/admin/mentors',
       icons: <User />,
       title: 'Mentors',
    },
    {
-      path: '/events',
+      path: '/admin/events',
       icons: <Events />,
       title: 'Events',
    },
    {
-      path: '/schedule',
+      path: '/admin/schedule',
       icons: <CustomCalendarIcon />,
       title: 'Schedule',
    },

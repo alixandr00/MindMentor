@@ -13,8 +13,14 @@ export const NewVendors = ({ children }) => {
    const onOpenModalHandler = () => {
       setOpenModalVendors(true)
    }
+   const onCloseModalHandler = () => {
+      setOpenModalVendors(false)
+   }
    const onOpenModalHandlerVacansy = () => {
       setOpenModalVacansy(true)
+   }
+   const onCloseModalHandlerVacansy = () => {
+      setOpenModalVacansy(false)
    }
    return (
       <Container>
@@ -50,8 +56,18 @@ export const NewVendors = ({ children }) => {
             </div>
          </ContIntern>
          {children}
-         {openModalVendors ? <VendorsModal /> : ''}
-         {openModalVacansy ? <NewVendorModal /> : ''}
+         {openModalVendors ? (
+            <VendorsModal onCloseModalHandler={onCloseModalHandler} />
+         ) : (
+            ''
+         )}
+         {openModalVacansy ? (
+            <NewVendorModal
+               onCloseModalHandlerVacansy={onCloseModalHandlerVacansy}
+            />
+         ) : (
+            ''
+         )}
       </Container>
    )
 }
