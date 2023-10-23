@@ -11,6 +11,7 @@ export const SignInPage = () => {
    const { token, isLoading } = useSelector((state) => state.auth)
    const [username, setUsername] = useState('')
    const [password, setPassword] = useState('')
+   const [validForm, setValidForm] = useState(false)
 
    const onSubmitHandler = (e) => {
       e.preventDefault()
@@ -22,11 +23,15 @@ export const SignInPage = () => {
          }
 
          dispatch(signIn({ data, snackbar: showSnackbar }))
+
+         setValidForm(false)
       } else {
          showSnackbar({
             message: 'Bce поле должны быть заполнены',
             severity: 'warning',
          })
+
+         setValidForm(true)
       }
    }
 
@@ -46,6 +51,7 @@ export const SignInPage = () => {
                   placeholder="LOGIN"
                   onChange={(e) => setUsername(e.target.value)}
                   value={username}
+                  error={validForm && username === ''}
                />
                <InputStyle
                   placeholder="PASSWORD"
@@ -53,6 +59,7 @@ export const SignInPage = () => {
                   classpadding="true"
                   onChange={(e) => setPassword(e.target.value)}
                   value={password}
+                  error={validForm && password === ''}
                />
             </ContainerInputs>
             <ButtonStyled type="submit">
@@ -95,17 +102,17 @@ const ContainerForm = styled('form')({
    alignItems: 'center',
 })
 
-const InputStyle = styled(UiInput)({
+const InputStyle = styled(UiInput)(({ error }) => ({
    width: '27.6875rem',
    height: '2.5rem',
    borderRadius: '0.625rem',
-   border: '1px solid #FFF',
+   border: `1px solid ${error === true ? '#f00' : '#fff'}`,
 
    background: '#1E1F22',
    '& .MuiInputBase-input': {
       color: '#fff',
    },
-})
+}))
 
 const SignInText = styled('h1')({
    color: '#FFF',

@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom'
+import { Navigate, createBrowserRouter } from 'react-router-dom'
 import App from '../App'
 import { adminRoutes } from './AdminRoutes'
 import { SignInPage } from '../components/signIn/SignInPage'
@@ -42,5 +42,9 @@ export const router = createBrowserRouter([
             component={<ManagerLayout />}
          />
       ),
+   },
+   {
+      path: '*',
+      element: <Navigate to="/" />,
    },
 ])
