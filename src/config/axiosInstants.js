@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { BASE_URL } from '../utils/common/constants/globalConstants'
-// import { logOut } from '../store/auth/auth.thunk'
 
 const headers = {
    'Content-Type': 'application/json',
@@ -24,10 +23,13 @@ axiosInstance.interceptors.request.use((config) => {
    if (token) {
       updatedConfig.headers.Authorization = `Basic ${token}`
    }
+
    return updatedConfig
 })
 
-const logOut = () => {}
+const logOut = () => {
+   // store.dispatch()
+}
 
 axiosInstance.interceptors.response.use(
    (response) => {
@@ -35,7 +37,7 @@ axiosInstance.interceptors.response.use(
    },
    (error) => {
       if (error.response.status === 401) {
-         store.dispatch(logOut())
+         logOut()
       }
       return Promise.reject(error)
    }
