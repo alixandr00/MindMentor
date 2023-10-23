@@ -1,9 +1,21 @@
+import { useState } from 'react'
 import { IconButton, styled } from '@mui/material'
 import { UiButton } from '../UI/button/UiButton'
 import { UiInput } from '../UI/input/UiInput'
 import { SearchIcon } from '../../assets/icons'
+import { VendorsModal } from './NewVacansyModal'
+import { NewVendorModal } from './NewVendorModal'
 
 export const NewVendors = ({ children }) => {
+   const [openModalVendors, setOpenModalVendors] = useState(false)
+   const [openModalVacansy, setOpenModalVacansy] = useState(false)
+
+   const onOpenModalHandler = () => {
+      setOpenModalVendors(true)
+   }
+   const onOpenModalHandlerVacansy = () => {
+      setOpenModalVacansy(true)
+   }
    return (
       <Container>
          <ContIntern>
@@ -26,11 +38,20 @@ export const NewVendors = ({ children }) => {
                         <SearchIcon />
                      </Icons>
                   </Input>
-                  <UiButtonStyled>+ New vendor</UiButtonStyled>
+                  <ButtonBlock>
+                     <ButtonStyled onClick={onOpenModalHandler}>
+                        + New Vacancy
+                     </ButtonStyled>
+                     <UiButtonStyled onClick={onOpenModalHandlerVacansy}>
+                        + New vendor
+                     </UiButtonStyled>
+                  </ButtonBlock>
                </InputBox>
             </div>
          </ContIntern>
          {children}
+         {openModalVendors ? <VendorsModal /> : ''}
+         {openModalVacansy ? <NewVendorModal /> : ''}
       </Container>
    )
 }
@@ -115,3 +136,10 @@ const UiInputStyled = styled(UiInput)({
 const UiButtonStyled = styled(UiButton)({
    width: '8rem',
 })
+const ButtonStyled = styled(UiButton)({
+   width: '8.5rem',
+})
+const ButtonBlock = styled('div')`
+   display: flex;
+   gap: 1rem;
+`
