@@ -7,27 +7,27 @@ import { Vendors } from '../components/modules/Vendors'
 
 export const adminRoutes = [
    {
-      path: '/interns',
+      path: 'interns',
       element: <Interns />,
    },
    {
-      path: '/vendors',
+      path: 'vendors',
       element: <Vendors />,
    },
    {
-      path: '/groups',
+      path: 'groups',
       element: <Groups />,
    },
    {
-      path: '/mentors',
+      path: 'mentors',
       element: <Mentors />,
    },
    {
-      path: '/events',
+      path: 'events',
       element: <Events />,
    },
    {
-      path: '/schedule',
+      path: 'schedule',
       element: <Schedule />,
    },
 ]

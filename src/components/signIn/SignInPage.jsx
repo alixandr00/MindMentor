@@ -1,19 +1,84 @@
-import { styled } from '@mui/material'
-import React from 'react'
+import { CircularProgress, styled } from '@mui/material'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { UiInput } from '../UI/input/UiInput'
 import { UiButton } from '../UI/button/UiButton'
+import { showSnackbar } from '../UI/snackbar/Snackbar'
+import { profile, signIn } from '../../store/auth/auth.thunk'
 
 export const SignInPage = () => {
+   const dispatch = useDispatch()
+   const { token, isLoading } = useSelector((state) => state.auth)
+   const [username, setUsername] = useState('')
+   const [password, setPassword] = useState('')
+   const [validForm, setValidForm] = useState(false)
+
+   const onSubmitHandler = (e) => {
+      e.preventDefault()
+
+      if (username !== '' && password !== '') {
+         const data = {
+            username,
+            password,
+         }
+
+         dispatch(signIn({ data, snackbar: showSnackbar }))
+
+         setValidForm(false)
+      } else {
+         showSnackbar({
+            message: 'Bce поле должны быть заполнены',
+            severity: 'warning',
+         })
+
+         setValidForm(true)
+      }
+   }
+
+   useEffect(() => {
+      if (token !== '') {
+         dispatch(profile())
+      }
+   }, [token])
+
    return (
       <WrapperContainer>
-         <ContainerForm>
-            <SignInText>MindMento</SignInText>
+         <ContainerForm onSubmit={onSubmitHandler}>
+            <SignInText>MindMentor</SignInText>
 
             <ContainerInputs>
-               <InputStyle placeholder="LOGIN" />
-               <InputStyle placeholder="PASSWORD" type="password" />
+               <InputStyle
+                  placeholder="LOGIN"
+                  onChange={(e) => setUsername(e.target.value)}
+                  value={username}
+                  error={validForm && username === ''}
+               />
+               <InputStyle
+                  placeholder="PASSWORD"
+                  type="password"
+                  classpadding="true"
+                  onChange={(e) => setPassword(e.target.value)}
+                  value={password}
+                  error={validForm && password === ''}
+               />
             </ContainerInputs>
-            <ButtonStyled>LOGIN</ButtonStyled>
+            <ButtonStyled type="submit">
+               {isLoading ? (
+                  <CircularProgress
+                     size={24}
+                     sx={{
+                        color: '#fff',
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        marginTop: '-12px',
+                        marginLeft: '-12px',
+                     }}
+                  />
+               ) : (
+                  'SIGN IN'
+               )}
+            </ButtonStyled>
          </ContainerForm>
       </WrapperContainer>
    )
@@ -37,17 +102,17 @@ const ContainerForm = styled('form')({
    alignItems: 'center',
 })
 
-const InputStyle = styled(UiInput)({
+const InputStyle = styled(UiInput)(({ error }) => ({
    width: '27.6875rem',
    height: '2.5rem',
    borderRadius: '0.625rem',
-   border: '1px solid #FFF',
+   border: `1px solid ${error === true ? '#f00' : '#fff'}`,
 
    background: '#1E1F22',
    '& .MuiInputBase-input': {
       color: '#fff',
    },
-})
+}))
 
 const SignInText = styled('h1')({
    color: '#FFF',
