@@ -294,13 +294,13 @@ const StyledTableContainer = styled(TableContainer)`
 `
 const StyledTableRowOne = styled(TableRow)`
    &:nth-child(even) {
-      width: 100px;
+      width: 100%;
       background-color: #1a227e1a;
    }
 `
 const StyledTableRow = styled(TableRow)`
    &:nth-of-type(even) {
-      width: 100px;
+      width: 100%;
    }
    border: none;
    :hover {
