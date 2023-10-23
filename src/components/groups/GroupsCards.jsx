@@ -1,32 +1,45 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { styled } from '@mui/material'
-import { groupsCards } from '../../utils/general'
 import { NotesIcon, PeopleIcon, ProgressIcon } from '../../assets/icons'
+import { getGroups } from '../../store/groups/groupThunk'
+import { Loading } from '../UI/loading/Loading'
 
 export const GroupsCards = () => {
+   const { groups, isLoading } = useSelector((state) => state.groups)
+   console.log('groups: ', groups)
+   const dispatch = useDispatch()
+
+   useEffect(() => {
+      dispatch(getGroups())
+   }, [dispatch])
+
    return (
       <Container>
-         {groupsCards.map((card) => (
+         {isLoading && <Loading />}
+         {groups?.map((card) => (
             <ContainerCards key={card.id}>
-               <CompanyNameText>{card.companyName}</CompanyNameText>
+               <CompanyNameText>{card.name}</CompanyNameText>
                <WrapperMain>
                   <MainContainers>
                      <IconWrapper>
                         <ProgressIcon />
                      </IconWrapper>
-                     <CardTexts>{card.progress}</CardTexts>
+                     <CardTexts>{card.status}</CardTexts>
                   </MainContainers>
                   <MainContainers>
                      <IconWrapper>
                         <PeopleIcon />
                      </IconWrapper>
-                     <CardTexts>{card.peoples}</CardTexts>
+                     <CardTexts>{card.people} people</CardTexts>
                   </MainContainers>
                   <MainContainers>
                      <IconWrapper>
                         <NotesIcon />
                      </IconWrapper>
-                     <CardTexts>{card.data}</CardTexts>
+                     <CardTexts>
+                        {card.start_date}/{card.end_date}
+                     </CardTexts>
                   </MainContainers>
                </WrapperMain>
             </ContainerCards>
@@ -38,8 +51,8 @@ export const GroupsCards = () => {
 const Container = styled('div')(() => ({
    marginTop: '2rem',
    width: '100%',
-   // height: '100%',
    display: 'flex',
+   cursor: 'pointer',
    flexWrap: 'wrap',
    gap: '1.31rem',
    maxHeight: '68vh',
@@ -67,7 +80,7 @@ const ContainerCards = styled('div')(() => ({
    transition: 'transform 0.3s, background 0.3s',
    '&:hover': {
       background: 'linear-gradient(7.1875deg, #49318C, #3F5FB0)',
-      transform: 'scale(1.05)',
+      // transform: 'scale(1.01)',
    },
 }))
 const CompanyNameText = styled('p')({

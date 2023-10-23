@@ -1,21 +1,14 @@
 import { styled } from '@mui/material'
 import React from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { NavLink } from 'react-router-dom'
 import { ReactComponent as Settings } from '../../../assets/icons/setting-2.svg'
 import { ReactComponent as LogOut } from '../../../assets/icons/login.svg'
 import { sideBarArray } from '../../../utils/sidebar'
 import { logOut } from '../../../store/auth/auth.thunk'
 
 export const SideBar = () => {
-   const dispatch = useDispatch()
-   const navigate = useNavigate()
-
    const onLogOutHandler = () => {
-      navigate('/')
-
-      dispatch(logOut())
-      window.location.reload()
+      logOut()
    }
 
    return (

@@ -9,10 +9,12 @@ import { useState } from 'react'
 import { UiButton } from '../UI/button/UiButton'
 import { UiInput } from '../UI/input/UiInput'
 import { DownIcon, SearchIcon, UpIcon } from '../../assets/icons'
+import { CreateGroupModal } from './CreateGroupModal'
 
 export const NewGroups = ({ children }) => {
    const [isSelectOpen, setIsSelectOpen] = useState(false)
    const [selectedValue, setSelectedValue] = useState('Status')
+   const [openCreateGroupModal, setOpenCreateGroupModal] = useState(false)
 
    const handleSelectOpen = () => {
       setIsSelectOpen(true)
@@ -25,6 +27,9 @@ export const NewGroups = ({ children }) => {
    const handleSelectChange = (event) => {
       setSelectedValue(event.target.value)
    }
+   const openCloseModalHandler = () => {
+      setOpenCreateGroupModal((prev) => !prev)
+   }
 
    return (
       <Container>
@@ -35,7 +40,15 @@ export const NewGroups = ({ children }) => {
             <div>
                <InternBox>
                   <p className="Interns">Groups</p>
-                  <UiButton>+ New group</UiButton>
+                  <UiButton onClick={openCloseModalHandler}>
+                     + New group
+                  </UiButton>
+                  {openCreateGroupModal ? (
+                     <CreateGroupModal
+                        openModal={openCreateGroupModal}
+                        oncloseModal={openCloseModalHandler}
+                     />
+                  ) : null}
                </InternBox>
                <InputBox>
                   <Input>
