@@ -291,6 +291,7 @@ const StyleTableBody = styled(TableBody)({
 const StyledTableContainer = styled(TableContainer)`
    width: 100%;
    border-radius: 10px;
+   margin-top: 2rem;
 `
 const StyledTableRowOne = styled(TableRow)`
    &:nth-child(even) {

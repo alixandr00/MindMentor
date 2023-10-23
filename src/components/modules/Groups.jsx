@@ -1,13 +1,11 @@
 import React from 'react'
 import { GroupsCards } from '../groups/GroupsCards'
-import { HelloSuperAdmin } from '../Interns/HelloSuperAdmin'
+import { NewGroups } from '../groups/NewGroups'
 
 export const Groups = () => {
    return (
-      <div>
-         <HelloSuperAdmin>
-            <GroupsCards />
-         </HelloSuperAdmin>
-      </div>
+      <NewGroups>
+         <GroupsCards />
+      </NewGroups>
    )
 }

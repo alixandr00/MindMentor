@@ -18,7 +18,11 @@ import { ReactComponent as CommentIcon } from '../../../assets/icons/Comment.svg
 import { ReactComponent as NextIcon } from '../../../assets/icons/NextIcon.svg'
 import { ReactComponent as PrevIcon } from '../../../assets/icons/PrevIcon.svg'
 
-export const TableStudents = ({ array, headerArray }) => {
+export const TableStudents = ({
+   array,
+   headerArray,
+   onOpenPayModalHandler,
+}) => {
    const [data, setData] = useState([])
    const [loading, setLoading] = useState(true)
    const [currentPage, setCurrentPage] = useState(1)
@@ -30,7 +34,7 @@ export const TableStudents = ({ array, headerArray }) => {
             const mockData = array
             setData(mockData)
             setLoading(false)
-         }, 1500) // Simulated delay of 2 seconds
+         }, 1000) // Simulated delay of 2 seconds
       }
       fetchData()
    }, [])
@@ -183,7 +187,7 @@ export const TableStudents = ({ array, headerArray }) => {
                            </StyledTableCellForData>
                            <StyledTableCellForData align="center">
                               <IconButton>
-                                 <CommentIcon />
+                                 <CommentIcon onClick={onOpenPayModalHandler} />
                               </IconButton>
                            </StyledTableCellForData>
                            <StyledTableCellForData align="center">

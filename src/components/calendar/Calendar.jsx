@@ -1,20 +1,14 @@
-import {
-   FormControl,
-   InputLabel,
-   MenuItem,
-   Select,
-   styled,
-} from '@mui/material'
+import { FormControl, MenuItem, Select, styled } from '@mui/material'
 import React, { useState } from 'react'
 import 'react-calendar/dist/Calendar.css'
-import { DownIcon, LeftIcon, UpIcon } from '../../assets/icons'
+import { DownIcon, UpIcon } from '../../assets/icons'
 import { WeekCalendar } from './WeekCalendar'
 import { UiButton } from '../UI/button/UiButton'
 import { BasicDateCalendar } from './DateCalendar'
 
 export const MyCalendar = () => {
    const [isSelectOpen, setIsSelectOpen] = useState(false)
-   const [selectedValue, setSelectedValue] = useState('')
+   const [selectedValue, setSelectedValue] = useState('Month')
    const [date, setDate] = useState(null)
 
    const monthNames = [
@@ -52,31 +46,26 @@ export const MyCalendar = () => {
                <div className="box">
                   <p className="textCalendarAndToday">Calendar</p>
                   <p className="textCalendarAndToday">Today</p>
-                  <LeftIconStyledd />
                </div>
                {currentMonth ? (
                   <div className="textMonth">
-                     <p className="currents">
-                        <span>{currentMonth}</span>
-                        <span>{currentYear}</span>
-                     </p>
+                     <div className="currents">
+                        <p>{currentMonth}</p>
+                        <p>{currentYear}</p>
+                     </div>
                   </div>
                ) : (
-                  <p className="textMonth">October 2023</p>
+                  <div className="textMonth">
+                     <div className="currents">
+                        <p>October</p>
+                        <p>2023</p>
+                     </div>
+                  </div>
                )}
 
                <div className="sortText">
                   <p>sort by</p>
                   <FormControlStyled size="medium">
-                     <InputLabel
-                        className="status"
-                        id="demo-select-small-label"
-                        style={{
-                           marginTop: selectedValue ? '0' : '-12px',
-                        }}
-                     >
-                        Month
-                     </InputLabel>
                      <SelectStyled
                         open={isSelectOpen}
                         onClose={handleSelectClose}
@@ -95,9 +84,6 @@ export const MyCalendar = () => {
                               <DownIconStyled isOpen={isSelectOpen} />
                            </SelectIcon>
                         )}
-                        labelId="demo-select-small-label"
-                        id="demo-select-small"
-                        label="status"
                      >
                         <MenuItem value="Month">Month</MenuItem>
                         <MenuItem value="Week">Week</MenuItem>
@@ -131,31 +117,29 @@ const Header = styled('div')({
    display: 'flex',
    color: 'white',
    '.currents': {
+      gap: '1.3rem',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      gap: '0.5rem',
    },
    '.textCalendarAndToday': {
       fontSize: '2rem',
    },
    '.box': {
       display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
       gap: '3rem',
       marginLeft: '3rem',
    },
    '.textMonth': {
       fontSize: '2rem',
-      marginLeft: '11rem',
+      marginLeft: '17rem',
       marginTop: '0.5rem',
    },
    '.sortText': {
       display: 'flex',
       alignItems: 'center',
-      marginLeft: '4rem',
-      gap: '2rem',
+      marginLeft: '7rem',
+      gap: '3rem',
       marginTop: '0.5rem',
    },
 })
@@ -200,18 +184,12 @@ const DownIconStyled = styled(DownIcon)((props) => ({
    display: props.isOpen ? 'none' : 'block',
 }))
 
-const LeftIconStyledd = styled(LeftIcon)({
-   position: 'relative',
-   right: '2.5rem',
-   top: '0.8rem',
-})
-
 const UiButtonStyled = styled(UiButton)({
-   width: '20.75rem',
+   width: '23.75rem',
    height: '6rem',
    borderRadius: '1.875rem',
    background: '#252335',
-   marginLeft: '0.5rem',
+   marginLeft: '0.7rem',
    marginTop: '1rem',
    fontSize: '2.25rem',
    fontWeight: 700,
