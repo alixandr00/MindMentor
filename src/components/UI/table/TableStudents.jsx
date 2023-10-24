@@ -11,62 +11,92 @@ import {
    IconButton,
    styled,
 } from '@mui/material'
+// eslint-disable-next-line import/no-duplicates
+import { useSelector } from 'react-redux'
+// eslint-disable-next-line import/no-duplicates
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { ReactComponent as History } from '../../../assets/icons/History.svg'
 import { ReactComponent as DeleteIcon } from '../../../assets/icons/deleteicon.svg'
 import { ReactComponent as EditIcon } from '../../../assets/icons/editIcon.svg'
 import { ReactComponent as CommentIcon } from '../../../assets/icons/Comment.svg'
 import { ReactComponent as NextIcon } from '../../../assets/icons/NextIcon.svg'
 import { ReactComponent as PrevIcon } from '../../../assets/icons/PrevIcon.svg'
+import { fetchInterns } from '../../../store/interns/internsThunk'
 
-export const TableStudents = ({
-   array,
-   headerArray,
-   onOpenPayModalHandler,
-}) => {
+export const TableStudents = ({ headerArray, onOpenPayModalHandler }) => {
+   const dispatch = useDispatch()
+   const interns = useSelector((state) => state.interns.interns)
+   const loading = useSelector((state) => state.interns.loading)
+   const error = useSelector((state) => state.interns.error)
    const [data, setData] = useState([])
-   const [loading, setLoading] = useState(true)
+   const [loadings, setLoadings] = useState(true)
    const [currentPage, setCurrentPage] = useState(1)
 
+   const navigate = useNavigate()
    useEffect(() => {
-      const fetchData = () => {
-         setTimeout(() => {
-            // Simulated data
-            const mockData = array
-            setData(mockData)
-            setLoading(false)
-         }, 1000) // Simulated delay of 2 seconds
+      const fetchData = async () => {
+         dispatch(fetchInterns()) // Fetch data when the component mounts
       }
+
       fetchData()
-   }, [])
+   }, [dispatch])
+
+   useEffect(() => {
+      // Set the data when interns are available
+      if (interns?.results) {
+         setData(interns.results)
+      }
+
+      // Set loading to false after data is available
+      setLoadings(false)
+   }, [interns])
 
    const recordsPerPage = 5
    const lastIndex = currentPage * recordsPerPage
    const firstIndex = lastIndex - recordsPerPage
-   const records = data.slice(firstIndex, lastIndex)
-   const npage = Math.ceil(data.length / recordsPerPage)
+   const records = data?.slice(firstIndex, lastIndex)
+   const dd = data?.length
+   const npage = Math.ceil(dd / recordsPerPage)
+
+   console.log(interns?.results)
+
+   if (loading === 'loading') {
+      return <div>Loading...</div>
+   }
+
+   if (error) {
+      return <div>Error: {error}</div>
+   }
 
    function prevPage() {
-      setLoading(true) // Set loading state to true when starting the loading process
+      setLoadings(true)
       setTimeout(() => {
          if (currentPage !== 1) {
             setCurrentPage(currentPage - 1)
          }
-         setLoading(false) // Set loading state to false after loading is done
+         setLoadings(false)
       }, 1500)
    }
 
    function nextPage() {
-      setLoading(true) // Set loading state to true when starting the loading process
+      setLoadings(true)
       setTimeout(() => {
          if (currentPage !== npage) {
             setCurrentPage(currentPage + 1)
          }
-         setLoading(false) // Set loading state to false after loading is done
+         setLoadings(false)
       }, 1500)
+   }
+   const onOpenModalHandler = (e, id) => {
+      // e.preventDefault()
+
+      console.log(id, 'jnknkjnj')
+      navigate(`details/${id}`)
    }
 
    return (
-      <>
+      <div>
          <StyledTableContainer component={Paper}>
             <Table>
                <TableHead>
@@ -75,7 +105,7 @@ export const TableStudents = ({
                         All interns
                      </StyledTableCell>
                   </TableRow>
-                  {headerArray.map((headerArray) => (
+                  {headerArray?.map((headerArray) => (
                      <TableRow>
                         <StyledTableCell>{headerArray.name}</StyledTableCell>
                         <StyledTableCell align="center">
@@ -100,7 +130,7 @@ export const TableStudents = ({
                   ))}
                </TableHead>
                <StyleTableBody>
-                  {loading ? (
+                  {loadings ? (
                      <>
                         <StyledTableRowOne>
                            <StyledTableCellForData colSpan={7}>
@@ -149,13 +179,19 @@ export const TableStudents = ({
                         </StyledTableRowOne>
                      </>
                   ) : (
-                     records.map((item) => (
-                        <StyledTableRow key={item.id}>
+                     records?.map((intern) => (
+                        <StyledTableRow
+                           key={intern.id}
+                           onClick={(e) => {
+                              onOpenModalHandler(e.preventDefault(), intern?.id)
+                              console.log(intern?.id, 'ids')
+                           }}
+                        >
                            <StyledTableCellForData>
-                              {item.name}
+                              {intern.name} {intern.surname}
                            </StyledTableCellForData>
                            <StyledTableCellForData align="center">
-                              <p className={item.group}>{item.group}</p>
+                              <p className={intern.surname}>{intern.surname}</p>
                            </StyledTableCellForData>
                            <StyledTableCellForData
                               align="center"
@@ -163,27 +199,27 @@ export const TableStudents = ({
                            >
                               <p
                                  className={
-                                    item.techStack === 'Project Manager'
+                                    intern.tech_stack === 'Project Manager'
                                        ? 'ProjectManager'
-                                       : item.techStack
+                                       : intern.tech_stack
                                  }
                               >
-                                 {item.techStack}
+                                 {intern.tech_stack}
                               </p>
                            </StyledTableCellForData>
                            <StyledTableCellForData align="center">
                               <p
                                  className={
-                                    item.status === 'in progress'
+                                    intern.status === 'in progress'
                                        ? 'inprogress'
-                                       : item.status
+                                       : intern.status
                                  }
                               >
-                                 {item.status}
+                                 {intern.status}
                               </p>
                            </StyledTableCellForData>
                            <StyledTableCellForData align="center">
-                              {item.mentor}
+                              {intern.mentor}
                            </StyledTableCellForData>
                            <StyledTableCellForData align="center">
                               <IconButton>
@@ -232,7 +268,7 @@ export const TableStudents = ({
                </StyledUl>
             </nav>
          </StyledContainer>
-      </>
+      </div>
    )
 }
 
@@ -297,7 +333,7 @@ const StyleTableBody = styled(TableBody)({
 })
 
 const StyledTableContainer = styled(TableContainer)`
-   width: 100%;
+   width: 65vw;
    border-radius: 10px;
    margin-top: 2rem;
 `

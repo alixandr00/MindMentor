@@ -1,3 +1,4 @@
+import { TableStudentsDetails } from '../components/UI/table/TabelStudentsDetails'
 import { Events } from '../components/modules/Events'
 import { Groups } from '../components/modules/Groups'
 import { Interns } from '../components/modules/Interns'
@@ -9,6 +10,12 @@ export const adminRoutes = [
    {
       path: 'interns',
       element: <Interns />,
+      children: [
+         {
+            path: 'details/:id',
+            element: <TableStudentsDetails />,
+         },
+      ],
    },
    {
       path: 'vendors',
