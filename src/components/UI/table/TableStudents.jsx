@@ -168,15 +168,18 @@ export const TableStudents = ({ headerArray, onOpenPayModalHandler }) => {
                      </>
                   ) : (
                      records?.map((intern) => (
-                        <StyledTableRow
-                           key={intern.id}
-                           onClick={(e) => {
-                              onOpenModalHandler(e.preventDefault(), intern?.id)
-                              console.log(intern?.id, 'ids')
-                           }}
-                        >
-                           <StyledTableCellForData>
-                              {intern.name} {intern.surname}
+                        <StyledTableRow key={intern.id}>
+                           <StyledTableCellForData
+                              onClick={(e) => {
+                                 onOpenModalHandler(
+                                    e.preventDefault(),
+                                    intern?.id
+                                 )
+                              }}
+                           >
+                              <p className="internName">
+                                 {intern.name} {intern.surname}
+                              </p>
                            </StyledTableCellForData>
                            <StyledTableCellForData align="center">
                               <p className={intern.surname}>{intern.surname}</p>
@@ -360,6 +363,9 @@ const StyledTableCellForData = styled(TableCell)`
    color: white;
    font-size: 1rem;
    border: none;
+   .internName {
+      cursor: pointer;
+   }
 `
 
 const StyledSpan = styled('span')`
