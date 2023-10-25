@@ -22,10 +22,16 @@ export const DateOfCartDetail = ({ setSelectedDate, selectedDate }) => {
 const DateStyle = styled('div')`
    .MuiOutlinedInput-root {
       width: 11rem;
+      border: 1px solid #fff;
+      height: 2.0625rem;
+      padding-left: 1rem;
+      border-radius: 0.625rem;
+      background-color: rgba(84, 71, 170, 0.93);
    }
    .MuiOutlinedInput-notchedOutline {
       border: none;
    }
+
    .MuiInputLabel-root {
       display: none;
    }

@@ -1,21 +1,26 @@
+/* eslint-disable camelcase */
 import React, { useState } from 'react'
 import { styled } from '@mui/material'
 import dayjs from 'dayjs'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { UiModal } from '../UI/modal/UiModal'
 import { UiInput } from '../UI/input/UiInput'
 import { UiButton } from '../UI/button/UiButton'
 import { ReactComponent as Icon } from '../../assets/images/Ellipse 5 (1).svg'
-import { editVacancyThunk } from '../../store/vendors/vendors.thunk'
+import {
+   editVacancyThunk,
+   getVacansyInfo,
+} from '../../store/vendors/vendors.thunk'
 import { DateOfCartDetail } from '../UI/dateOfCartDetail/DateOfCartDetail'
 import { showSnackbar } from '../UI/snackbar/Snackbar'
 
 export const EditVacancyModal = ({ onCloseModalHandlerVacansy, id }) => {
    const dispatch = useDispatch()
-
+   const { vacansyGet } = useSelector((state) => state.vendor)
+   console.log(vacansyGet)
    const [selectedLevel, setSelectedLevel] = useState('Junior')
    const [value, setValue] = useState('')
-   const [description, setDescription] = useState()
+   const [description, setDescription] = useState('')
    const [selectedDate, setSelectedDate] = useState('')
    const formattedDate = dayjs(selectedDate).format('YYYY-MM-DD')
 
@@ -48,6 +53,7 @@ export const EditVacancyModal = ({ onCloseModalHandlerVacansy, id }) => {
                severity: 'success',
             })
             onCloseModalHandlerVacansy()
+            dispatch(getVacansyInfo())
          })
          .catch(() => {
             showSnackbar({
@@ -56,6 +62,7 @@ export const EditVacancyModal = ({ onCloseModalHandlerVacansy, id }) => {
             })
          })
    }
+
    return (
       <ModalComponent
          open
@@ -130,7 +137,7 @@ export const EditVacancyModal = ({ onCloseModalHandlerVacansy, id }) => {
                   background="#252335"
                   onClick={onCloseModalHandlerVacansy}
                >
-                  Close
+                  Сancel
                </UiButton>
                <UiButton
                   width="5.375rem"

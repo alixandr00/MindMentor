@@ -6,13 +6,16 @@ import { UiModal } from '../UI/modal/UiModal'
 import { UiInput } from '../UI/input/UiInput'
 import { UiButton } from '../UI/button/UiButton'
 import { ReactComponent as Icon } from '../../assets/images/Ellipse 5 (1).svg'
-import { addNewVacancy } from '../../store/vendors/vendors.thunk'
+import {
+   addNewVacancy,
+   getVacansyInfo,
+} from '../../store/vendors/vendors.thunk'
 import { DateOfCartDetail } from '../UI/dateOfCartDetail/DateOfCartDetail'
 import { showSnackbar } from '../UI/snackbar/Snackbar'
 
 export const NewVendorModal = ({ onCloseModalHandlerVacansy }) => {
    const dispatch = useDispatch()
-   const [selectedLevel, setSelectedLevel] = useState('')
+   const [selectedLevel, setSelectedLevel] = useState('Junior')
    const [value, setValue] = useState('')
    const [description, setDescription] = useState('')
    const [selectedDate, setSelectedDate] = useState('')
@@ -48,6 +51,7 @@ export const NewVendorModal = ({ onCloseModalHandlerVacansy }) => {
                severity: 'success',
             })
             onCloseModalHandlerVacansy()
+            dispatch(getVacansyInfo())
          })
          .catch(() => {
             showSnackbar({
@@ -130,7 +134,7 @@ export const NewVendorModal = ({ onCloseModalHandlerVacansy }) => {
                   background="#252335"
                   onClick={onCloseModalHandlerVacansy}
                >
-                  Close
+                  Сancel
                </UiButton>
                <UiButton
                   width="5.375rem"

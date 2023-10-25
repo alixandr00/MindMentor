@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import { styled } from '@mui/material'
 import { GmailIcon, LocationIcon, PhoneIcon } from '../../assets/icons'
 import { ReactComponent as Delete } from '../../assets/icons/deleteicon.svg'
@@ -11,7 +11,7 @@ import { showSnackbar } from '../UI/snackbar/Snackbar'
 
 export const VendorsCards = () => {
    const dispatch = useDispatch()
-   const navigate = useNavigate()
+   const location = useLocation()
    const { vendorsGetCart } = useSelector((state) => state.vendor)
 
    const [openDeleteModal, setOpenDeleteModal] = useState(false)
@@ -32,7 +32,6 @@ export const VendorsCards = () => {
                message: 'Успешно удалено!',
                severity: 'success',
             })
-            navigate('/admin/vendors')
          } else {
             showSnackbar({
                message:
@@ -58,15 +57,20 @@ export const VendorsCards = () => {
                   <ImageCards imageUrl={card.image} />
                   <CompanyName>{card.name}</CompanyName>
 
-                  <DeleteIconContainer
-                     onClick={() => {
-                        setSelectedId(card?.id)
-                        onOpenDeleteModalHandler()
-                     }}
-                     className="delete-icon"
-                  >
-                     <Delete />
-                  </DeleteIconContainer>
+                  {location.pathname.includes(
+                     `vendorsDetail/${card.id}`
+                  ) ? null : (
+                     <DeleteIconContainer
+                        onClick={(e) => {
+                           e.preventDefault()
+                           setSelectedId(card?.id)
+                           onOpenDeleteModalHandler()
+                        }}
+                        className="delete-icon"
+                     >
+                        <Delete />
+                     </DeleteIconContainer>
+                  )}
                </CardHead>
 
                <CardMain>

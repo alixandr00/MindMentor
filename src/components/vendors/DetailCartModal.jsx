@@ -3,20 +3,24 @@ import React, { useEffect } from 'react'
 import { styled } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import CloseIcon from '@mui/icons-material/Close'
+import { useNavigate, useParams } from 'react-router-dom'
 import { ReactComponent as Square } from '../../assets/icons/Square Arrow Right Up.svg'
 import { UiModal } from '../UI/modal/UiModal'
 import { getVacansyDetail } from '../../store/vendors/vendors.thunk'
 import { ReactComponent as Calendar } from '../../assets/icons/Calendar Date.svg'
 
-export const DetailCartModal = ({ onCloseDetailVacancyModal, id = 16 }) => {
+export const DetailCartModal = () => {
    const dispatch = useDispatch()
+   const param = useParams()
+   const navigate = useNavigate()
 
    const { level, creation_date, requirements_vacancy } = useSelector(
       (state) => state.vendor.vacansyGetDetail
    )
+   const { vendorsGetCart } = useSelector((state) => state.vendor)
 
    useEffect(() => {
-      dispatch(getVacansyDetail(id))
+      dispatch(getVacansyDetail(param.id))
    }, [])
    return (
       <Modal
@@ -25,11 +29,17 @@ export const DetailCartModal = ({ onCloseDetailVacancyModal, id = 16 }) => {
          borderRadius="0.625rem"
          backgroundColor="rgba(84, 71, 170, 0.93)"
          open
-         onClose={onCloseDetailVacancyModal}
       >
          <Childe>
             <Title>JavaScript Developer</Title>
-            <CloseIconStyle onClick={onCloseDetailVacancyModal} />
+            {vendorsGetCart.map((el) => (
+               <CloseIconStyle
+                  key={el.id}
+                  onClick={() =>
+                     navigate(`/admin/vendors/vendorsDetail/${el.id}`)
+                  }
+               />
+            ))}
          </Childe>
          <BlockArrow>
             <Square />

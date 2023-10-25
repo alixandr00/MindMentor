@@ -157,7 +157,7 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
                   background="#252335"
                   onClick={onCloseModalHandler}
                >
-                  Close
+                  Сancel
                </UiButton>
                <UiButton
                   onClick={addNewUserCards}

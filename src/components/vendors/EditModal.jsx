@@ -5,7 +5,10 @@ import { styled } from '@mui/material'
 import { UiInput } from '../UI/input/UiInput'
 import { UiModal } from '../UI/modal/UiModal'
 import { UiButton } from '../UI/button/UiButton'
-import { editDetailCart } from '../../store/vendors/vendors.thunk'
+import {
+   editDetailCart,
+   getVendorsDetailCart,
+} from '../../store/vendors/vendors.thunk'
 import { showSnackbar } from '../UI/snackbar/Snackbar'
 
 export const EditModal = ({ onCloseEditModal }) => {
@@ -51,6 +54,7 @@ export const EditModal = ({ onCloseEditModal }) => {
                message: 'Данные о студенте успешно обнавлены!',
                severity: 'success',
             })
+            dispatch(getVendorsDetailCart(id))
             onCloseEditModal()
             setValueName('')
             setValueEmail('')
@@ -160,7 +164,7 @@ export const EditModal = ({ onCloseEditModal }) => {
                   background="#252335"
                   onClick={onCloseEditModal}
                >
-                  Close
+                  Сancel
                </UiButton>
                <UiButton
                   onClick={editUserCards}

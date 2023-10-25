@@ -5,6 +5,7 @@ import { Mentors } from '../components/modules/Mentors'
 import { Schedule } from '../components/modules/Schedule'
 import { Vendors } from '../components/modules/Vendors'
 import { DetailCart } from '../components/vendors/DetailCart'
+import { DetailCartModal } from '../components/vendors/DetailCartModal'
 
 export const adminRoutes = [
    {
@@ -18,6 +19,12 @@ export const adminRoutes = [
          {
             path: 'vendorsDetail/:id',
             element: <DetailCart />,
+            children: [
+               {
+                  path: 'modal/:id',
+                  element: <DetailCartModal />,
+               },
+            ],
          },
       ],
    },
