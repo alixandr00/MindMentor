@@ -35,7 +35,7 @@ export const NewInterns = ({ children }) => {
             <div>
                <InternBox>
                   <p className="Interns">Interns</p>
-                  <UiButton>+ New intern</UiButton>
+                  <UiButton onClick={{}}>+ New intern</UiButton>
                </InternBox>
                <InputBox>
                   <Input>
