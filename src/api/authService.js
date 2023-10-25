@@ -7,3 +7,10 @@ export const signInRequest = (data) => {
 export const profileRequest = () => {
    return axiosInstance.get(`/api/v1/profile/`)
 }
+
+export const internsStudents = () => {
+   return axiosInstance.get(`/interns/`)
+}
+export const internsStudentsDetails = (id) => {
+   return axiosInstance.get(`/interns/${id}/`)
+}
