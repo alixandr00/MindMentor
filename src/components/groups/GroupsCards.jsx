@@ -7,7 +7,6 @@ import { Loading } from '../UI/loading/Loading'
 
 export const GroupsCards = () => {
    const { groups, isLoading } = useSelector((state) => state.groups)
-   console.log('groups: ', groups)
    const dispatch = useDispatch()
 
    useEffect(() => {

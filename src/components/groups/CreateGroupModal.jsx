@@ -1,59 +1,157 @@
-import React from 'react'
+import React, { useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
-import { styled } from '@mui/material'
+import { IconButton, styled } from '@mui/material'
 import { LocalizationProvider } from '@mui/x-date-pickers'
+// import { useSearchParams } from 'react-router-dom'
+import dayjs from 'dayjs'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-
+import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { UiModal } from '../UI/modal/UiModal'
 import { UiInput } from '../UI/input/UiInput'
 import { UiButton } from '../UI/button/UiButton'
+import 'dayjs/locale/en'
+import { AddedInternsModal } from './AddedInternsModal'
+
+dayjs.extend(customParseFormat)
+dayjs.locale('en')
 
 export const CreateGroupModal = ({ openModal, oncloseModal }) => {
+   const [openModalInterns, setOpenModalInterns] = useState(false)
+
+   const [groupName, setGroupName] = useState('')
+   const [status, setStatus] = useState('')
+   const [startData, setStartData] = useState(null)
+   const [endData, setEndData] = useState(null)
+
+   const handleFormSubmit = (event) => {
+      event.preventDefault()
+      const formattedStartData = dayjs(startData).format('YYYY-MM-DD')
+      const formattedEndData = dayjs(endData).format('YYYY-MM-DD')
+
+      const formData = {
+         name: groupName,
+         status,
+         start_date: formattedStartData,
+         end_date: formattedEndData,
+         people: [1, 2],
+      }
+
+      console.log(formData)
+   }
+   const openModalHandler = () => {
+      setOpenModalInterns(true)
+      // setOpenModalInterns({ added: 'Interns' })
+   }
+   const closeModalHandler = () => {
+      setOpenModalInterns(false)
+
+      // openModalInterns.delete('added')
+      // setOpenModalInterns(openModalInterns)
+   }
+   // const internsModalOpen = openModalInterns.has('added')
+
    return (
       <UiModal open={openModal} onClose={oncloseModal}>
          <Container>
-            <CloseIconBlock onClick={oncloseModal}>
-               <CloseIcon />
-            </CloseIconBlock>
-            <FirstWrapper>
-               <GroupText>Group Name</GroupText>
-               <UiInputStyled placeholder="group name" />
-            </FirstWrapper>
-            <SecondWrapper>
-               <UiButtonStyled>Group</UiButtonStyled>
-            </SecondWrapper>
-            <ThirdWrapper>
-               <StatusText>Status</StatusText>
-               <WrapperButtons>
-                  <StatusButtonsStyled>ACTIVE</StatusButtonsStyled>
-                  <StatusButtonsStyled>INACTIVE</StatusButtonsStyled>
-                  <StatusButtonsStyled>FINISHED</StatusButtonsStyled>
-               </WrapperButtons>
-               <WrapperData>
-                  <StyleBlockCalendar>
-                     <DataTexts>Start data</DataTexts>
-                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker />
-                     </LocalizationProvider>
-                  </StyleBlockCalendar>
-                  <StyleBlockCalendar>
-                     <DataTexts>End data</DataTexts>
-                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker />
-                     </LocalizationProvider>
-                  </StyleBlockCalendar>
-               </WrapperData>
-               <ButtonWrapper>
-                  <ButtonsStyled>Cancel</ButtonsStyled>
-                  <ButtonsStyled>Save</ButtonsStyled>
-               </ButtonWrapper>
-            </ThirdWrapper>
+            <IconButtonStyled onClick={oncloseModal}>
+               <CloseIconBlock>
+                  <CloseIcon />
+               </CloseIconBlock>
+            </IconButtonStyled>
+            <form onSubmit={handleFormSubmit}>
+               <FirstWrapper>
+                  <GroupText>Group Name</GroupText>
+                  <UiInputStyled
+                     placeholder="group name"
+                     value={groupName}
+                     onChange={(e) => setGroupName(e.target.value)}
+                     type="text"
+                  />
+               </FirstWrapper>
+               <SecondWrapper>
+                  <UiButtonStyled onClick={openModalHandler}>
+                     Group
+                  </UiButtonStyled>
+                  {openModalInterns ? (
+                     <AddedInternsModal
+                        openModal={openModalHandler}
+                        oncloseModal={closeModalHandler}
+                     />
+                  ) : null}
+               </SecondWrapper>
+               <ThirdWrapper>
+                  <StatusText>Status</StatusText>
+                  <WrapperButtons>
+                     <StatusButtonsStyled
+                        onClick={() => setStatus('ACTIVE')}
+                        style={{
+                           backgroundColor:
+                              status === 'ACTIVE'
+                                 ? 'rgba(84, 71, 170, 0.93)'
+                                 : 'transparent',
+                        }}
+                     >
+                        ACTIVE
+                     </StatusButtonsStyled>
+                     <StatusButtonsStyled
+                        onClick={() => setStatus('INACTIVE')}
+                        style={{
+                           backgroundColor:
+                              status === 'INACTIVE'
+                                 ? 'rgba(84, 71, 170, 0.93)'
+                                 : 'transparent',
+                        }}
+                     >
+                        INACTIVE
+                     </StatusButtonsStyled>
+                     <StatusButtonsStyled
+                        onClick={() => setStatus('FINISHED')}
+                        style={{
+                           backgroundColor:
+                              status === 'FINISHED'
+                                 ? 'rgba(84, 71, 170, 0.93)'
+                                 : 'transparent',
+                        }}
+                     >
+                        FINISHED
+                     </StatusButtonsStyled>
+                  </WrapperButtons>
+                  <WrapperData>
+                     <StyleBlockCalendar>
+                        <DataTexts>Start data</DataTexts>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                           <DatePicker
+                              value={startData}
+                              onChange={setStartData}
+                           />
+                        </LocalizationProvider>
+                     </StyleBlockCalendar>
+                     <StyleBlockCalendar>
+                        <DataTexts>End data</DataTexts>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                           <DatePicker value={endData} onChange={setEndData} />
+                        </LocalizationProvider>
+                     </StyleBlockCalendar>
+                  </WrapperData>
+                  <ButtonWrapper>
+                     <ButtonsStyled onClick={oncloseModal}>
+                        Cancel
+                     </ButtonsStyled>
+                     <ButtonsStyled type="submit">Save</ButtonsStyled>
+                  </ButtonWrapper>
+               </ThirdWrapper>
+            </form>
          </Container>
       </UiModal>
    )
 }
 
+const IconButtonStyled = styled(IconButton)({
+   position: 'absolute',
+   right: '1.3rem',
+   top: '1.3rem',
+})
 const Container = styled('div')({
    width: '55rem ',
    height: '40rem',
@@ -71,9 +169,7 @@ const CloseIconBlock = styled('div')`
    height: 1.5rem;
    border: 1px solid #fff;
    border-radius: 5px;
-   position: absolute;
-   right: 1.3rem;
-   top: 1.3rem;
+
    cursor: pointer;
    .MuiSvgIcon-root {
       width: 1rem;
@@ -143,14 +239,22 @@ const ThirdWrapper = styled('div')({
    flexDirection: 'column',
    gap: '0.5rem',
 })
-const UiButtonStyled = styled(UiButton)({
+const UiButtonStyled = styled('div')({
    borderRadius: '0.625rem',
    border: '1px solid #F9F9F9',
    background: '#252335',
    width: '6.25rem',
    height: '2.0625rem',
+   color: '#FFFFFF',
+   display: 'flex',
+   justifyContent: 'center',
+   alignItems: 'center',
+   cursor: 'pointer',
    '&:hover': {
       backgroundColor: 'rgba(84, 71, 170, 0.93)',
+   },
+   '&:active': {
+      backgroundColor: 'rgba(80, 72, 132, 0.93)',
    },
 })
 const StatusText = styled('h2')({
@@ -164,15 +268,20 @@ const WrapperButtons = styled('div')({
    gap: '2rem',
 })
 
-const StatusButtonsStyled = styled(UiButton)({
+const StatusButtonsStyled = styled('div')({
    borderRadius: '0.625rem',
    border: '1px solid #F9F9F9',
    background: '#252335',
+   color: '#FFF',
+   display: 'flex',
+   justifyContent: 'center',
+   alignItems: 'center',
    width: '6.25rem',
    height: '2.0625rem',
-   '&:hover': {
-      backgroundColor: 'rgba(84, 71, 170, 0.93)',
-   },
+   cursor: 'pointer',
+   // '& :hover': {
+   //    backgroundColor: 'rgba(84, 71, 170, 0.93)',
+   // },
 })
 const ButtonsStyled = styled(UiButton)({
    borderRadius: '0.625rem',

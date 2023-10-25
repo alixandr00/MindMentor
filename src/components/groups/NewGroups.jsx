@@ -5,6 +5,7 @@ import {
    Select,
    styled,
 } from '@mui/material'
+import { useSearchParams } from 'react-router-dom'
 import { useState } from 'react'
 import { UiButton } from '../UI/button/UiButton'
 import { UiInput } from '../UI/input/UiInput'
@@ -14,7 +15,7 @@ import { CreateGroupModal } from './CreateGroupModal'
 export const NewGroups = ({ children }) => {
    const [isSelectOpen, setIsSelectOpen] = useState(false)
    const [selectedValue, setSelectedValue] = useState('Status')
-   const [openCreateGroupModal, setOpenCreateGroupModal] = useState(false)
+   const [searchParams, setSearchParams] = useSearchParams()
 
    const handleSelectOpen = () => {
       setIsSelectOpen(true)
@@ -27,10 +28,14 @@ export const NewGroups = ({ children }) => {
    const handleSelectChange = (event) => {
       setSelectedValue(event.target.value)
    }
-   const openCloseModalHandler = () => {
-      setOpenCreateGroupModal((prev) => !prev)
+   const openModalHandler = () => {
+      setSearchParams({ create: 'Group' })
    }
-
+   const closeModalHandler = () => {
+      searchParams.delete('create')
+      setSearchParams(searchParams)
+   }
+   const openModal = searchParams.has('create')
    return (
       <Container>
          <ContIntern>
@@ -40,13 +45,11 @@ export const NewGroups = ({ children }) => {
             <div>
                <InternBox>
                   <p className="Interns">Groups</p>
-                  <UiButton onClick={openCloseModalHandler}>
-                     + New group
-                  </UiButton>
-                  {openCreateGroupModal ? (
+                  <UiButton onClick={openModalHandler}>+ New group</UiButton>
+                  {openModal ? (
                      <CreateGroupModal
-                        openModal={openCreateGroupModal}
-                        oncloseModal={openCloseModalHandler}
+                        openModal={openModalHandler}
+                        oncloseModal={closeModalHandler}
                      />
                   ) : null}
                </InternBox>
