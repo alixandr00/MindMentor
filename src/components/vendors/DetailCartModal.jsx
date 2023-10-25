@@ -1,11 +1,23 @@
-import React from 'react'
+/* eslint-disable camelcase */
+import React, { useEffect } from 'react'
 import { styled } from '@mui/material'
+import { useDispatch, useSelector } from 'react-redux'
+import CloseIcon from '@mui/icons-material/Close'
 import { ReactComponent as Square } from '../../assets/icons/Square Arrow Right Up.svg'
 import { UiModal } from '../UI/modal/UiModal'
-import { DateOfCartDetail } from '../UI/dateOfCartDetail/DateOfCartDetail'
-import { ReactComponent as Arrow } from '../../assets/icons/arrow-down.svg'
+import { getVacansyDetail } from '../../store/vendors/vendors.thunk'
+import { ReactComponent as Calendar } from '../../assets/icons/Calendar Date.svg'
 
-export const DetailCartModal = ({ onCloseDetailCarthandler }) => {
+export const DetailCartModal = ({ onCloseDetailVacancyModal, id = 16 }) => {
+   const dispatch = useDispatch()
+
+   const { level, creation_date, requirements_vacancy } = useSelector(
+      (state) => state.vendor.vacansyGetDetail
+   )
+
+   useEffect(() => {
+      dispatch(getVacansyDetail(id))
+   }, [])
    return (
       <Modal
          width="31.75rem"
@@ -13,26 +25,22 @@ export const DetailCartModal = ({ onCloseDetailCarthandler }) => {
          borderRadius="0.625rem"
          backgroundColor="rgba(84, 71, 170, 0.93)"
          open
-         onClose={onCloseDetailCarthandler}
+         onClose={onCloseDetailVacancyModal}
       >
          <Childe>
             <Title>JavaScript Developer</Title>
-            <Arrow onClick={onCloseDetailCarthandler} />
+            <CloseIconStyle onClick={onCloseDetailVacancyModal} />
          </Childe>
          <BlockArrow>
             <Square />
-            <p>Senior</p>
+            <p>{level}</p>
+            <Date>
+               <Calendar />
+               <p>{creation_date}</p>
+            </Date>
          </BlockArrow>
-         <DateOfCartDetail />
          <Desc>Описание</Desc>
-         <Description>
-            - Знание принципов ООП, шаблонов проектирования, SOLID; - C#, .NET
-            CORE 3.1 и выше, CORE MVC, WebAPi,Razor Pages,Entity Framework
-            Сore,LINQ, SignalR,Automapper - Javascript, Vanila JS,
-            jQuery,HTML,CSS - будет плюсом знание frontend фреймворка (React,Vue
-            JS,Angular) - RabbitMq,Linux, Git, REST,SOAP, oauth 2.0, identity
-            server 4 - Postgres SQL, Mongo DB Профессиональные навыки C#
-         </Description>
+         <Description>{requirements_vacancy}</Description>
       </Modal>
    )
 }
@@ -63,6 +71,7 @@ const Desc = styled('p')`
    color: #fff;
    font-size: 1rem;
    font-weight: 600;
+   margin-top: 2.25rem;
 `
 const Description = styled('p')`
    width: 25.625rem;
@@ -74,4 +83,14 @@ const Childe = styled('div')`
    display: flex;
    justify-content: space-between;
    margin-top: 1.19rem;
+`
+const Date = styled('div')`
+   display: flex;
+   gap: 0.4rem;
+   align-items: center;
+   margin-left: 1rem;
+`
+const CloseIconStyle = styled(CloseIcon)`
+   color: #fff;
+   cursor: pointer;
 `

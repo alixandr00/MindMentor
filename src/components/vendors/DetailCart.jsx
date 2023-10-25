@@ -2,7 +2,10 @@
 import { styled } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate, useParams } from 'react-router-dom'
 import CloseIcon from '@mui/icons-material/Close'
+import Pagination from '@mui/material/Pagination'
+import Stack from '@mui/material/Stack'
 import { ReactComponent as Message } from '../../assets/icons/message.svg'
 import { ReactComponent as Telephon } from '../../assets/icons/Tel.svg'
 import { ReactComponent as Location } from '../../assets/icons/Location.svg'
@@ -11,55 +14,133 @@ import { ReactComponent as Square } from '../../assets/icons/Square Arrow Right 
 import { ReactComponent as Arrow } from '../../assets/icons/arrow-down.svg'
 import { ReactComponent as Delete } from '../../assets/icons/deleteicon.svg'
 import { ReactComponent as Edit } from '../../assets/icons/editIcon.svg'
-import { DetailCartModal } from './DetailCartModal'
-import { DateOfCartDetail } from '../UI/dateOfCartDetail/DateOfCartDetail'
 import {
-   deleteUserCartThunk,
-   getDetailVendors,
+   deleteVacancyThunk,
+   deleteVendors,
+   getVacansyInfo,
+   getVendorsDetailCart,
 } from '../../store/vendors/vendors.thunk'
-import { UiModal } from '../UI/modal/UiModal'
-import { UiButton } from '../UI/button/UiButton'
+import { showSnackbar } from '../UI/snackbar/Snackbar'
+import { DetailCartModal } from './DetailCartModal'
+import { ReactComponent as Calendar } from '../../assets/icons/Calendar Date.svg'
+import { EditModal } from './EditModal'
+import { DeleteModal } from '../UI/deleteModal/DeleteModal'
+import { EditVacancyModal } from './EditVacancyModal'
 
-export const DetailCart = ({ onClosingHandler }) => {
+export const DetailCart = () => {
    const dispatch = useDispatch()
-   const { id, name, address, email, contact_number, about_company } =
-      useSelector((state) => state.vendor.vendorsDetailCart)
-   const [openDetailCart, setOpenDetailCart] = useState(false)
-   const [openDeleteModal, setOpenDeleteModal] = useState(false)
+   const navigate = useNavigate()
+   const param = useParams()
 
-   const onOpenDetailCarthandler = () => {
-      setOpenDetailCart(true)
+   const { id, name, email, contact_number, about_company, address } =
+      useSelector((state) => state.vendor.vendorsDetail)
+   const { vacansyGet } = useSelector((state) => state.vendor)
+
+   const [openDeleteModal, setOpenDeleteModal] = useState(false)
+   const [openDeleteVacancyModal, setOpenDeletevacancyModal] = useState(false)
+   const [openEditModal, setOpenEditModal] = useState(false)
+   const [openVacancyDetailModal, setOpenVacancyDetailModal] = useState(false)
+   const [openModalVacansy, setOpenModalVacansy] = useState(false)
+   const [getId, setGetId] = useState(null)
+   const [editId, setEditId] = useState(null)
+
+   const onCloseModalHandlerVacansy = () => {
+      setOpenModalVacansy(false)
    }
+   const onOpenModalHandlerVacansy = () => {
+      setOpenModalVacansy(true)
+   }
+
+   const onOpendeleteVacancyModal = () => {
+      setOpenDeletevacancyModal(true)
+   }
+   const onCloseDeleteVacancyModal = () => {
+      setOpenDeletevacancyModal(false)
+   }
+
+   const onOpenDetailVacancyModal = () => {
+      setOpenVacancyDetailModal(true)
+   }
+   const onCloseDetailVacancyModal = () => {
+      setOpenVacancyDetailModal(false)
+   }
+   const onOpenEditModal = () => {
+      setOpenEditModal(true)
+   }
+   const onCloseEditModal = () => {
+      setOpenEditModal(false)
+   }
+
    const onCloseDeleteModalHandler = () => {
       setOpenDeleteModal(false)
    }
    const onOpenDeleteModalHandler = () => {
       setOpenDeleteModal(true)
    }
-   const onCloseDetailCarthandler = () => {
-      setOpenDetailCart(false)
+   const navigatePrevPage = () => {
+      navigate('/admin/vendors')
    }
 
-   const deleteCartModal = () => {
-      dispatch(deleteUserCartThunk(id))
+   const onDeleteVacancy = () => {
+      dispatch(deleteVacancyThunk(getId))
+         .unwrap()
+         .then(() => {
+            showSnackbar({
+               message: 'Успешно удалено!',
+               severity: 'success',
+            })
+         })
+         .catch(() => {
+            showSnackbar({
+               message:
+                  'Не удалось удалить вакансию! Пожалуйста, попробуйте ещё раз.',
+               severity: 'warning',
+            })
+         })
+   }
+
+   const onDeleteCart = () => {
+      dispatch(deleteVendors(id)).then((resultAction) => {
+         const { error } = resultAction
+         if (!error) {
+            showSnackbar({
+               message: 'Успешно удалено!',
+               severity: 'success',
+            })
+            navigate('/admin/vendors')
+         } else {
+            showSnackbar({
+               message:
+                  'Не удалось удалить элемент. Пожалуйста, попробуйте еще раз.',
+               severity: 'warning',
+            })
+         }
+      })
    }
 
    useEffect(() => {
-      dispatch(getDetailVendors())
+      dispatch(getVendorsDetailCart(param.id))
+      dispatch(getVacansyInfo())
    }, [])
+
+   const itemsPerPage = 3
+   const [currentPage, setCurrentPage] = useState(1)
+   const startIndex = (currentPage - 1) * itemsPerPage
+   const endIndex = startIndex + itemsPerPage
+   const vacanciesToDisplay = vacansyGet.slice(startIndex, endIndex)
+   const totalPages = Math.ceil(vacansyGet.length / itemsPerPage)
+   const handlePageChange = (event, page) => {
+      setCurrentPage(page)
+   }
 
    return (
       <Container>
          <CloseIconBlock>
-            <IconsClose onClick={onClosingHandler} />
+            <IconsClose onClick={navigatePrevPage} />
          </CloseIconBlock>
          <ContainerChilde>
             <Title>{name}</Title>
             <BlockImage>
-               <Image
-                  src="https://static.nike.com/a/images/f_jpg,q_auto:eco/61b4738b-e1e1-4786-8f6c-26aa0008e80b/swoosh-logo-black.png"
-                  alt="nike"
-               />
                <BrendDescription>
                   <MessageBlock>
                      <Message />
@@ -74,84 +155,103 @@ export const DetailCart = ({ onClosingHandler }) => {
                      <p>{address}</p>
                   </LocationBlock>
                </BrendDescription>
+               <DeleteAndEdit>
+                  <DeleteStyle onClick={onOpenDeleteModalHandler} />
+                  <EditStyle onClick={onOpenEditModal} />
+               </DeleteAndEdit>
             </BlockImage>
             <Description>{about_company}</Description>
          </ContainerChilde>
          <UserBlock>
             <User />
             <p>Vacancy</p>
-            <DeleteAndEdit>
-               <DeleteStyle onClick={onOpenDeleteModalHandler} />
-               <EditStyle />
-            </DeleteAndEdit>
          </UserBlock>
          <VacancyBlock>
-            <ContainerChildrenArrow>
-               <JsBlock>
-                  <JavaScriptText>JavaScript Developer</JavaScriptText>
-                  <Arrow onClick={onOpenDetailCarthandler} />
-               </JsBlock>
-               <BlockArrow>
-                  <Square />
-                  <p>Senior</p>
-               </BlockArrow>
-               <DateOfCartDetail />
-            </ContainerChildrenArrow>
-
-            <ContainerChildrenArrow>
-               <JsBlock>
-                  <JavaScriptText>JavaScript Developer</JavaScriptText>
-                  <Arrow onClick={onOpenDetailCarthandler} />
-               </JsBlock>
-               <BlockArrow>
-                  <Square />
-                  <p>Senior</p>
-               </BlockArrow>
-               <DateOfCartDetail />
-            </ContainerChildrenArrow>
-
-            <ContainerChildrenArrow>
-               <JsBlock>
-                  <JavaScriptText onClick={onOpenDetailCarthandler}>
-                     JavaScript Developer
-                  </JavaScriptText>
-                  <Arrow />
-               </JsBlock>
-               <BlockArrow>
-                  <Square />
-                  <p>Senior</p>
-               </BlockArrow>
-               <DateOfCartDetail />
-            </ContainerChildrenArrow>
+            {vacanciesToDisplay?.map((el) => (
+               <ContainerChildrenArrow>
+                  <JsBlock>
+                     <JavaScriptText>{el.vacancy_name}</JavaScriptText>
+                     <Arrow onClick={onOpenDetailVacancyModal} />
+                  </JsBlock>
+                  <BlockArrow>
+                     <SquareBlock>
+                        <Square />
+                        <p>{el.level}</p>
+                     </SquareBlock>
+                     <CalendarStyle>
+                        <Calendar />
+                        <p>{el.creation_date}</p>
+                     </CalendarStyle>
+                     <DeleteStyles
+                        onClick={() => {
+                           setGetId(el.id)
+                           onOpendeleteVacancyModal()
+                        }}
+                     />
+                     <EditStyles
+                        onClick={() => {
+                           setEditId(el.id)
+                           onOpenModalHandlerVacansy()
+                        }}
+                     />
+                  </BlockArrow>
+               </ContainerChildrenArrow>
+            ))}
          </VacancyBlock>
-         {openDetailCart ? (
+         {openVacancyDetailModal ? (
             <DetailCartModal
-               onCloseDetailCarthandler={onCloseDetailCarthandler}
+               onCloseDetailVacancyModal={onCloseDetailVacancyModal}
             />
          ) : (
             ''
          )}
          {openDeleteModal ? (
-            <Modal open>
-               <p>Are you sure that you want to delete this Vendor?</p>
-               <UiButtonBlock>
-                  <Button
-                     onClick={deleteCartModal}
-                     backgroundColor="linear-gradient(180deg, rgba(4, 1, 22, 0.93) 0%, rgba(43, 45, 49, 0.00) 100%)"
-                  >
-                     Yes
-                  </Button>
-                  <Button
-                     onClick={onCloseDeleteModalHandler}
-                     backgroundColor="linear-gradient(180deg, rgba(4, 1, 22, 0.93) 0%, rgba(43, 45, 49, 0.00) 100%)"
-                  >
-                     No
-                  </Button>
-               </UiButtonBlock>
-            </Modal>
+            <DeleteModal
+               onClose={onCloseDeleteModalHandler}
+               onClick={() => {
+                  onDeleteCart()
+                  onCloseDeleteModalHandler()
+               }}
+               unClick={onCloseDeleteModalHandler}
+            />
          ) : (
             ''
          )}
+         {openDeleteVacancyModal ? (
+            <DeleteModal
+               onClick={() => {
+                  onDeleteVacancy()
+                  onCloseDeleteVacancyModal()
+               }}
+               onClose={onCloseDeleteVacancyModal}
+               unClick={onCloseDeleteVacancyModal}
+            />
+         ) : (
+            ''
+         )}
+         {openEditModal ? (
+            <EditModal onCloseEditModal={onCloseEditModal} />
+         ) : (
+            ''
+         )}
+         {openModalVacansy ? (
+            <EditVacancyModal
+               id={editId}
+               onCloseModalHandlerVacansy={onCloseModalHandlerVacansy}
+            />
+         ) : (
+            ''
+         )}
+         <PaginationBlock>
+            <Stack spacing={2}>
+               <Pagination
+                  count={totalPages}
+                  page={currentPage}
+                  onChange={handlePageChange}
+                  color="secondary"
+               />
+            </Stack>
+         </PaginationBlock>
       </Container>
    )
 }
@@ -161,11 +261,11 @@ const Container = styled('div')`
    flex-direction: column;
    margin-top: 2rem;
    width: 31.875rem;
-   padding: 0 0.5rem 2.31rem 0;
-   height: 100%;
+   height: 43rem;
    border-radius: 0.625rem;
    background-color: #1e1f22;
    border: 1px solid #fff;
+   padding: 0px 1rem 1.31rem 1rem;
 `
 
 const ContainerChilde = styled('div')`
@@ -183,14 +283,11 @@ const Title = styled('p')`
 
 const BlockImage = styled('div')`
    display: flex;
-   gap: 1rem;
+   width: 100%;
    margin-top: 1.56rem;
+   justify-content: space-around;
 `
-const Image = styled('img')`
-   width: 6.9375rem;
-   height: 6.375rem;
-   border-radius: 6.9375rem;
-`
+
 const BrendDescription = styled('div')`
    display: flex;
    flex-direction: column;
@@ -249,7 +346,6 @@ const UserBlock = styled('div')`
 const BlockArrow = styled('div')`
    display: flex;
    align-items: center;
-   gap: 0.3rem;
    margin-top: 0.31rem;
    p {
       color: #fff;
@@ -262,7 +358,7 @@ const ContainerChildrenArrow = styled('div')`
    height: 3.25rem;
    border-radius: 0.625rem;
    background: rgba(84, 71, 170, 0.93);
-   padding: 0 1rem 0 1.81rem;
+   padding: 0 1rem 3.5rem 1.81rem;
 `
 const JavaScriptText = styled('p')`
    color: #fff;
@@ -302,33 +398,30 @@ const EditStyle = styled(Edit)`
 const DeleteStyle = styled(Delete)`
    cursor: pointer;
 `
-const Modal = styled(UiModal)`
+const CalendarStyle = styled('div')`
    display: flex;
-   flex-direction: column;
+   gap: 0.4rem;
+   margin-left: 1rem;
+`
+const DeleteStyles = styled(Delete)`
+   width: 1rem;
+   cursor: pointer;
+   margin-left: 1rem;
+`
+const EditStyles = styled(Edit)`
+   width: 1rem;
+   cursor: pointer;
+   margin-left: 1rem;
+`
+const SquareBlock = styled('div')`
+   display: flex;
+   gap: 0.3rem;
+`
+const PaginationBlock = styled('div')`
+   display: flex;
    justify-content: center;
-   align-items: center;
-   width: 34.1875rem;
-   height: 16.8125rem;
-   border-radius: 1.875rem;
-   border: 1px solid #ececec;
-   background: linear-gradient(
-      176deg,
-      #252335 26.77%,
-      rgba(84, 71, 170, 0.93) 97.4%
-   );
-   p {
-      width: 350px;
-      color: #fffefe;
-      text-align: center;
-      font-size: 1.25rem;
-      font-weight: 500;
+   margin-top: auto;
+   .MuiPaginationItem-root {
+      color: #fff;
    }
-`
-const UiButtonBlock = styled('div')`
-   display: flex;
-   gap: 2rem;
-   margin-top: 2.75rem;
-`
-const Button = styled(UiButton)`
-   border: 1px solid #fff;
 `

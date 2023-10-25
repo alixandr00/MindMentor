@@ -1,26 +1,17 @@
-import React, { useState } from 'react'
+import React from 'react'
+import { Outlet } from 'react-router-dom'
 import { styled } from '@mui/material'
 import { VendorsCards } from '../vendors/VendorsCards'
 import { NewVendors } from '../vendors/NewVendors'
-import { DetailCart } from '../vendors/DetailCart'
 
 export const Vendors = () => {
-   const [onOpening, setOnOpening] = useState(false)
-   const onOpeningHandler = () => {
-      setOnOpening(true)
-   }
-   const onClosingHandler = () => {
-      setOnOpening(false)
-   }
    return (
       <NewVendors>
          <Container>
-            {onOpening ? (
-               <DetailCart onClosingHandler={onClosingHandler} />
-            ) : (
-               ''
-            )}
-            <VendorsCards onOpeningHandler={onOpeningHandler} />
+            <Outlet />
+            <div>
+               <VendorsCards />
+            </div>
          </Container>
       </NewVendors>
    )

@@ -1,15 +1,21 @@
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { styled } from '@mui/material'
 import { GmailIcon, LocationIcon, PhoneIcon } from '../../assets/icons'
 import { ReactComponent as Delete } from '../../assets/icons/deleteicon.svg'
 import { UiModal } from '../UI/modal/UiModal'
 import { UiButton } from '../UI/button/UiButton'
+import { deleteVendors, getVendors } from '../../store/vendors/vendors.thunk'
+import { showSnackbar } from '../UI/snackbar/Snackbar'
 
-export const VendorsCards = ({ onOpeningHandler }) => {
-   const { results } = useSelector((state) => state.vendor.vendorsGetCart)
+export const VendorsCards = () => {
+   const dispatch = useDispatch()
+   const navigate = useNavigate()
+   const { vendorsGetCart } = useSelector((state) => state.vendor)
 
    const [openDeleteModal, setOpenDeleteModal] = useState(false)
+   const [selectedId, setSelectedId] = useState(null)
 
    const onCloseDeleteModalHandler = () => {
       setOpenDeleteModal(false)
@@ -17,27 +23,53 @@ export const VendorsCards = ({ onOpeningHandler }) => {
    const onOpenDeleteModalHandler = () => {
       setOpenDeleteModal(true)
    }
+
+   const onDeleteCart = () => {
+      dispatch(deleteVendors(selectedId)).then((resultAction) => {
+         const { error } = resultAction
+         if (!error) {
+            showSnackbar({
+               message: 'Успешно удалено!',
+               severity: 'success',
+            })
+            navigate('/admin/vendors')
+         } else {
+            showSnackbar({
+               message:
+                  'Не удалось удалить элемент. Пожалуйста, попробуйте еще раз.',
+               severity: 'warning',
+            })
+         }
+      })
+   }
+
+   useEffect(() => {
+      dispatch(getVendors())
+   }, [])
    return (
       <Container>
-         {results?.map((card) => (
-            <ContainerCards key={card.id}>
+         {vendorsGetCart?.map((card) => (
+            <ContainerCards
+               key={card.id}
+               to={`vendorsDetail/${card.id}`}
+               className={({ isActive }) => (isActive ? 'active' : '')}
+            >
                <CardHead>
-                  <ImageCards
-                     onClick={onOpeningHandler}
-                     imageUrl={card.image}
-                  />
-                  <CompanyName onClick={onOpeningHandler}>
-                     {card.name}
-                  </CompanyName>
+                  <ImageCards imageUrl={card.image} />
+                  <CompanyName>{card.name}</CompanyName>
+
                   <DeleteIconContainer
-                     onClick={onOpenDeleteModalHandler}
+                     onClick={() => {
+                        setSelectedId(card?.id)
+                        onOpenDeleteModalHandler()
+                     }}
                      className="delete-icon"
                   >
                      <Delete />
                   </DeleteIconContainer>
                </CardHead>
 
-               <CardMain onClick={onOpeningHandler}>
+               <CardMain>
                   <MainContainers>
                      <GmailIcon />
                      <CardsTexts>{card.email}</CardsTexts>
@@ -53,14 +85,20 @@ export const VendorsCards = ({ onOpeningHandler }) => {
                </CardMain>
             </ContainerCards>
          ))}
-
          {openDeleteModal ? (
             <Modal open>
                <p>Are you sure that you want to delete this Vendor?</p>
                <UiButtonBlock>
-                  <Button backgroundColor="linear-gradient(180deg, rgba(4, 1, 22, 0.93) 0%, rgba(43, 45, 49, 0.00) 100%)">
+                  <Button
+                     onClick={() => {
+                        onDeleteCart()
+                        onCloseDeleteModalHandler()
+                     }}
+                     backgroundColor="linear-gradient(180deg, rgba(4, 1, 22, 0.93) 0%, rgba(43, 45, 49, 0.00) 100%)"
+                  >
                      Yes
                   </Button>
+
                   <Button
                      onClick={onCloseDeleteModalHandler}
                      backgroundColor="linear-gradient(180deg, rgba(4, 1, 22, 0.93) 0%, rgba(43, 45, 49, 0.00) 100%)"
@@ -96,8 +134,11 @@ const Container = styled('div')(() => ({
       backgroundColor: ' #fff',
       borderRadius: '0.25rem',
    },
+   '& .active': {
+      background: 'rgba(84, 71, 170, 0.93)',
+   },
 }))
-const ContainerCards = styled('div')(() => ({
+const ContainerCards = styled(NavLink)(() => ({
    width: '14.375rem',
    height: '10.4375rem',
    borderRadius: '0.625rem',
@@ -112,6 +153,7 @@ const ContainerCards = styled('div')(() => ({
       opacity: 1,
    },
 }))
+
 const DeleteIconContainer = styled('div')(() => ({
    display: 'flex',
    width: '100%',
@@ -119,11 +161,12 @@ const DeleteIconContainer = styled('div')(() => ({
    cursor: 'pointer',
    opacity: 0,
 }))
-const CardHead = styled('div')(() => ({
-   display: 'flex',
-   gap: '0.44rem',
-   alignItems: 'center',
-}))
+
+const CardHead = styled('div')`
+   display: flex;
+   gap: 0.44rem;
+   align-items: center;
+`
 const ImageCards = styled('div')((props) => ({
    width: '2.4375rem',
    height: '2.4375rem',
@@ -131,7 +174,8 @@ const ImageCards = styled('div')((props) => ({
    background: `url(${props.imageUrl}) center/cover no-repeat`,
 }))
 
-const CompanyName = styled('div')(() => ({
+const CompanyName = styled('p')(() => ({
+   width: '100vw',
    color: '#FFF',
    fontSize: '1rem',
    fontWeight: '600',

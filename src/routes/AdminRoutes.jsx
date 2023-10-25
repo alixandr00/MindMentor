@@ -4,6 +4,7 @@ import { Interns } from '../components/modules/Interns'
 import { Mentors } from '../components/modules/Mentors'
 import { Schedule } from '../components/modules/Schedule'
 import { Vendors } from '../components/modules/Vendors'
+import { DetailCart } from '../components/vendors/DetailCart'
 
 export const adminRoutes = [
    {
@@ -13,6 +14,12 @@ export const adminRoutes = [
    {
       path: 'vendors',
       element: <Vendors />,
+      children: [
+         {
+            path: 'vendorsDetail/:id',
+            element: <DetailCart />,
+         },
+      ],
    },
    {
       path: 'groups',

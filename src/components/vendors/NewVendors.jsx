@@ -5,22 +5,29 @@ import { UiInput } from '../UI/input/UiInput'
 import { SearchIcon } from '../../assets/icons'
 import { VendorsModal } from './NewVacansyModal'
 import { NewVendorModal } from './NewVendorModal'
+import { useCustomSearchParams } from '../../utils/CustomSearchParams'
 
 export const NewVendors = ({ children }) => {
    const [openModalVendors, setOpenModalVendors] = useState(false)
    const [openModalVacansy, setOpenModalVacansy] = useState(false)
 
+   const { setParam, deleteParam } = useCustomSearchParams()
+
    const onOpenModalHandler = () => {
       setOpenModalVendors(true)
+      setParam('ModalVendors', 'open')
    }
    const onCloseModalHandler = () => {
       setOpenModalVendors(false)
+      deleteParam('ModalVendors')
    }
    const onOpenModalHandlerVacansy = () => {
       setOpenModalVacansy(true)
+      setParam('ModalVacancy', 'open')
    }
    const onCloseModalHandlerVacansy = () => {
       setOpenModalVacansy(false)
+      deleteParam('ModalVacancy')
    }
    return (
       <Container>
@@ -45,10 +52,10 @@ export const NewVendors = ({ children }) => {
                      </Icons>
                   </Input>
                   <ButtonBlock>
-                     <ButtonStyled onClick={onOpenModalHandler}>
+                     <ButtonStyled onClick={onOpenModalHandlerVacansy}>
                         + New Vacancy
                      </ButtonStyled>
-                     <UiButtonStyled onClick={onOpenModalHandlerVacansy}>
+                     <UiButtonStyled onClick={onOpenModalHandler}>
                         + New vendor
                      </UiButtonStyled>
                   </ButtonBlock>
@@ -92,7 +99,6 @@ const Container = styled('div')({
 const ContIntern = styled('div')({
    width: '100%',
    height: '10rem',
-   //    background: 'blue',
    display: 'flex',
    flexDirection: 'column',
 })

@@ -1,20 +1,22 @@
+/* eslint-disable camelcase */
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { styled } from '@mui/material'
 import { UiInput } from '../UI/input/UiInput'
 import { UiModal } from '../UI/modal/UiModal'
 import { UiButton } from '../UI/button/UiButton'
-import { addNewCart } from '../../store/vendors/vendors.thunk'
+import { editDetailCart } from '../../store/vendors/vendors.thunk'
 import { showSnackbar } from '../UI/snackbar/Snackbar'
 
-export const VendorsModal = ({ onCloseModalHandler }) => {
+export const EditModal = ({ onCloseEditModal }) => {
    const dispatch = useDispatch()
-
-   const [valueName, setValueName] = useState('')
-   const [valueEmail, setValueEmail] = useState('')
-   const [valueAdress, setValueAdress] = useState('')
-   const [valueNum, setValueNum] = useState('')
-   const [valueDesc, setValueDesc] = useState('')
+   const { id, name, email, contact_number, about_company, address } =
+      useSelector((state) => state.vendor.vendorsDetail)
+   const [valueName, setValueName] = useState(name)
+   const [valueEmail, setValueEmail] = useState(email)
+   const [valueAdress, setValueAdress] = useState(address)
+   const [valueNum, setValueNum] = useState(contact_number)
+   const [valueDesc, setValueDesc] = useState(about_company)
 
    const onChangeValue = (e) => {
       setValueName(e.target.value)
@@ -32,7 +34,7 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
       setValueDesc(e.target.value)
    }
 
-   const addNewUserCards = () => {
+   const editUserCards = () => {
       const data = {
          name: valueName,
          address: valueAdress,
@@ -42,35 +44,36 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
          vacancy: 16,
          user: 1,
       }
-      dispatch(addNewCart(data))
-         .unwrap()
-         .then(() => {
+      dispatch(editDetailCart({ id, data })).then((resultAction) => {
+         const { error } = resultAction
+         if (!error) {
             showSnackbar({
-               message: 'Данные о студенте успешно добавлены!',
+               message: 'Данные о студенте успешно обнавлены!',
                severity: 'success',
             })
-            onCloseModalHandler()
+            onCloseEditModal()
             setValueName('')
             setValueEmail('')
             setValueAdress('')
             setValueNum('')
             setValueDesc('')
-         })
-         .catch(() => {
+         } else {
             showSnackbar({
-               message: 'Заполните все поля!',
+               message:
+                  'Все поля должны быть заполнены. Пожалуйста, попробуйте еще раз.',
                severity: 'warning',
             })
-         })
+         }
+      })
    }
 
    return (
       <ModalComponent
          open
-         onClose={onCloseModalHandler}
          width="60.4375rem"
          height="47.1875rem"
          border="1px solid #fff"
+         onClose={onCloseEditModal}
       >
          <Container>
             <Image
@@ -155,12 +158,12 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
                   border="1px solid #F9F9F9"
                   borderRadius="0.625rem"
                   background="#252335"
-                  onClick={onCloseModalHandler}
+                  onClick={onCloseEditModal}
                >
                   Close
                </UiButton>
                <UiButton
-                  onClick={addNewUserCards}
+                  onClick={editUserCards}
                   width="5.375rem"
                   height="2.0625rem"
                   border="1px solid #F9F9F9"

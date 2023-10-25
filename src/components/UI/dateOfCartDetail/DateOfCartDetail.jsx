@@ -1,13 +1,11 @@
 import { styled } from '@mui/material'
-import dayjs from 'dayjs'
-import React, { useState } from 'react'
+import React from 'react'
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 
-export const DateOfCartDetail = () => {
-   const [selectedDate, setSelectedDate] = useState(dayjs(new Date()))
+export const DateOfCartDetail = ({ setSelectedDate, selectedDate }) => {
    return (
       <DateStyle>
          <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -22,12 +20,8 @@ export const DateOfCartDetail = () => {
    )
 }
 const DateStyle = styled('div')`
-   position: relative;
-   left: 5rem;
-   bottom: 40px;
-
    .MuiOutlinedInput-root {
-      width: 7.5rem;
+      width: 11rem;
    }
    .MuiOutlinedInput-notchedOutline {
       border: none;
@@ -40,13 +34,14 @@ const DateStyle = styled('div')`
    }
    .MuiSvgIcon-root {
       color: #fff;
-      font-size: 1rem;
+      font-size: 1.5rem;
       margin-right: 1rem;
    }
    .MuiOutlinedInput-input {
       color: #fff;
-      font-size: 0.75rem;
+      font-size: 1rem;
       font-weight: 600;
+      padding: 0;
    }
    .MuiIconButton-root {
       padding: 0;

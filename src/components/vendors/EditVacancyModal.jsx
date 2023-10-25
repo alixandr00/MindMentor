@@ -6,17 +6,17 @@ import { UiModal } from '../UI/modal/UiModal'
 import { UiInput } from '../UI/input/UiInput'
 import { UiButton } from '../UI/button/UiButton'
 import { ReactComponent as Icon } from '../../assets/images/Ellipse 5 (1).svg'
-import { addNewVacancy } from '../../store/vendors/vendors.thunk'
+import { editVacancyThunk } from '../../store/vendors/vendors.thunk'
 import { DateOfCartDetail } from '../UI/dateOfCartDetail/DateOfCartDetail'
 import { showSnackbar } from '../UI/snackbar/Snackbar'
 
-export const NewVendorModal = ({ onCloseModalHandlerVacansy }) => {
+export const EditVacancyModal = ({ onCloseModalHandlerVacansy, id }) => {
    const dispatch = useDispatch()
-   const [selectedLevel, setSelectedLevel] = useState('')
-   const [value, setValue] = useState('')
-   const [description, setDescription] = useState('')
-   const [selectedDate, setSelectedDate] = useState('')
 
+   const [selectedLevel, setSelectedLevel] = useState('Junior')
+   const [value, setValue] = useState('')
+   const [description, setDescription] = useState()
+   const [selectedDate, setSelectedDate] = useState('')
    const formattedDate = dayjs(selectedDate).format('YYYY-MM-DD')
 
    const onChangeInputValue = (e) => {
@@ -40,18 +40,18 @@ export const NewVendorModal = ({ onCloseModalHandlerVacansy }) => {
          level: selectedLevel,
          requirements_vacancy: description,
       }
-      dispatch(addNewVacancy(data))
+      dispatch(editVacancyThunk({ id, data }))
          .unwrap()
          .then(() => {
             showSnackbar({
-               message: 'Новая вакансия успешно добавлена!',
+               message: 'Успешно обновлено!',
                severity: 'success',
             })
             onCloseModalHandlerVacansy()
          })
          .catch(() => {
             showSnackbar({
-               message: 'Правильно заполните все поля!',
+               message: 'Не удалось обновить.Правильно заполните все поля!',
                severity: 'warning',
             })
          })
@@ -140,7 +140,7 @@ export const NewVendorModal = ({ onCloseModalHandlerVacansy }) => {
                   background="#252335"
                   onClick={saveNewVacancy}
                >
-                  Save
+                  Edit
                </UiButton>
             </BlockBtn>
          </Container>
