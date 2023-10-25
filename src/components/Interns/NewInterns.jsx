@@ -9,10 +9,13 @@ import { useState } from 'react'
 import { UiButton } from '../UI/button/UiButton'
 import { UiInput } from '../UI/input/UiInput'
 import { DownIcon, SearchIcon, UpIcon } from '../../assets/icons'
+import { InternsAddStudentModal } from './InternsAddStudentModal/InternsAddStudentModal'
+import { UiModal } from '../UI/modal/UiModal'
 
 export const NewInterns = ({ children }) => {
    const [isSelectOpen, setIsSelectOpen] = useState(false)
    const [selectedValue, setSelectedValue] = useState('Status')
+   const [openModalInterns, setOpenModalInterns] = useState(false)
 
    const handleSelectOpen = () => {
       setIsSelectOpen(true)
@@ -25,6 +28,9 @@ export const NewInterns = ({ children }) => {
    const handleSelectChange = (event) => {
       setSelectedValue(event.target.value)
    }
+   const handleOpenModalInterns = () => {
+      setOpenModalInterns(true)
+   }
 
    return (
       <Container>
@@ -35,7 +41,9 @@ export const NewInterns = ({ children }) => {
             <div>
                <InternBox>
                   <p className="Interns">Interns</p>
-                  <UiButton onClick={{}}>+ New intern</UiButton>
+                  <UiButton onClick={handleOpenModalInterns}>
+                     + New intern
+                  </UiButton>
                </InternBox>
                <InputBox>
                   <Input>
@@ -81,6 +89,14 @@ export const NewInterns = ({ children }) => {
             </div>
          </ContIntern>
          {children}
+
+         {openModalInterns ? (
+            <UiModal>
+               <InternsAddStudentModal />
+            </UiModal>
+         ) : (
+            ''
+         )}
       </Container>
    )
 }
