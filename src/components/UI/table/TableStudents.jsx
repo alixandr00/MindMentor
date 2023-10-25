@@ -11,10 +11,7 @@ import {
    IconButton,
    styled,
 } from '@mui/material'
-// eslint-disable-next-line import/no-duplicates
-import { useSelector } from 'react-redux'
-// eslint-disable-next-line import/no-duplicates
-import { useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { ReactComponent as History } from '../../../assets/icons/History.svg'
 import { ReactComponent as DeleteIcon } from '../../../assets/icons/deleteicon.svg'
@@ -23,11 +20,13 @@ import { ReactComponent as CommentIcon } from '../../../assets/icons/Comment.svg
 import { ReactComponent as NextIcon } from '../../../assets/icons/NextIcon.svg'
 import { ReactComponent as PrevIcon } from '../../../assets/icons/PrevIcon.svg'
 import { fetchInterns } from '../../../store/interns/internsThunk'
+import { Loading } from '../loading/Loading'
 
 export const TableStudents = ({ headerArray, onOpenPayModalHandler }) => {
    const dispatch = useDispatch()
    const interns = useSelector((state) => state.interns.interns)
-   const loading = useSelector((state) => state.interns.loading)
+   console.log(interns)
+   const loading = useSelector((state) => state.interns.isLoading)
    const error = useSelector((state) => state.interns.error)
    const [data, setData] = useState([])
    const [loadings, setLoadings] = useState(true)
@@ -36,19 +35,16 @@ export const TableStudents = ({ headerArray, onOpenPayModalHandler }) => {
    const navigate = useNavigate()
    useEffect(() => {
       const fetchData = async () => {
-         dispatch(fetchInterns()) // Fetch data when the component mounts
+         dispatch(fetchInterns())
       }
-
       fetchData()
    }, [dispatch])
 
    useEffect(() => {
-      // Set the data when interns are available
-      if (interns?.results) {
-         setData(interns.results)
+      if (interns) {
+         setData(interns)
       }
 
-      // Set loading to false after data is available
       setLoadings(false)
    }, [interns])
 
@@ -58,12 +54,6 @@ export const TableStudents = ({ headerArray, onOpenPayModalHandler }) => {
    const records = data?.slice(firstIndex, lastIndex)
    const dd = data?.length
    const npage = Math.ceil(dd / recordsPerPage)
-
-   console.log(interns?.results)
-
-   if (loading === 'loading') {
-      return <div>Loading...</div>
-   }
 
    if (error) {
       return <div>Error: {error}</div>
@@ -89,14 +79,12 @@ export const TableStudents = ({ headerArray, onOpenPayModalHandler }) => {
       }, 1500)
    }
    const onOpenModalHandler = (e, id) => {
-      // e.preventDefault()
-
-      console.log(id, 'jnknkjnj')
       navigate(`details/${id}`)
    }
 
    return (
-      <div>
+      <StyledContent>
+         {loading && <Loading />}
          <StyledTableContainer component={Paper}>
             <Table>
                <TableHead>
@@ -268,7 +256,7 @@ export const TableStudents = ({ headerArray, onOpenPayModalHandler }) => {
                </StyledUl>
             </nav>
          </StyledContainer>
-      </div>
+      </StyledContent>
    )
 }
 
@@ -276,7 +264,9 @@ const StyledUl = styled('ul')`
    display: flex;
    gap: 0.8rem;
 `
-
+const StyledContent = styled('div')`
+   width: 100%;
+`
 const StyleTableBody = styled(TableBody)({
    backgroundColor: '#2B2D31',
    border: 'none',
@@ -333,7 +323,7 @@ const StyleTableBody = styled(TableBody)({
 })
 
 const StyledTableContainer = styled(TableContainer)`
-   width: 65vw;
+   /* width: 100vh; */
    border-radius: 10px;
    margin-top: 2rem;
 `
