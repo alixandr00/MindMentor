@@ -16,11 +16,10 @@ export const TableStudentsDetails = () => {
    const dispatch = useDispatch()
    const { id } = useParams()
    const interns = useSelector((state) => state.interns.interns)
-   const loading = useSelector((state) => state.interns.loading)
+   const loading = useSelector((state) => state.interns.isLoading)
    const error = useSelector((state) => state.interns.error)
    const [data, setData] = useState([])
    const navigate = useNavigate()
-   console.log(interns, 'jianak')
 
    useEffect(() => {
       const fetchData = async () => {
@@ -31,11 +30,10 @@ export const TableStudentsDetails = () => {
    }, [dispatch])
 
    useEffect(() => {
-      if (interns?.results) {
-         setData(interns.results)
+      if (interns) {
+         setData(interns)
       }
    }, [interns])
-   console.log(interns?.results)
 
    if (loading === 'loading') {
       return <div>Loading...</div>
@@ -45,18 +43,12 @@ export const TableStudentsDetails = () => {
       return <div>Error: {error}</div>
    }
 
-   console.log('datauseParams', id)
-
    const onCloceModalHandler = () => {
       navigate('interns')
    }
    return (
       <StyledContainer>
          {data.map((internDetail) => {
-            console.log(
-               'id === internDetail',
-               +id === internDetail.id && internDetail
-            )
             return (
                +id === internDetail.id && (
                   <StyledContent>
@@ -68,18 +60,15 @@ export const TableStudentsDetails = () => {
                      </StyledHeader>
                      <StyledStudentsInformation>
                         <StyledImage
-                           src={
-                              internDetail.photo !== 'null'
-                                 ? internDetail.photo
-                                 : ProfileImage
-                           }
-                           alt="photo"
+                           src={ProfileImage}
+                           // src={
+                           //    internDetail.photo !== 'null'
+                           //       ? internDetail.photo
+                           //       : ProfileImage
+                           // }
+                           alt="photos"
                         />
-                        <h3>
-                           {internDetail.name}
-                           <br />
-                           {internDetail.surname}
-                        </h3>
+                        <h3>{`${internDetail.name}  ${internDetail.surname}`}</h3>
                         <p>JS/group****</p>
                         <span>Mentor-Tugolbay</span>
                      </StyledStudentsInformation>
@@ -172,6 +161,7 @@ const StyledContainer = styled('div')`
    border: 1px solid white;
    border-radius: 10px;
    margin-top: 2rem;
+   height: 100%;
 `
 const StyledHeader = styled('div')`
    display: flex;
@@ -298,7 +288,7 @@ const StyleStatus = styled('div')({
 })
 
 const StyledContent = styled('div')`
-   padding: 8px 10px;
+   padding: 0px 10px;
    display: flex;
    flex-direction: column;
    gap: 1rem;
@@ -333,7 +323,7 @@ const StyledBlock = styled('div')`
 `
 
 const StyledImage = styled('img')`
-   width: 40px;
-   height: 40px;
+   width: 60px;
+   height: 60px;
    border-radius: 100%;
 `

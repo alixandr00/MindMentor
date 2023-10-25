@@ -70,9 +70,9 @@ export const NewInterns = ({ children }) => {
                               </SelectIcon>
                            )}
                         >
-                           <MenuItem value="Status">Status</MenuItem>
-                           <MenuItem value={10}>Ten</MenuItem>
-                           <MenuItem value={20}>Twenty</MenuItem>
+                           <MenuItem value="Status">Java</MenuItem>
+                           <MenuItem value={10}>JavaScrip</MenuItem>
+                           <MenuItem value={20}>Photon</MenuItem>
                            <MenuItem value={30}>Thirty</MenuItem>
                         </SelectStyled>
                      </FormControlStyled>
