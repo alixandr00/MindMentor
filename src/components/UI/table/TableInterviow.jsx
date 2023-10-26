@@ -17,7 +17,7 @@ import { ReactComponent as NextIcon } from '../../../assets/icons/NextIcon.svg'
 import { ReactComponent as PrevIcon } from '../../../assets/icons/PrevIcon.svg'
 import ProfileImage from '../../../assets/images/profileImage.jpg'
 
-export const TableInterviow = ({ array, headerArray }) => {
+export const TableInterviow = ({ array, headerArray, onOpenDeleteModal }) => {
    const [data, setData] = useState([])
    const [loading, setLoading] = useState(true)
    const [currentPage, setCurrentPage] = useState(1)
@@ -190,7 +190,7 @@ export const TableInterviow = ({ array, headerArray }) => {
                                  <EditIcon />
                               </IconButton>
                               <IconButton>
-                                 <DeleteIcon />
+                                 <DeleteIcon onClick={onOpenDeleteModal} />
                               </IconButton>
                            </StyledTableCellForData>
                         </StyledTableRow>
