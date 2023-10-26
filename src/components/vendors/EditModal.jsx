@@ -1,6 +1,8 @@
+/* eslint-disable object-shorthand */
 /* eslint-disable camelcase */
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { z } from 'zod'
 import { styled } from '@mui/material'
 import { UiInput } from '../UI/input/UiInput'
 import { UiModal } from '../UI/modal/UiModal'
@@ -15,27 +17,104 @@ export const EditModal = ({ onCloseEditModal }) => {
    const dispatch = useDispatch()
    const { id, name, email, contact_number, about_company, address } =
       useSelector((state) => state.vendor.vendorsDetail)
+
+   const schemaEmail = z.object({
+      email: z
+         .string()
+         .nonempty('Заполните обязательные поля')
+         .regex(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, {
+            message: 'Пожалуйста, введите корректный адрес электронной почты.',
+         }),
+   })
+
+   const schemaPhoneNumber = z.object({
+      phoneNumber: z
+         .string()
+         .nonempty('Заполните обязательные поля')
+         .min(10, 'Номер телефона должен состоять из 10 символов')
+         .regex(/^0\d{9}$/, {
+            message: 'Введите корректный номер телефона, начинающийся с 0 ',
+         }),
+   })
+   const schemaDescription = z.object({
+      descriptions: z
+         .string()
+         .nonempty('Заполните обязательные поля')
+         .max(
+            290,
+            'Длина текста превышает допустимый лимит. Пожалуйста, сократите текст.'
+         ),
+   })
    const [valueName, setValueName] = useState(name)
    const [valueEmail, setValueEmail] = useState(email)
    const [valueAdress, setValueAdress] = useState(address)
    const [valueNum, setValueNum] = useState(contact_number)
    const [valueDesc, setValueDesc] = useState(about_company)
+   const [emailrError, setEmailError] = useState(false)
+   const [phoneNumberError, setPhoneNumberError] = useState(false)
+   const [descriptionsErrorss, setDescriptionsErrorss] = useState(false)
+   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true)
 
    const onChangeValue = (e) => {
       setValueName(e.target.value)
    }
    const onChangeEmail = (e) => {
-      setValueEmail(e.target.value)
+      const email = e.target.value
+      setValueEmail(email)
+
+      try {
+         schemaEmail.parse({
+            email: email,
+         })
+         setEmailError('')
+      } catch (error) {
+         setEmailError(
+            'Пожалуйста, введите корректный адрес электронной почты.'
+         )
+      }
    }
    const onChangeAdress = (e) => {
       setValueAdress(e.target.value)
    }
    const onChangeNum = (e) => {
-      setValueNum(e.target.value)
+      const phoneNumber = e.target.value
+      setValueNum(phoneNumber)
+
+      try {
+         schemaPhoneNumber.parse({
+            phoneNumber: phoneNumber,
+         })
+         setPhoneNumberError('')
+      } catch (error) {
+         setPhoneNumberError(
+            'Номер телефона должен начинаться с 0 и содержать 10 цифр'
+         )
+      }
    }
    const onChangeDesc = (e) => {
-      setValueDesc(e.target.value)
+      const descriptions = e.target.value
+      setValueDesc(descriptions)
+
+      try {
+         schemaDescription.parse({
+            descriptions: descriptions,
+         })
+         setDescriptionsErrorss('')
+      } catch (error) {
+         setDescriptionsErrorss(
+            'Длина текста превышает допустимый лимит. Пожалуйста, сократите текст.'
+         )
+      }
    }
+   const canSubmit = () => {
+      if (valueNum && !phoneNumberError) {
+         setIsSubmitDisabled(false)
+      } else {
+         setIsSubmitDisabled(true)
+      }
+   }
+
+   useEffect(canSubmit, [valueNum, phoneNumberError])
 
    const editUserCards = () => {
       const data = {
@@ -44,7 +123,7 @@ export const EditModal = ({ onCloseEditModal }) => {
          email: valueEmail,
          contact_number: valueNum,
          about_company: valueDesc,
-         vacancy: 16,
+         vacancy: 33,
          user: 1,
       }
       dispatch(editDetailCart({ id, data })).then((resultAction) => {
@@ -61,6 +140,7 @@ export const EditModal = ({ onCloseEditModal }) => {
             setValueAdress('')
             setValueNum('')
             setValueDesc('')
+            setIsSubmitDisabled(true)
          } else {
             showSnackbar({
                message:
@@ -75,7 +155,7 @@ export const EditModal = ({ onCloseEditModal }) => {
       <ModalComponent
          open
          width="60.4375rem"
-         height="47.1875rem"
+         height="50rem"
          border="1px solid #fff"
          onClose={onCloseEditModal}
       >
@@ -97,6 +177,7 @@ export const EditModal = ({ onCloseEditModal }) => {
                   borderColor="#fff"
                   borderradius="0.626rem"
                />
+               {emailrError && <ErrorText>{emailrError}</ErrorText>}
             </div>
             <div>
                <InputTitle>Email</InputTitle>
@@ -139,6 +220,7 @@ export const EditModal = ({ onCloseEditModal }) => {
                   borderColor="#fff"
                   borderradius="0.626rem"
                />
+               {phoneNumberError && <ErrorText>{phoneNumberError}</ErrorText>}
             </div>
             <div>
                <InputTitle>More about company</InputTitle>
@@ -154,6 +236,9 @@ export const EditModal = ({ onCloseEditModal }) => {
                   background="#252335"
                   borderColor="#fff"
                />
+               {descriptionsErrorss && (
+                  <ErrorText>{descriptionsErrorss}</ErrorText>
+               )}
             </div>
             <BlockBtn>
                <UiButton
@@ -173,6 +258,7 @@ export const EditModal = ({ onCloseEditModal }) => {
                   border="1px solid #F9F9F9"
                   borderRadius="0.625rem"
                   background="#252335"
+                  disabled={isSubmitDisabled}
                >
                   Save
                </UiButton>
@@ -214,4 +300,9 @@ const Image = styled('img')`
    width: 9.875rem;
    height: 9.875rem;
    border-radius: 100%;
+`
+const ErrorText = styled('p')`
+   color: red;
+   font-size: 0.8125rem;
+   margin-top: 0.2rem;
 `

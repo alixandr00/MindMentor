@@ -1,4 +1,6 @@
-import React, { useState } from 'react'
+/* eslint-disable object-shorthand */
+import React, { useEffect, useState } from 'react'
+import { z } from 'zod'
 import { useDispatch } from 'react-redux'
 import { styled } from '@mui/material'
 import { UiInput } from '../UI/input/UiInput'
@@ -10,36 +12,121 @@ import { showSnackbar } from '../UI/snackbar/Snackbar'
 export const VendorsModal = ({ onCloseModalHandler }) => {
    const dispatch = useDispatch()
 
+   const schemaEmail = z.object({
+      email: z
+         .string()
+         .nonempty('Заполните обязательные поля')
+         .regex(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, {
+            message: 'Пожалуйста, введите корректный адрес электронной почты.',
+         }),
+   })
+
+   const schemaPhoneNumber = z.object({
+      phoneNumber: z
+         .string()
+         .nonempty('Заполните обязательные поля')
+         .min(10, 'Номер телефона должен состоять из 10 символов')
+         .regex(/^0\d{9}$/, {
+            message: 'Введите корректный номер телефона, начинающийся с 0 ',
+         }),
+   })
+   const schemaDescription = z.object({
+      descriptions: z
+         .string()
+         .nonempty('Заполните обязательные поля')
+         .max(
+            200,
+            'Длина текста превышает допустимый лимит. Пожалуйста, сократите текст.'
+         ),
+   })
+
    const [valueName, setValueName] = useState('')
    const [valueEmail, setValueEmail] = useState('')
    const [valueAdress, setValueAdress] = useState('')
    const [valueNum, setValueNum] = useState('')
    const [valueDesc, setValueDesc] = useState('')
+   const [emailrError, setEmailError] = useState(false)
+   const [phoneNumberError, setPhoneNumberError] = useState(false)
+   const [descriptionsErrorss, setDescriptionsErrorss] = useState(false)
+   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true)
 
    const onChangeValue = (e) => {
       setValueName(e.target.value)
    }
    const onChangeEmail = (e) => {
-      setValueEmail(e.target.value)
+      const email = e.target.value
+      setValueEmail(email)
+
+      try {
+         schemaEmail.parse({
+            email: email,
+         })
+         setEmailError('')
+      } catch (error) {
+         setEmailError(
+            'Пожалуйста, введите корректный адрес электронной почты.'
+         )
+      }
    }
    const onChangeAdress = (e) => {
       setValueAdress(e.target.value)
    }
    const onChangeNum = (e) => {
-      setValueNum(e.target.value)
+      const phoneNumber = e.target.value
+      setValueNum(phoneNumber)
+
+      try {
+         schemaPhoneNumber.parse({
+            phoneNumber: phoneNumber,
+         })
+         setPhoneNumberError('')
+      } catch (error) {
+         setPhoneNumberError(
+            'Номер телефона должен начинаться с 0 и содержать 10 цифр'
+         )
+      }
    }
    const onChangeDesc = (e) => {
-      setValueDesc(e.target.value)
+      const descriptions = e.target.value
+      setValueDesc(descriptions)
+
+      try {
+         schemaDescription.parse({
+            descriptions: descriptions,
+         })
+         setDescriptionsErrorss('')
+      } catch (error) {
+         setDescriptionsErrorss(
+            'Длина текста превышает допустимый лимит. Пожалуйста, сократите текст.'
+         )
+      }
    }
 
+   const canSubmit = () => {
+      if (valueNum && !phoneNumberError) {
+         setIsSubmitDisabled(false)
+      } else {
+         setIsSubmitDisabled(true)
+      }
+   }
+
+   useEffect(canSubmit, [valueNum, phoneNumberError])
+
    const addNewUserCards = () => {
+      if (phoneNumberError) {
+         showSnackbar({
+            message: phoneNumberError,
+            severity: 'error',
+         })
+         return
+      }
       const data = {
          name: valueName,
          address: valueAdress,
          email: valueEmail,
          contact_number: valueNum,
          about_company: valueDesc,
-         vacancy: 16,
+         vacancy: 33,
          user: 1,
       }
       dispatch(addNewCart(data))
@@ -55,10 +142,11 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
             setValueAdress('')
             setValueNum('')
             setValueDesc('')
+            setIsSubmitDisabled(true)
          })
          .catch(() => {
             showSnackbar({
-               message: 'Заполните все поля!',
+               message: 'Правильно заполните все поля!',
                severity: 'warning',
             })
          })
@@ -69,7 +157,7 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
          open
          onClose={onCloseModalHandler}
          width="60.4375rem"
-         height="47.1875rem"
+         height="50rem"
          border="1px solid #fff"
       >
          <Container>
@@ -104,6 +192,7 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
                   borderColor="#fff"
                   borderradius="0.626rem"
                />
+               {emailrError && <ErrorText>{emailrError}</ErrorText>}
             </div>
             <div>
                <InputTitle>Address</InputTitle>
@@ -119,6 +208,7 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
                   borderradius="0.626rem"
                />
             </div>
+
             <div>
                <InputTitle>Phone Number</InputTitle>
                <UiInput
@@ -132,6 +222,7 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
                   borderColor="#fff"
                   borderradius="0.626rem"
                />
+               {phoneNumberError && <ErrorText>{phoneNumberError}</ErrorText>}
             </div>
             <div>
                <InputTitle>More about company</InputTitle>
@@ -147,6 +238,9 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
                   background="#252335"
                   borderColor="#fff"
                />
+               {descriptionsErrorss && (
+                  <ErrorText>{descriptionsErrorss}</ErrorText>
+               )}
             </div>
             <BlockBtn>
                <UiButton
@@ -166,6 +260,7 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
                   border="1px solid #F9F9F9"
                   borderRadius="0.625rem"
                   background="#252335"
+                  disabled={isSubmitDisabled}
                >
                   Save
                </UiButton>
@@ -207,4 +302,9 @@ const Image = styled('img')`
    width: 9.875rem;
    height: 9.875rem;
    border-radius: 100%;
+`
+const ErrorText = styled('p')`
+   color: red;
+   font-size: 0.8125rem;
+   margin-top: 0.2rem;
 `

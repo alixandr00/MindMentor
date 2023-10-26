@@ -5,6 +5,7 @@
    "dependencies": {
       "@emotion/react": "^11.11.1",
       "@emotion/styled": "^11.11.0",
+      "@hookform/resolvers": "^3.3.2",
       "@material/icon-button": "^14.0.0",
       "@mui/icons-material": "^5.14.13",
       "@mui/lab": "^5.0.0-alpha.149",
@@ -28,7 +29,8 @@
       "react-virtuoso": "^4.6.1",
       "redux": "^4.2.1",
       "swiper-react": "^1.0.0",
-      "web-vitals": "^2.1.4"
+      "web-vitals": "^2.1.4",
+      "zod": "^3.22.4"
    },
    "scripts": {
       "start": "react-scripts start",

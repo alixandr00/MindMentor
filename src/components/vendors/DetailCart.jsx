@@ -27,7 +27,7 @@ import { EditModal } from './EditModal'
 import { DeleteModal } from '../UI/deleteModal/DeleteModal'
 import { EditVacancyModal } from './EditVacancyModal'
 
-export const DetailCart = ({ iD = 16 }) => {
+export const DetailCart = () => {
    const dispatch = useDispatch()
    const navigate = useNavigate()
    const param = useParams()
@@ -48,7 +48,7 @@ export const DetailCart = ({ iD = 16 }) => {
    }
    const onOpenModalHandlerVacansy = () => {
       setOpenModalVacansy(true)
-      dispatch(getVacansyDetail(iD))
+      dispatch(getVacansyDetail(id))
    }
 
    const onOpendeleteVacancyModal = () => {
