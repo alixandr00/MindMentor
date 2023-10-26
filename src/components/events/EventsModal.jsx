@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { styled } from '@mui/material'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
@@ -10,19 +10,14 @@ import { UiInput } from '../UI/input/UiInput'
 import { UiButton } from '../UI/button/UiButton'
 import { Time } from '../UI/time/Time'
 
-export const EventsModal = () => {
-   const [close, setClose] = useState(true)
-
-   const onClose = () => {
-      setClose(false)
-   }
-
-   return close ? (
+export const EventsModal = ({ onClose }) => {
+   return (
       <UiModal
          open
          width="36.75rem"
          height="43.0625rem"
          backgroundColor="rgba(84, 71, 170, 0.93)"
+         onClose={onClose}
       >
          <CloseIconContainer>
             <CloseIconBlock onClick={onClose}>
@@ -131,8 +126,6 @@ export const EventsModal = () => {
             </ButtonBlock>
          </Container>
       </UiModal>
-   ) : (
-      ''
    )
 }
 

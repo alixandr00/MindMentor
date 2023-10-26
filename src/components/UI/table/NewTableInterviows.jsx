@@ -9,10 +9,19 @@ import { useState } from 'react'
 import { DownIcon, SearchIcon, UpIcon } from '../../../assets/icons'
 import { UiInput } from '../input/UiInput'
 import { UiButton } from '../button/UiButton'
+import { EventsModal } from '../../events/EventsModal'
 
 export const NewInterviews = ({ children }) => {
    const [isSelectOpen, setIsSelectOpen] = useState(false)
    const [selectedValue, setSelectedValue] = useState('Tech Stack')
+   const [openModal, setOpenModal] = useState(false)
+
+   const onOpenHandleModal = () => {
+      setOpenModal(true)
+   }
+   const onCloseHandleModal = () => {
+      setOpenModal(false)
+   }
 
    const handleSelectOpen = () => {
       setIsSelectOpen(true)
@@ -35,7 +44,9 @@ export const NewInterviews = ({ children }) => {
             <div>
                <InternBox>
                   <p className="Interns">Interview schedules</p>
-                  <UiButtonStyled>+ New interview</UiButtonStyled>
+                  <UiButtonStyled onClick={onOpenHandleModal}>
+                     + New interview
+                  </UiButtonStyled>
                </InternBox>
                <InputBox>
                   <Input>
@@ -81,6 +92,7 @@ export const NewInterviews = ({ children }) => {
             </div>
          </ContIntern>
          {children}
+         {openModal ? <EventsModal onClose={onCloseHandleModal} /> : ''}
       </Container>
    )
 }
