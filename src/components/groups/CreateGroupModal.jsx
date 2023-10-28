@@ -3,26 +3,39 @@ import CloseIcon from '@mui/icons-material/Close'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { IconButton, styled } from '@mui/material'
 import { LocalizationProvider } from '@mui/x-date-pickers'
-// import { useSearchParams } from 'react-router-dom'
 import dayjs from 'dayjs'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { useDispatch } from 'react-redux'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { UiModal } from '../UI/modal/UiModal'
 import { UiInput } from '../UI/input/UiInput'
 import { UiButton } from '../UI/button/UiButton'
 import 'dayjs/locale/en'
 import { AddedInternsModal } from './AddedInternsModal'
+import { postGroups } from '../../store/groups/groupThunk'
+import { headerArray } from '../../utils/table-students'
 
 dayjs.extend(customParseFormat)
 dayjs.locale('en')
 
 export const CreateGroupModal = ({ openModal, oncloseModal }) => {
    const [openModalInterns, setOpenModalInterns] = useState(false)
+   const [state, setState] = useState({})
+   const [internName, setInternName] = useState([])
+   const [internId, setInternId] = useState([])
+   console.log('state: ', state)
+   const dispatch = useDispatch()
 
    const [groupName, setGroupName] = useState('')
    const [status, setStatus] = useState('')
    const [startData, setStartData] = useState(null)
    const [endData, setEndData] = useState(null)
+   const openModalHandler = () => {
+      setOpenModalInterns(true)
+   }
+   const closeModalHandler = () => {
+      setOpenModalInterns(false)
+   }
 
    const handleFormSubmit = (event) => {
       event.preventDefault()
@@ -34,22 +47,11 @@ export const CreateGroupModal = ({ openModal, oncloseModal }) => {
          status,
          start_date: formattedStartData,
          end_date: formattedEndData,
-         people: [1, 2],
+         people: state.internId,
       }
-
+      dispatch(postGroups({ formData, oncloseModal }))
       console.log(formData)
    }
-   const openModalHandler = () => {
-      setOpenModalInterns(true)
-      // setOpenModalInterns({ added: 'Interns' })
-   }
-   const closeModalHandler = () => {
-      setOpenModalInterns(false)
-
-      // openModalInterns.delete('added')
-      // setOpenModalInterns(openModalInterns)
-   }
-   // const internsModalOpen = openModalInterns.has('added')
 
    return (
       <UiModal open={openModal} onClose={oncloseModal}>
@@ -73,10 +75,26 @@ export const CreateGroupModal = ({ openModal, oncloseModal }) => {
                   <UiButtonStyled onClick={openModalHandler}>
                      Group
                   </UiButtonStyled>
+                  <WrapperInternName>
+                     {state.name?.map((el) => (
+                        <TextInternName>{el}</TextInternName>
+                     )) ?? (
+                        <TextInternNameNo>
+                           There are no interns here yet .
+                        </TextInternNameNo>
+                     )}
+                  </WrapperInternName>
                   {openModalInterns ? (
                      <AddedInternsModal
+                        setState={setState}
+                        state={state}
+                        internName={internName}
+                        setInternName={setInternName}
+                        internId={internId}
+                        setInternId={setInternId}
                         openModal={openModalHandler}
                         oncloseModal={closeModalHandler}
+                        headerArray={headerArray}
                      />
                   ) : null}
                </SecondWrapper>
@@ -147,6 +165,28 @@ export const CreateGroupModal = ({ openModal, oncloseModal }) => {
    )
 }
 
+const TextInternName = styled('p')({
+   color: '#FFF',
+   fontSize: '1rem',
+   fontWeight: 500,
+   width: 'fit-content',
+   height: 'fit-content',
+   fontFamily: 'Bai Jamjuree',
+})
+const TextInternNameNo = styled('p')({
+   color: '#FFF',
+   fontSize: '1rem',
+   fontWeight: 500,
+   width: 'fit-content',
+   height: 'fit-content',
+   fontFamily: 'Bai Jamjuree',
+   marginTop: '2rem',
+})
+const WrapperInternName = styled('div')({
+   display: 'flex',
+   gap: '1rem',
+   flexWrap: 'wrap',
+})
 const IconButtonStyled = styled(IconButton)({
    position: 'absolute',
    right: '1.3rem',
@@ -231,8 +271,10 @@ const SecondWrapper = styled('div')({
    width: '30rem',
    height: '12rem',
    marginTop: '1rem',
-   // backgroundColor: 'red',
-   border: '1px solid white',
+   display: 'flex',
+   flexWrap: 'wrap',
+   flexDirection: 'column',
+   gap: '1rem',
 })
 const ThirdWrapper = styled('div')({
    display: 'flex',

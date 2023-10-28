@@ -1,52 +1,124 @@
-import React, { useEffect } from 'react'
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { styled } from '@mui/material'
+import { IconButton, styled } from '@mui/material'
+import { ReactComponent as DeleteIcon } from '../../assets/icons/deleteicon.svg'
 import { NotesIcon, PeopleIcon, ProgressIcon } from '../../assets/icons'
-import { getGroups } from '../../store/groups/groupThunk'
+import {
+   deleteGroups,
+   getGroupById,
+   getGroups,
+} from '../../store/groups/groupThunk'
 import { Loading } from '../UI/loading/Loading'
+import { DeleteGroupModal } from './DeleteGroupModal'
+import { GetGroupModal } from './GetGroupModal'
+import { showSnackbar } from '../UI/snackbar/Snackbar'
 
-export const GroupsCards = () => {
-   const { groups, isLoading } = useSelector((state) => state.groups)
+export const GroupsCards = ({ groups }) => {
+   const [deleteOpenModal, setDeleteOpenModal] = useState(false)
+   const [groupOpenModal, setGroupOpenModal] = useState(false)
+
+   const { isLoading } = useSelector((state) => state.groups)
+   const [getId, setGetId] = useState(null)
    const dispatch = useDispatch()
 
    useEffect(() => {
       dispatch(getGroups())
    }, [dispatch])
 
+   const deleteOpenModalHandler = (id) => {
+      setDeleteOpenModal(true)
+      setGetId(id)
+   }
+
+   const deleteGroupById = () => {
+      dispatch(deleteGroups({ getId, setDeleteOpenModal }))
+   }
+
+   const openModalHandler = () => {
+      setGroupOpenModal(true)
+   }
+
+   const closeModalHandler = () => {
+      setGroupOpenModal(false)
+   }
+
+   const getGroupsById = (id) => {
+      console.log('id: ', id)
+      dispatch(getGroupById(id))
+         .unwrap()
+         .then(() => {
+            setGroupOpenModal(true)
+         })
+         .catch(() => {
+            showSnackbar({
+               severity: 'error',
+               message: 'error getting group',
+            })
+         })
+   }
+
    return (
       <Container>
          {isLoading && <Loading />}
          {groups?.map((card) => (
             <ContainerCards key={card.id}>
-               <CompanyNameText>{card.name}</CompanyNameText>
-               <WrapperMain>
-                  <MainContainers>
-                     <IconWrapper>
-                        <ProgressIcon />
-                     </IconWrapper>
-                     <CardTexts>{card.status}</CardTexts>
-                  </MainContainers>
-                  <MainContainers>
-                     <IconWrapper>
-                        <PeopleIcon />
-                     </IconWrapper>
-                     <CardTexts>{card.people} people</CardTexts>
-                  </MainContainers>
-                  <MainContainers>
-                     <IconWrapper>
-                        <NotesIcon />
-                     </IconWrapper>
-                     <CardTexts>
-                        {card.start_date}/{card.end_date}
-                     </CardTexts>
-                  </MainContainers>
-               </WrapperMain>
+               {groupOpenModal ? (
+                  <GetGroupModal
+                     openModal={() => openModalHandler()}
+                     oncloseModal={closeModalHandler}
+                  />
+               ) : null}
+               <IconButtonStyled
+                  className="dd"
+                  onClick={() => deleteOpenModalHandler(card.id)}
+               >
+                  <DeleteIcon />
+               </IconButtonStyled>
+               {deleteOpenModal ? (
+                  <DeleteGroupModal
+                     onOpen={deleteOpenModal}
+                     onCloseModal={setDeleteOpenModal}
+                     deleteGroupById={deleteGroupById}
+                  />
+               ) : null}
+               <div onClick={() => getGroupsById(card.id)}>
+                  <CompanyNameText>{card.name}</CompanyNameText>
+                  <WrapperMain>
+                     <MainContainers>
+                        <IconWrapper>
+                           <ProgressIcon />
+                        </IconWrapper>
+                        <CardTexts>{card.status}</CardTexts>
+                     </MainContainers>
+                     <MainContainers>
+                        <IconWrapper>
+                           <PeopleIcon />
+                        </IconWrapper>
+                        <CardTexts>{card.people} people</CardTexts>
+                     </MainContainers>
+                     <MainContainers>
+                        <IconWrapper>
+                           <NotesIcon />
+                        </IconWrapper>
+                        <CardTexts>
+                           {card.start_date}/{card.end_date}
+                        </CardTexts>
+                     </MainContainers>
+                  </WrapperMain>
+               </div>
             </ContainerCards>
          ))}
       </Container>
    )
 }
-
+const IconButtonStyled = styled(IconButton)({
+   position: 'absolute',
+   top: '-0.3rem',
+   right: 0,
+   display: 'none',
+   // visibility: 'hidden', // Иконка по умолчанию скрыта
+})
 const Container = styled('div')(() => ({
    marginTop: '2rem',
    width: '100%',
@@ -74,12 +146,16 @@ const ContainerCards = styled('div')(() => ({
    width: '14.375rem',
    height: '10.4375rem',
    borderRadius: '0.625rem',
+   position: 'relative',
    border: '1px solid #FFF',
    paddingTop: '1.75rem',
    transition: 'transform 0.3s, background 0.3s',
    '&:hover': {
       background: 'linear-gradient(7.1875deg, #49318C, #3F5FB0)',
-      // transform: 'scale(1.01)',
+
+      '& .dd': {
+         display: 'block',
+      },
    },
 }))
 const CompanyNameText = styled('p')({

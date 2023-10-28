@@ -1,9 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { getGroups } from './groupThunk'
+import {
+   getGroupById,
+   getGroupFiltered,
+   getGroups,
+   getGroupsBySearch,
+} from './groupThunk'
 
 const initialState = {
    groups: [],
    isLoading: false,
+   getGroupId: {},
+   getGroupFilter: [],
 }
 
 export const groupsSlice = createSlice({
@@ -21,6 +28,24 @@ export const groupsSlice = createSlice({
          })
          .addCase(getGroups.rejected, (state) => {
             state.isLoading = false
+         })
+         .addCase(getGroupById.fulfilled, (state, actions) => {
+            state.getGroupId = actions.payload
+            state.isLoading = false
+         })
+         .addCase(getGroupById.pending, (state) => {
+            state.isLoading = true
+         })
+         .addCase(getGroupById.rejected, (state) => {
+            state.isLoading = false
+         })
+         .addCase(getGroupFiltered.fulfilled, (state, actions) => {
+            state.isLoading = false
+            state.groups = actions.payload
+         })
+         .addCase(getGroupsBySearch.fulfilled, (state, actions) => {
+            state.isLoading = false
+            state.groups = actions.payload
          })
    },
 })
