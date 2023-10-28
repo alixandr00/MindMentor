@@ -9,18 +9,24 @@ import { UiButton } from '../UI/button/UiButton'
 import { ReactComponent as Icon } from '../../assets/images/Ellipse 5 (1).svg'
 import {
    editVacancyThunk,
-   getVacansyInfo,
+   getSearchVendors,
+   getVacansyDetail,
 } from '../../store/vendors/vendors.thunk'
 import { DateOfCartDetail } from '../UI/dateOfCartDetail/DateOfCartDetail'
 import { showSnackbar } from '../UI/snackbar/Snackbar'
 
 export const EditVacancyModal = ({ onCloseModalHandlerVacansy, id }) => {
    const dispatch = useDispatch()
-   const { vacansyGet } = useSelector((state) => state.vendor)
-   console.log(vacansyGet)
-   const [selectedLevel, setSelectedLevel] = useState('Junior')
-   const [value, setValue] = useState('')
-   const [description, setDescription] = useState('')
+   const {
+      vacancy_name,
+      level,
+      requirements_vacancy,
+      id: iD,
+   } = useSelector((state) => state.vendor.vacansyGetDetail)
+
+   const [selectedLevel, setSelectedLevel] = useState(level)
+   const [value, setValue] = useState(vacancy_name)
+   const [description, setDescription] = useState(requirements_vacancy)
    const [selectedDate, setSelectedDate] = useState('')
    const formattedDate = dayjs(selectedDate).format('YYYY-MM-DD')
 
@@ -48,12 +54,13 @@ export const EditVacancyModal = ({ onCloseModalHandlerVacansy, id }) => {
       dispatch(editVacancyThunk({ id, data }))
          .unwrap()
          .then(() => {
+            dispatch(getSearchVendors(''))
+            dispatch(getVacansyDetail(iD))
+            onCloseModalHandlerVacansy()
             showSnackbar({
                message: 'Успешно обновлено!',
                severity: 'success',
             })
-            onCloseModalHandlerVacansy()
-            dispatch(getVacansyInfo())
          })
          .catch(() => {
             showSnackbar({
@@ -103,8 +110,8 @@ export const EditVacancyModal = ({ onCloseModalHandlerVacansy, id }) => {
                <Level>Level</Level>
                <SelectBlock onChange={onChangeOption} value={selectedLevel}>
                   <option value="Junior">Junior</option>
-                  <option value="Senior">Senior</option>
-                  <option value="Middle">Middle</option>
+                  <option value="Senior">Middle</option>
+                  <option value="Middle">Senior</option>
                </SelectBlock>
                <DateOfCartDetailStyle>
                   <DateOfCartDetail

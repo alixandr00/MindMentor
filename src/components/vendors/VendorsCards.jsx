@@ -6,16 +6,20 @@ import { GmailIcon, LocationIcon, PhoneIcon } from '../../assets/icons'
 import { ReactComponent as Delete } from '../../assets/icons/deleteicon.svg'
 import { UiModal } from '../UI/modal/UiModal'
 import { UiButton } from '../UI/button/UiButton'
-import { deleteVendors, getVendors } from '../../store/vendors/vendors.thunk'
+import {
+   deleteVendors,
+   getVendorsDetailCart,
+} from '../../store/vendors/vendors.thunk'
 import { showSnackbar } from '../UI/snackbar/Snackbar'
 
 export const VendorsCards = () => {
    const dispatch = useDispatch()
    const location = useLocation()
-   const { vendorsGetCart } = useSelector((state) => state.vendor)
+   const { vendorSearch } = useSelector((state) => state.vendor)
 
    const [openDeleteModal, setOpenDeleteModal] = useState(false)
    const [selectedId, setSelectedId] = useState(null)
+   const [selId, setSelId] = useState(null)
 
    const onCloseDeleteModalHandler = () => {
       setOpenDeleteModal(false)
@@ -43,14 +47,16 @@ export const VendorsCards = () => {
    }
 
    useEffect(() => {
-      dispatch(getVendors())
-   }, [])
+      dispatch(getVendorsDetailCart(selId))
+   }, [selId])
+
    return (
       <Container>
-         {vendorsGetCart?.map((card) => (
+         {vendorSearch?.map((card) => (
             <ContainerCards
                key={card.id}
                to={`vendorsDetail/${card.id}`}
+               onClick={() => setSelId(card.id)}
                className={({ isActive }) => (isActive ? 'active' : '')}
             >
                <CardHead>
@@ -94,6 +100,13 @@ export const VendorsCards = () => {
                <p>Are you sure that you want to delete this Vendor?</p>
                <UiButtonBlock>
                   <Button
+                     onClick={onCloseDeleteModalHandler}
+                     backgroundColor="linear-gradient(180deg, rgba(4, 1, 22, 0.93) 0%, rgba(43, 45, 49, 0.00) 100%)"
+                  >
+                     No
+                  </Button>
+
+                  <Button
                      onClick={() => {
                         onDeleteCart()
                         onCloseDeleteModalHandler()
@@ -101,13 +114,6 @@ export const VendorsCards = () => {
                      backgroundColor="linear-gradient(180deg, rgba(4, 1, 22, 0.93) 0%, rgba(43, 45, 49, 0.00) 100%)"
                   >
                      Yes
-                  </Button>
-
-                  <Button
-                     onClick={onCloseDeleteModalHandler}
-                     backgroundColor="linear-gradient(180deg, rgba(4, 1, 22, 0.93) 0%, rgba(43, 45, 49, 0.00) 100%)"
-                  >
-                     No
                   </Button>
                </UiButtonBlock>
             </Modal>

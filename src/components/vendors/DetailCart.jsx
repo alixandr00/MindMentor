@@ -4,8 +4,6 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Outlet, useNavigate, useParams } from 'react-router-dom'
 import CloseIcon from '@mui/icons-material/Close'
-import Pagination from '@mui/material/Pagination'
-import Stack from '@mui/material/Stack'
 import { ReactComponent as Message } from '../../assets/icons/message.svg'
 import { ReactComponent as Telephon } from '../../assets/icons/Tel.svg'
 import { ReactComponent as Location } from '../../assets/icons/Location.svg'
@@ -17,8 +15,8 @@ import { ReactComponent as Edit } from '../../assets/icons/editIcon.svg'
 import {
    deleteVacancyThunk,
    deleteVendors,
+   getSearchVendors,
    getVacansyDetail,
-   getVacansyInfo,
    getVendorsDetailCart,
 } from '../../store/vendors/vendors.thunk'
 import { showSnackbar } from '../UI/snackbar/Snackbar'
@@ -32,23 +30,22 @@ export const DetailCart = () => {
    const navigate = useNavigate()
    const param = useParams()
 
-   const { id, name, email, contact_number, about_company, address } =
+   const { id, name, email, contact_number, about_company, address, vacancy } =
       useSelector((state) => state.vendor.vendorsDetail)
-   const { vacansyGet } = useSelector((state) => state.vendor)
-
+   const { level, creation_date, vacancy_name } = useSelector(
+      (state) => state.vendor.vacansyGetDetail
+   )
    const [openDeleteModal, setOpenDeleteModal] = useState(false)
    const [openDeleteVacancyModal, setOpenDeletevacancyModal] = useState(false)
    const [openEditModal, setOpenEditModal] = useState(false)
    const [openModalVacansy, setOpenModalVacansy] = useState(false)
-   const [getId, setGetId] = useState(null)
-   const [editId, setEditId] = useState(null)
 
    const onCloseModalHandlerVacansy = () => {
       setOpenModalVacansy(false)
    }
    const onOpenModalHandlerVacansy = () => {
       setOpenModalVacansy(true)
-      dispatch(getVacansyDetail(id))
+      dispatch(getVacansyDetail(vacancy))
    }
 
    const onOpendeleteVacancyModal = () => {
@@ -76,14 +73,15 @@ export const DetailCart = () => {
    }
 
    const onDeleteVacancy = () => {
-      dispatch(deleteVacancyThunk(getId))
+      dispatch(deleteVacancyThunk(vacancy))
          .unwrap()
          .then(() => {
             showSnackbar({
                message: 'Успешно удалено!',
                severity: 'success',
             })
-            dispatch(getVacansyInfo())
+            dispatch(getSearchVendors(''))
+            navigate('/admin/vendors')
          })
          .catch(() => {
             showSnackbar({
@@ -95,39 +93,36 @@ export const DetailCart = () => {
    }
 
    const onDeleteCart = () => {
-      dispatch(deleteVendors(id)).then((resultAction) => {
-         const { error } = resultAction
-         if (!error) {
-            showSnackbar({
-               message: 'Успешно удалено!',
-               severity: 'success',
-            })
-            navigate('/admin/vendors')
+      dispatch(deleteVendors(id))
+         .unwrap()
+         .then((resultAction) => {
+            dispatch(getSearchVendors(''))
             dispatch(getVendorsDetailCart(id))
-         } else {
-            showSnackbar({
-               message:
-                  'Не удалось удалить элемент. Пожалуйста, попробуйте еще раз.',
-               severity: 'warning',
-            })
-         }
-      })
+            const { error } = resultAction
+            if (!error) {
+               showSnackbar({
+                  message: 'Успешно удалено!',
+                  severity: 'success',
+               })
+               navigate('/admin/vendors')
+            } else {
+               showSnackbar({
+                  message:
+                     'Не удалось удалить элемент. Пожалуйста, попробуйте еще раз.',
+                  severity: 'warning',
+               })
+            }
+         })
    }
 
    useEffect(() => {
       dispatch(getVendorsDetailCart(param.id))
-      dispatch(getVacansyInfo())
-   }, [])
-
-   const itemsPerPage = 3
-   const [currentPage, setCurrentPage] = useState(1)
-   const startIndex = (currentPage - 1) * itemsPerPage
-   const endIndex = startIndex + itemsPerPage
-   const vacanciesToDisplay = vacansyGet.slice(startIndex, endIndex)
-   const totalPages = Math.ceil(vacansyGet.length / itemsPerPage)
-   const handlePageChange = (event, page) => {
-      setCurrentPage(page)
-   }
+         .unwrap()
+         .then(() => {
+            dispatch(getSearchVendors(''))
+            dispatch(getVacansyDetail(vacancy))
+         })
+   }, [vacancy])
 
    return (
       <Container>
@@ -163,36 +158,32 @@ export const DetailCart = () => {
             <p>Vacancy</p>
          </UserBlock>
          <VacancyBlock>
-            {vacanciesToDisplay?.map((el) => (
-               <ContainerChildrenArrow>
-                  <JsBlock>
-                     <JavaScriptText>{el.vacancy_name}</JavaScriptText>
-                     <Arrow onClick={() => navigate(`modal/${el.id}`)} />
-                  </JsBlock>
-                  <BlockArrow>
-                     <SquareBlock>
-                        <Square />
-                        <p>{el.level}</p>
-                     </SquareBlock>
-                     <CalendarStyle>
-                        <Calendar />
-                        <p>{el.creation_date}</p>
-                     </CalendarStyle>
-                     <DeleteStyles
-                        onClick={() => {
-                           setGetId(el.id)
-                           onOpendeleteVacancyModal()
-                        }}
-                     />
-                     <EditStyles
-                        onClick={() => {
-                           setEditId(el.id)
-                           onOpenModalHandlerVacansy()
-                        }}
-                     />
-                  </BlockArrow>
-               </ContainerChildrenArrow>
-            ))}
+            <ContainerChildrenArrow>
+               <JsBlock>
+                  <JavaScriptText>{vacancy_name}</JavaScriptText>
+                  <ArrowStyle onClick={() => navigate(`modal/${vacancy}`)} />
+               </JsBlock>
+               <BlockArrow>
+                  <SquareBlock>
+                     <Square />
+                     <p>{level}</p>
+                  </SquareBlock>
+                  <CalendarStyle>
+                     <Calendar />
+                     <p>{creation_date}</p>
+                  </CalendarStyle>
+                  <DeleteStyles
+                     onClick={() => {
+                        onOpendeleteVacancyModal()
+                     }}
+                  />
+                  <EditStyles
+                     onClick={() => {
+                        onOpenModalHandlerVacansy()
+                     }}
+                  />
+               </BlockArrow>
+            </ContainerChildrenArrow>
          </VacancyBlock>
          {openDeleteModal ? (
             <DeleteModal
@@ -225,22 +216,12 @@ export const DetailCart = () => {
          )}
          {openModalVacansy ? (
             <EditVacancyModal
-               id={editId}
+               id={vacancy}
                onCloseModalHandlerVacansy={onCloseModalHandlerVacansy}
             />
          ) : (
             ''
          )}
-         <PaginationBlock>
-            <Stack spacing={2}>
-               <Pagination
-                  count={totalPages}
-                  page={currentPage}
-                  onChange={handlePageChange}
-                  color="secondary"
-               />
-            </Stack>
-         </PaginationBlock>
          <Outlet />
       </Container>
    )
@@ -407,11 +388,6 @@ const SquareBlock = styled('div')`
    display: flex;
    gap: 0.3rem;
 `
-const PaginationBlock = styled('div')`
-   display: flex;
-   justify-content: center;
-   margin-top: auto;
-   .MuiPaginationItem-root {
-      color: #fff;
-   }
+const ArrowStyle = styled(Arrow)`
+   cursor: pointer;
 `

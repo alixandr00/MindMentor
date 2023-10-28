@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { IconButton, styled } from '@mui/material'
 import { UiButton } from '../UI/button/UiButton'
 import { UiInput } from '../UI/input/UiInput'
@@ -6,12 +7,22 @@ import { SearchIcon } from '../../assets/icons'
 import { VendorsModal } from './NewVacansyModal'
 import { NewVendorModal } from './NewVendorModal'
 import { useCustomSearchParams } from '../../utils/CustomSearchParams'
+import {
+   getSearchVendors,
+   getVacansyDetail,
+} from '../../store/vendors/vendors.thunk'
 
 export const NewVendors = ({ children }) => {
+   const dispatch = useDispatch()
    const [openModalVendors, setOpenModalVendors] = useState(false)
    const [openModalVacansy, setOpenModalVacansy] = useState(false)
-
    const { setParam, deleteParam } = useCustomSearchParams()
+
+   const [value, setValue] = useState('')
+
+   const onChangeValue = (e) => {
+      setValue(e.target.value)
+   }
 
    const onOpenModalHandler = () => {
       setOpenModalVendors(true)
@@ -29,6 +40,13 @@ export const NewVendors = ({ children }) => {
       setOpenModalVacansy(false)
       deleteParam('ModalVacancy')
    }
+   useEffect(() => {
+      dispatch(getSearchVendors(value))
+         .unwrap()
+         .then(() => {
+            dispatch(getVacansyDetail())
+         })
+   }, [value])
    return (
       <Container>
          <ContIntern>
@@ -38,11 +56,12 @@ export const NewVendors = ({ children }) => {
             <div>
                <InternBox>
                   <p className="Interns">Vendors</p>
-                  <div>{}</div>
                </InternBox>
                <InputBox>
                   <Input>
                      <UiInputStyled
+                        value={value}
+                        onChange={onChangeValue}
                         colors="#FFFF"
                         placeholder="search name"
                         type="text"

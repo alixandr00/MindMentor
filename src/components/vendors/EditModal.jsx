@@ -9,13 +9,14 @@ import { UiModal } from '../UI/modal/UiModal'
 import { UiButton } from '../UI/button/UiButton'
 import {
    editDetailCart,
+   getSearchVendors,
    getVendorsDetailCart,
 } from '../../store/vendors/vendors.thunk'
 import { showSnackbar } from '../UI/snackbar/Snackbar'
 
 export const EditModal = ({ onCloseEditModal }) => {
    const dispatch = useDispatch()
-   const { id, name, email, contact_number, about_company, address } =
+   const { id, name, email, contact_number, about_company, address, vacancy } =
       useSelector((state) => state.vendor.vendorsDetail)
 
    const schemaEmail = z.object({
@@ -45,6 +46,7 @@ export const EditModal = ({ onCloseEditModal }) => {
             'Длина текста превышает допустимый лимит. Пожалуйста, сократите текст.'
          ),
    })
+   const [valueId, setValueId] = useState(vacancy)
    const [valueName, setValueName] = useState(name)
    const [valueEmail, setValueEmail] = useState(email)
    const [valueAdress, setValueAdress] = useState(address)
@@ -55,6 +57,9 @@ export const EditModal = ({ onCloseEditModal }) => {
    const [descriptionsErrorss, setDescriptionsErrorss] = useState(false)
    const [isSubmitDisabled, setIsSubmitDisabled] = useState(true)
 
+   const onChangeValueId = (e) => {
+      setValueId(e.target.value)
+   }
    const onChangeValue = (e) => {
       setValueName(e.target.value)
    }
@@ -123,16 +128,13 @@ export const EditModal = ({ onCloseEditModal }) => {
          email: valueEmail,
          contact_number: valueNum,
          about_company: valueDesc,
-         vacancy: 33,
+         vacancy: vacancy,
          user: 1,
       }
-      dispatch(editDetailCart({ id, data })).then((resultAction) => {
-         const { error } = resultAction
-         if (!error) {
-            showSnackbar({
-               message: 'Данные о студенте успешно обнавлены!',
-               severity: 'success',
-            })
+      dispatch(editDetailCart({ id, data }))
+         .unwrap()
+         .then(() => {
+            dispatch(getSearchVendors(''))
             dispatch(getVendorsDetailCart(id))
             onCloseEditModal()
             setValueName('')
@@ -141,29 +143,43 @@ export const EditModal = ({ onCloseEditModal }) => {
             setValueNum('')
             setValueDesc('')
             setIsSubmitDisabled(true)
-         } else {
+            showSnackbar({
+               message: 'Данные о студенте успешно обнавлены!',
+               severity: 'success',
+            })
+         })
+         .catch(() => {
             showSnackbar({
                message:
-                  'Все поля должны быть заполнены. Пожалуйста, попробуйте еще раз.',
+                  'Не удалось удалить вакансию! Пожалуйста, попробуйте ещё раз.',
                severity: 'warning',
             })
-         }
-      })
+         })
    }
 
    return (
       <ModalComponent
          open
          width="60.4375rem"
-         height="50rem"
+         height="47.1875rem"
          border="1px solid #fff"
          onClose={onCloseEditModal}
       >
          <Container>
-            <Image
-               src="https://www.pavilionweb.com/wp-content/uploads/2017/03/man-300x300.png"
-               alt="user"
-            />
+            <div>
+               <InputTitle>Vacancy ID</InputTitle>
+               <UiInput
+                  value={valueId}
+                  onChange={onChangeValueId}
+                  background="#252335"
+                  width="30.8125rem"
+                  height="2.0625rem"
+                  type="text"
+                  colors="#fff"
+                  borderColor="#fff"
+                  borderradius="0.626rem"
+               />
+            </div>
             <div>
                <InputTitle>Company Name</InputTitle>
                <UiInput
@@ -177,7 +193,6 @@ export const EditModal = ({ onCloseEditModal }) => {
                   borderColor="#fff"
                   borderradius="0.626rem"
                />
-               {emailrError && <ErrorText>{emailrError}</ErrorText>}
             </div>
             <div>
                <InputTitle>Email</InputTitle>
@@ -192,6 +207,7 @@ export const EditModal = ({ onCloseEditModal }) => {
                   borderColor="#fff"
                   borderradius="0.626rem"
                />
+               {emailrError && <ErrorText>{emailrError}</ErrorText>}
             </div>
             <div>
                <InputTitle>Address</InputTitle>
@@ -272,7 +288,7 @@ const Container = styled('div')`
    display: flex;
    flex-direction: column;
    gap: 1.12rem;
-   position: relative;
+   justify-content: center;
    .custom-width-input {
       width: 30.8125rem;
    }
@@ -294,13 +310,13 @@ const BlockBtn = styled('div')`
    justify-content: flex-end;
    margin-top: 0.56rem;
 `
-const Image = styled('img')`
-   position: relative;
-   left: 10rem;
-   width: 9.875rem;
-   height: 9.875rem;
-   border-radius: 100%;
-`
+// const Image = styled('img')`
+//    position: relative;
+//    left: 10rem;
+//    width: 9.875rem;
+//    height: 9.875rem;
+//    border-radius: 100%;
+// `
 const ErrorText = styled('p')`
    color: red;
    font-size: 0.8125rem;

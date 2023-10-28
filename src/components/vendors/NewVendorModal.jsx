@@ -8,7 +8,7 @@ import { UiButton } from '../UI/button/UiButton'
 import { ReactComponent as Icon } from '../../assets/images/Ellipse 5 (1).svg'
 import {
    addNewVacancy,
-   getVacansyInfo,
+   getSearchVendors,
 } from '../../store/vendors/vendors.thunk'
 import { DateOfCartDetail } from '../UI/dateOfCartDetail/DateOfCartDetail'
 import { showSnackbar } from '../UI/snackbar/Snackbar'
@@ -51,7 +51,7 @@ export const NewVendorModal = ({ onCloseModalHandlerVacansy }) => {
                severity: 'success',
             })
             onCloseModalHandlerVacansy()
-            dispatch(getVacansyInfo())
+            dispatch(getSearchVendors(''))
          })
          .catch(() => {
             showSnackbar({
@@ -100,8 +100,8 @@ export const NewVendorModal = ({ onCloseModalHandlerVacansy }) => {
                <Level>Level</Level>
                <SelectBlock onChange={onChangeOption} value={selectedLevel}>
                   <option value="Junior">Junior</option>
-                  <option value="Senior">Senior</option>
-                  <option value="Middle">Middle</option>
+                  <option value="Senior">Middle</option>
+                  <option value="Middle">Senior</option>
                </SelectBlock>
                <DateOfCartDetailStyle>
                   <DateOfCartDetail

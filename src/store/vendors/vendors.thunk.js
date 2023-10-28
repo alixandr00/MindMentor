@@ -3,33 +3,31 @@ import {
    deleteVacansyRequest,
    editCartDetailRequest,
    editVacansyRequest,
+   getSearchVendorRequest,
    getVacansyDetailRequest,
-   getVacansyRequest,
    postNewCartRequest,
    postVacansyDetailRequest,
    vendorsDeleteCartRequest,
    vendorsGetCartDeyailRequest,
-   vendorsGetCartRequest,
 } from '../../api/vendorsGetService'
 
-export const getVendors = createAsyncThunk(
-   'vendor/getVendors',
-   async (_, { rejectWithValue }) => {
+export const getSearchVendors = createAsyncThunk(
+   'vendor/getSearchVendors',
+   async (name, { rejectWithValue }) => {
       try {
-         const response = await vendorsGetCartRequest()
+         const response = await getSearchVendorRequest(name)
          return response.data
       } catch (error) {
          return rejectWithValue(error)
       }
    }
 )
-
 export const getVendorsDetailCart = createAsyncThunk(
    'vendor/getVendorsDetailCart',
    async (id, { dispatch, rejectWithValue }) => {
       try {
          const response = await vendorsGetCartDeyailRequest(id)
-         dispatch(getVendors())
+         dispatch(getSearchVendors(''))
          return response.data
       } catch (error) {
          return rejectWithValue(error)
@@ -42,7 +40,7 @@ export const deleteVendors = createAsyncThunk(
    async (id, { dispatch, rejectWithValue }) => {
       try {
          await vendorsDeleteCartRequest(id)
-         dispatch(getVendors())
+         dispatch(getSearchVendors(''))
          dispatch(getVendorsDetailCart(id))
       } catch (error) {
          return rejectWithValue(error)
@@ -50,11 +48,11 @@ export const deleteVendors = createAsyncThunk(
    }
 )
 export const addNewCart = createAsyncThunk(
-   'vendor/deleteVendors',
+   'vendor/addNewCart',
    async (data, { dispatch, rejectWithValue }) => {
       try {
          await postNewCartRequest(data)
-         dispatch(getVendors())
+         dispatch(getSearchVendors(''))
       } catch (error) {
          return rejectWithValue(error)
       }
@@ -66,21 +64,8 @@ export const editDetailCart = createAsyncThunk(
    async (data, { dispatch, rejectWithValue }) => {
       try {
          const response = await editCartDetailRequest(data)
-         dispatch(getVendors())
+         dispatch(getSearchVendors())
          dispatch(getVendorsDetailCart(data.id))
-         return response.data
-      } catch (error) {
-         return rejectWithValue(error)
-      }
-   }
-)
-
-export const getVacansyInfo = createAsyncThunk(
-   'vendor/getVacansyInfo',
-   async (_, { dispatch, rejectWithValue }) => {
-      try {
-         const response = await getVacansyRequest()
-         dispatch(getVendors())
          return response.data
       } catch (error) {
          return rejectWithValue(error)
@@ -93,7 +78,7 @@ export const getVacansyDetail = createAsyncThunk(
    async (id, { dispatch, rejectWithValue }) => {
       try {
          const response = await getVacansyDetailRequest(id)
-         dispatch(getVendors())
+         dispatch(getSearchVendors(''))
          return response.data
       } catch (error) {
          return rejectWithValue(error)
@@ -122,9 +107,10 @@ export const deleteVacancyThunk = createAsyncThunk(
 )
 export const editVacancyThunk = createAsyncThunk(
    'vendor/editVacancyThunk',
-   async (data, { rejectWithValue }) => {
+   async (data, { dispatch, rejectWithValue }) => {
       try {
          await editVacansyRequest(data)
+         dispatch(getSearchVendors(''))
       } catch (error) {
          return rejectWithValue(error)
       }

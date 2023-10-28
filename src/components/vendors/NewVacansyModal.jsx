@@ -1,4 +1,3 @@
-/* eslint-disable object-shorthand */
 import React, { useEffect, useState } from 'react'
 import { z } from 'zod'
 import { useDispatch } from 'react-redux'
@@ -6,7 +5,7 @@ import { styled } from '@mui/material'
 import { UiInput } from '../UI/input/UiInput'
 import { UiModal } from '../UI/modal/UiModal'
 import { UiButton } from '../UI/button/UiButton'
-import { addNewCart } from '../../store/vendors/vendors.thunk'
+import { addNewCart, getSearchVendors } from '../../store/vendors/vendors.thunk'
 import { showSnackbar } from '../UI/snackbar/Snackbar'
 
 export const VendorsModal = ({ onCloseModalHandler }) => {
@@ -40,6 +39,7 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
          ),
    })
 
+   const [valueId, setValueId] = useState('')
    const [valueName, setValueName] = useState('')
    const [valueEmail, setValueEmail] = useState('')
    const [valueAdress, setValueAdress] = useState('')
@@ -50,16 +50,19 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
    const [descriptionsErrorss, setDescriptionsErrorss] = useState(false)
    const [isSubmitDisabled, setIsSubmitDisabled] = useState(true)
 
+   const onChangeValueId = (e) => {
+      setValueId(e.target.value)
+   }
    const onChangeValue = (e) => {
       setValueName(e.target.value)
    }
    const onChangeEmail = (e) => {
-      const email = e.target.value
-      setValueEmail(email)
+      const emaill = e.target.value
+      setValueEmail(emaill)
 
       try {
          schemaEmail.parse({
-            email: email,
+            email: emaill,
          })
          setEmailError('')
       } catch (error) {
@@ -72,12 +75,12 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
       setValueAdress(e.target.value)
    }
    const onChangeNum = (e) => {
-      const phoneNumber = e.target.value
-      setValueNum(phoneNumber)
+      const phoneNumbers = e.target.value
+      setValueNum(phoneNumbers)
 
       try {
          schemaPhoneNumber.parse({
-            phoneNumber: phoneNumber,
+            phoneNumber: phoneNumbers,
          })
          setPhoneNumberError('')
       } catch (error) {
@@ -87,12 +90,12 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
       }
    }
    const onChangeDesc = (e) => {
-      const descriptions = e.target.value
-      setValueDesc(descriptions)
+      const descriptionss = e.target.value
+      setValueDesc(descriptionss)
 
       try {
          schemaDescription.parse({
-            descriptions: descriptions,
+            descriptions: descriptionss,
          })
          setDescriptionsErrorss('')
       } catch (error) {
@@ -126,7 +129,7 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
          email: valueEmail,
          contact_number: valueNum,
          about_company: valueDesc,
-         vacancy: 33,
+         vacancy: valueId,
          user: 1,
       }
       dispatch(addNewCart(data))
@@ -136,6 +139,7 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
                message: 'Данные о студенте успешно добавлены!',
                severity: 'success',
             })
+            dispatch(getSearchVendors(''))
             onCloseModalHandler()
             setValueName('')
             setValueEmail('')
@@ -157,14 +161,24 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
          open
          onClose={onCloseModalHandler}
          width="60.4375rem"
-         height="50rem"
+         height="47.1875rem"
          border="1px solid #fff"
       >
          <Container>
-            <Image
-               src="https://www.pavilionweb.com/wp-content/uploads/2017/03/man-300x300.png"
-               alt="user"
-            />
+            <div>
+               <InputTitle>Vacancy ID</InputTitle>
+               <UiInput
+                  value={valueId}
+                  onChange={onChangeValueId}
+                  background="#252335"
+                  width="30.8125rem"
+                  height="2.0625rem"
+                  type="text"
+                  colors="#fff"
+                  borderColor="#fff"
+                  borderradius="0.626rem"
+               />
+            </div>
             <div>
                <InputTitle>Company Name</InputTitle>
                <UiInput
@@ -273,6 +287,7 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
 const Container = styled('div')`
    display: flex;
    flex-direction: column;
+   justify-content: center;
    gap: 1.12rem;
    position: relative;
    .custom-width-input {
@@ -295,13 +310,6 @@ const BlockBtn = styled('div')`
    gap: 2.88rem;
    justify-content: flex-end;
    margin-top: 0.56rem;
-`
-const Image = styled('img')`
-   position: relative;
-   left: 10rem;
-   width: 9.875rem;
-   height: 9.875rem;
-   border-radius: 100%;
 `
 const ErrorText = styled('p')`
    color: red;
