@@ -11,54 +11,30 @@ import {
    IconButton,
    styled,
 } from '@mui/material'
+import { useDispatch, useSelector } from 'react-redux'
 import { ReactComponent as DeleteIcon } from '../../../assets/icons/deleteicon.svg'
 import { ReactComponent as EditIcon } from '../../../assets/icons/editIcon.svg'
 import { ReactComponent as NextIcon } from '../../../assets/icons/NextIcon.svg'
 import { ReactComponent as PrevIcon } from '../../../assets/icons/PrevIcon.svg'
 import ProfileImage from '../../../assets/images/profileImage.jpg'
+import { interviewThunk } from '../../../store/interview/interview.thunk'
 
-export const TableInterviow = ({ array, headerArray, onOpenDeleteModal }) => {
-   const [data, setData] = useState([])
+export const TableInterviow = ({ headerArray, onOpenDeleteModal }) => {
+   const dispatch = useDispatch()
+   const getInterviews = useSelector((state) => state.interview.getInterview)
+   console.log(getInterviews)
+
    const [loading, setLoading] = useState(true)
-   const [currentPage, setCurrentPage] = useState(1)
 
    useEffect(() => {
+      dispatch(interviewThunk())
       const fetchData = () => {
          setTimeout(() => {
-            // Simulated data
-            const mockData = array
-            setData(mockData)
             setLoading(false)
-         }, 1500) // Simulated delay of 2 seconds
+         }, 1500)
       }
       fetchData()
    }, [])
-
-   const recordsPerPage = 5
-   const lastIndex = currentPage * recordsPerPage
-   const firstIndex = lastIndex - recordsPerPage
-   const records = data.slice(firstIndex, lastIndex)
-   const npage = Math.ceil(data.length / recordsPerPage)
-
-   function prevPage() {
-      setLoading(true) // Set loading state to true when starting the loading process
-      setTimeout(() => {
-         if (currentPage !== 1) {
-            setCurrentPage(currentPage - 1)
-         }
-         setLoading(false) // Set loading state to false after loading is done
-      }, 500)
-   }
-
-   function nextPage() {
-      setLoading(true) // Set loading state to true when starting the loading process
-      setTimeout(() => {
-         if (currentPage !== npage) {
-            setCurrentPage(currentPage + 1)
-         }
-         setLoading(false) // Set loading state to false after loading is done
-      }, 500)
-   }
 
    return (
       <>
@@ -144,7 +120,7 @@ export const TableInterviow = ({ array, headerArray, onOpenDeleteModal }) => {
                         </StyledTableRowOne>
                      </>
                   ) : (
-                     records.map((item) => (
+                     getInterviews?.map((item) => (
                         <StyledTableRow key={item.id}>
                            <StyledTableCellForData>
                               <StyledContainerImageName>
@@ -203,20 +179,14 @@ export const TableInterviow = ({ array, headerArray, onOpenDeleteModal }) => {
             <nav>
                <StyledUl>
                   <li>
-                     <IconButton
-                        onClick={() => prevPage()}
-                        disabled={currentPage === 1}
-                     >
+                     <IconButton>
                         <PrevIcon />
                         <StyledSpan>Prev</StyledSpan>
                      </IconButton>
                   </li>
 
                   <li>
-                     <IconButton
-                        disabled={currentPage === npage}
-                        onClick={() => nextPage()}
-                     >
+                     <IconButton>
                         <StyledSpan>Next</StyledSpan>
                         <NextIcon />
                      </IconButton>
