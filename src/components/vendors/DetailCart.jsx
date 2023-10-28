@@ -119,7 +119,6 @@ export const DetailCart = () => {
       dispatch(getVendorsDetailCart(param.id))
          .unwrap()
          .then(() => {
-            dispatch(getSearchVendors(''))
             dispatch(getVacansyDetail(vacancy))
          })
    }, [vacancy])
@@ -127,6 +126,10 @@ export const DetailCart = () => {
    return (
       <Container>
          <CloseIconBlock>
+            <DeleteAndEdit>
+               <DeleteStyle onClick={onOpenDeleteModalHandler} />
+               <EditStyle onClick={onOpenEditModal} />
+            </DeleteAndEdit>
             <IconsClose onClick={navigatePrevPage} />
          </CloseIconBlock>
          <ContainerChilde>
@@ -146,10 +149,6 @@ export const DetailCart = () => {
                      <p>{address}</p>
                   </LocationBlock>
                </BrendDescription>
-               <DeleteAndEdit>
-                  <DeleteStyle onClick={onOpenDeleteModalHandler} />
-                  <EditStyle onClick={onOpenEditModal} />
-               </DeleteAndEdit>
             </BlockImage>
             <Description>{about_company}</Description>
          </ContainerChilde>
@@ -256,7 +255,6 @@ const BlockImage = styled('div')`
    display: flex;
    width: 100%;
    margin-top: 1.56rem;
-   justify-content: space-around;
 `
 
 const BrendDescription = styled('div')`
@@ -350,7 +348,8 @@ const JsBlock = styled('div')`
 `
 const CloseIconBlock = styled('div')`
    display: flex;
-   justify-content: flex-end;
+   justify-content: space-between;
+   margin-top: 1rem;
 `
 const IconsClose = styled(CloseIcon)`
    margin-top: 0.5rem;
@@ -359,9 +358,8 @@ const IconsClose = styled(CloseIcon)`
 `
 const DeleteAndEdit = styled('div')`
    display: flex;
-   width: 58%;
    gap: 1rem;
-   justify-content: flex-end;
+   align-items: center;
 `
 const EditStyle = styled(Edit)`
    cursor: pointer;
