@@ -6,9 +6,14 @@ import { UiInput } from '../../UI/input/UiInput'
 import { UiButton } from '../../UI/button/UiButton'
 import { ReactComponent as Money } from '../../../assets/icons/Chat Round Money.svg'
 
-export const PayModal = ({ onClosePayModalHandler }) => {
+export const PayModal = ({ onClosePayModalHandler, open }) => {
    return (
-      <Modal width=" 26.875rem" height="23.4375rem" open>
+      <Modal
+         width=" 26.875rem"
+         height="23.4375rem"
+         onClose={onClosePayModalHandler}
+         open={open}
+      >
          <IconContainer>
             <CloseIconContainer onClick={onClosePayModalHandler}>
                <StyldeIcon />

@@ -3,9 +3,14 @@ import { styled } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import { UiModal } from '../../UI/modal/UiModal'
 
-export const HistoryModal = ({ onCloseModalHandler }) => {
+export const HistoryModal = ({ onCloseModalHandler, open }) => {
    return (
-      <Modal width="32.375rem" height="43.0625rem" open>
+      <Modal
+         width="32.375rem"
+         height="43.0625rem"
+         open={open}
+         onClose={onCloseModalHandler}
+      >
          <IconContainer onClick={onCloseModalHandler}>
             <CloseIconContainer>
                <StyldeIcon />

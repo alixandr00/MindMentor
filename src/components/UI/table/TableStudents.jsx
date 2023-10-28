@@ -19,18 +19,28 @@ import { ReactComponent as EditIcon } from '../../../assets/icons/editIcon.svg'
 import { ReactComponent as CommentIcon } from '../../../assets/icons/Comment.svg'
 import { ReactComponent as NextIcon } from '../../../assets/icons/NextIcon.svg'
 import { ReactComponent as PrevIcon } from '../../../assets/icons/PrevIcon.svg'
-import { fetchInterns } from '../../../store/interns/internsThunk'
+import {
+   fetchInterns,
+   fetchInternsDelete,
+} from '../../../store/interns/internsThunk'
 import { Loading } from '../loading/Loading'
+import { PayModal } from '../../Interns/internsModal/PayModal'
+import { HistoryModal } from '../../Interns/internsModal/HistoryModal'
+import { showSnackbar } from '../snackbar/Snackbar'
+import { DeleteModal } from '../deleteModal/DeleteModal'
 
-export const TableStudents = ({ headerArray, onOpenPayModalHandler }) => {
+export const TableStudents = ({ headerArray }) => {
    const dispatch = useDispatch()
-   const interns = useSelector((state) => state.interns.interns)
-   console.log(interns)
+   const internss = useSelector((state) => state.interns.internsSearch)
    const loading = useSelector((state) => state.interns.isLoading)
    const error = useSelector((state) => state.interns.error)
    const [data, setData] = useState([])
    const [loadings, setLoadings] = useState(true)
    const [currentPage, setCurrentPage] = useState(1)
+   const [modalPay, setModalPay] = useState(false)
+   const [modalHistory, setModalHistory] = useState(false)
+   const [openModalDelete, setOpenModalDelete] = useState(false)
+   const [internsId, setInternsId] = useState()
 
    const navigate = useNavigate()
    useEffect(() => {
@@ -41,12 +51,12 @@ export const TableStudents = ({ headerArray, onOpenPayModalHandler }) => {
    }, [dispatch])
 
    useEffect(() => {
-      if (interns) {
-         setData(interns)
+      if (internss) {
+         setData(internss)
       }
 
       setLoadings(false)
-   }, [interns])
+   }, [internss])
 
    const recordsPerPage = 5
    const lastIndex = currentPage * recordsPerPage
@@ -81,6 +91,21 @@ export const TableStudents = ({ headerArray, onOpenPayModalHandler }) => {
    const onOpenModalHandler = (e, id) => {
       navigate(`details/${id}`)
    }
+
+   const handleModalHistory = () => setModalHistory((prev) => !prev)
+   const handleModalPay = () => setModalPay((prev) => !prev)
+
+   const handleOpenModalDelete = (id) => {
+      setOpenModalDelete(true)
+      setInternsId(id)
+   }
+
+   const handleDeleteStudents = (internId) => {
+      dispatch(fetchInternsDelete({ id: internId, snackbar: showSnackbar }))
+      navigate('/admin/interns')
+      setOpenModalDelete(false)
+   }
+   const handleModalDeleteClose = () => setOpenModalDelete(false)
 
    return (
       <StyledContent>
@@ -214,17 +239,21 @@ export const TableStudents = ({ headerArray, onOpenPayModalHandler }) => {
                            </StyledTableCellForData>
                            <StyledTableCellForData align="center">
                               <IconButton>
-                                 <CommentIcon onClick={onOpenPayModalHandler} />
+                                 <CommentIcon onClick={handleModalPay} />
                               </IconButton>
                            </StyledTableCellForData>
                            <StyledTableCellForData align="center">
                               <IconButton>
                                  <EditIcon />
                               </IconButton>
-                              <IconButton>
+                              <IconButton
+                                 onClick={() =>
+                                    handleOpenModalDelete(intern.id)
+                                 }
+                              >
                                  <DeleteIcon />
                               </IconButton>
-                              <IconButton>
+                              <IconButton onClick={handleModalHistory}>
                                  <History />
                               </IconButton>
                            </StyledTableCellForData>
@@ -259,6 +288,31 @@ export const TableStudents = ({ headerArray, onOpenPayModalHandler }) => {
                </StyledUl>
             </nav>
          </StyledContainer>
+         {modalPay ? (
+            <PayModal
+               onClosePayModalHandler={handleModalPay}
+               open={handleModalPay}
+            />
+         ) : (
+            ''
+         )}
+         {modalHistory ? (
+            <HistoryModal
+               onCloseModalHandler={handleModalHistory}
+               open={handleModalHistory}
+            />
+         ) : (
+            ''
+         )}
+         {openModalDelete ? (
+            <DeleteModal
+               onClick={() => handleDeleteStudents(internsId)}
+               onClose={handleModalDeleteClose}
+               unClick={handleModalDeleteClose}
+            />
+         ) : (
+            ''
+         )}
       </StyledContent>
    )
 }
@@ -350,6 +404,7 @@ const StyledTableRow = styled(TableRow)`
       );
    }
 `
+
 const StyledTableCell = styled(TableCell)`
    font-weight: 500;
    font-family: 'Roboto', sans-serif;

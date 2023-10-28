@@ -2,8 +2,42 @@ import { styled } from '@mui/material'
 import { UiInput } from '../../UI/input/UiInput'
 import { InternsAddStudentModalSelect } from './InternsAddStudentModalSelect'
 import { UiButton } from '../../UI/button/UiButton'
+import { useState } from 'react'
+import { addedInterns } from '../../../api/authService'
 
-export const InternsAddStudentModal = () => {
+export const InternsAddStudentModal = ({ onClose }) => {
+
+   const onSubmitHandler = (values) => {
+      const newData = {
+         firstName: values.firstName,
+         lastName: values.lastName,
+         phoneNumber: values.phoneNumber,
+         email: values.email,
+      }
+      addedInterns(newData)
+      onClose()
+   }
+   const formik = useFormik({
+      initialValues: {
+         firstName: '',
+         lastName: '',
+         email: '',
+         password: 'Здесь будет линк create password',
+         phoneNumber: '',
+      },
+      onSubmit: onSubmitHandler,
+   })
+   const { handleChange, handleSubmit, values, setFieldValue } = formik
+
+   const isEmailValid = () => {
+      return (
+         values.email.length === 0 ||
+         (values.email.length > 0 && values.email.includes('@'))
+      )
+   }
+   const handlePhoneChange = (value) => {
+      setFieldValue('phoneNumber', value)
+   }
    return (
       <MainContainer>
          <Container>
@@ -133,6 +167,7 @@ export const InternsAddStudentModal = () => {
 
                   <FooterButtonContainer>
                      <UiButton
+                        onClick={onClose}
                         backgroundColor="#252335"
                         backgroundhover="#28263a"
                         border="1px solid #fff"
@@ -166,7 +201,7 @@ const MainContainer = styled('div')`
 
 const Container = styled('div')`
    margin: 3rem 0 1.25rem 0;
-   padding: 2.4375rem 2.25rem 2.4375rem 2.25rem;
+   padding: 1.3rem 2.25rem 1.3rem 2.25rem;
 
    width: 52vw;
 

@@ -1,24 +1,25 @@
 import { IconButton, styled } from '@mui/material'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { ReactComponent as DatailsClose } from '../../../assets/icons/DatailsClose.svg'
 import ProfileImage from '../../../assets/images/profileImage.jpg'
 
-import { status } from '../../../utils/table-students'
+// import { status } from '../../../utils/table-students'
 // import ProfileImage from '../../../assets/images/profileImage.jpg'
 import Email from '../../../assets/images/Email.png'
 import PhoneNumber from '../../../assets/images/PhoneNumber.png'
 // import ProfileImage from '../../../assets/images/profileImage.jpg'
 import { fetchInternsDetails } from '../../../store/interns/internsThunk'
+import { Loading } from '../loading/Loading'
 
 export const TableStudentsDetails = () => {
    const dispatch = useDispatch()
    const { id } = useParams()
-   const interns = useSelector((state) => state.interns.interns)
+   const interns = useSelector((state) => state.interns.internsDetails)
+   const internss = useSelector((state) => state.interns.interns)
    const loading = useSelector((state) => state.interns.isLoading)
    const error = useSelector((state) => state.interns.error)
-   const [data, setData] = useState([])
    const navigate = useNavigate()
 
    useEffect(() => {
@@ -27,17 +28,7 @@ export const TableStudentsDetails = () => {
       }
 
       fetchData()
-   }, [dispatch])
-
-   useEffect(() => {
-      if (interns) {
-         setData(interns)
-      }
-   }, [interns])
-
-   if (loading === 'loading') {
-      return <div>Loading...</div>
-   }
+   }, [dispatch, id])
 
    if (error) {
       return <div>Error: {error}</div>
@@ -46,114 +37,84 @@ export const TableStudentsDetails = () => {
    const onCloceModalHandler = () => {
       navigate('interns')
    }
+
    return (
-      <StyledContainer>
-         {data.map((internDetail) => {
-            return (
-               +id === internDetail.id && (
-                  <StyledContent>
-                     <StyledHeader>
-                        <p>{internDetail.pay}som</p>
-                        <IconButton onClick={onCloceModalHandler}>
-                           <DatailsClose />
-                        </IconButton>
-                     </StyledHeader>
-                     <StyledStudentsInformation>
-                        <StyledImage
-                           src={ProfileImage}
-                           // src={
-                           //    internDetail.photo !== 'null'
-                           //       ? internDetail.photo
-                           //       : ProfileImage
-                           // }
-                           alt="photos"
-                        />
-                        <h3>{`${internDetail.name}  ${internDetail.surname}`}</h3>
-                        <p>JS/group****</p>
-                        <span>Mentor-Tugolbay</span>
-                     </StyledStudentsInformation>
-                     <StyleStatus>
-                        <p
-                           className={
-                              internDetail.status === 'New'
-                                 ? 'New'
-                                 : internDetail.status
-                           }
-                        >
-                           {internDetail.status}
-                        </p>
-                     </StyleStatus>
-                     <StyledEmailAndPhoneNumber>
-                        <StyledBlock>
-                           <img src={Email} alt="email" />
-                           <div>
-                              <span>Email</span>
-                              <p>{internDetail.email}</p>
-                           </div>
-                        </StyledBlock>
-                        <StyledBlock>
-                           <img src={PhoneNumber} alt="email" />
-                           <div>
-                              <span>Phone number</span>
-                              <p>{internDetail.phone_number}</p>
-                           </div>
-                        </StyledBlock>
-                     </StyledEmailAndPhoneNumber>
-                     <StyledDateHistory>
-                        <p>1st payment</p>
-                        <span>
-                           {' '}
-                           12.12.20023 <br /> 12.01.2024
-                        </span>
-                        <p
-                           className={
-                              internDetail.status === 'Paid'
-                                 ? 'Paid'
-                                 : internDetail.status
-                           }
-                        >
-                           {internDetail.status}
-                        </p>
-                     </StyledDateHistory>
-                     <StyledDateHistory>
-                        <p>2nd payment</p>
-                        <span>{internDetail.second_month}</span>
-                        <p>
-                           {status.map((status) => (
+      <>
+         {loading && <Loading />}
+         {internss?.length !== 0 ? (
+            <StyledContainer>
+               {[interns]?.map((internDetail) => {
+                  return (
+                     +id === internDetail.id && (
+                        <StyledContent key={internDetail.id}>
+                           <StyledHeader>
+                              <p>
+                                 {internDetail.pay}
+                                 som
+                              </p>
+                              <IconButton onClick={onCloceModalHandler}>
+                                 <DatailsClose />
+                              </IconButton>
+                           </StyledHeader>
+                           <StyledStudentsInformation>
+                              <StyledImage
+                                 src={
+                                    internDetail.photo !== null
+                                       ? internDetail.photo
+                                       : ProfileImage
+                                 }
+                                 alt="photos"
+                              />
+                              <h3>{`${internDetail.name}  ${internDetail.surname}`}</h3>
+                              <p>JS/group****</p>
+                              <span>Mentor-Tugolbay</span>
+                           </StyledStudentsInformation>
+                           <StyleStatus>
                               <p
                                  className={
-                                    status.paid === 'Paid'
-                                       ? 'Paid'
-                                       : status.paid
+                                    internDetail.status === 'New'
+                                       ? 'New'
+                                       : internDetail.status
                                  }
                               >
-                                 {status.paid}
+                                 {internDetail.status}
                               </p>
-                           ))}
-                        </p>
-                     </StyledDateHistory>
-                     <StyledDateHistory>
-                        <p>3rd payment</p>
-                        <span>{internDetail.third_month}</span>
-                        <p>
-                           {status.map((status) => (
-                              <p
-                                 className={
-                                    status.paid === 'Paid'
-                                       ? 'Paid'
-                                       : status.paid
-                                 }
-                              >
-                                 {status.paid}
-                              </p>
-                           ))}
-                        </p>
-                     </StyledDateHistory>
-                  </StyledContent>
-               )
-            )
-         })}
-      </StyledContainer>
+                           </StyleStatus>
+                           <StyledEmailAndPhoneNumber>
+                              <StyledBlock>
+                                 <img src={Email} alt="email" />
+                                 <div>
+                                    <span>Email</span>
+                                    <p>{internDetail.email}</p>
+                                 </div>
+                              </StyledBlock>
+                              <StyledBlock>
+                                 <img src={PhoneNumber} alt="email" />
+                                 <div>
+                                    <span>Phone number</span>
+                                    <p>{internDetail.phone_number}</p>
+                                 </div>
+                              </StyledBlock>
+                           </StyledEmailAndPhoneNumber>
+                           <StyledDateHistory>
+                              <p>1st payment</p>
+                              <span>{internDetail.first_month}</span>
+                           </StyledDateHistory>
+                           <StyledDateHistory>
+                              <p>2nd payment</p>
+                              <span>{internDetail.second_month}</span>
+                           </StyledDateHistory>
+                           <StyledDateHistory>
+                              <p>3rd payment</p>
+                              <span>{internDetail.third_month}</span>
+                           </StyledDateHistory>
+                        </StyledContent>
+                     )
+                  )
+               })}
+            </StyledContainer>
+         ) : null}
+      </>
    )
 }
 
@@ -161,6 +122,7 @@ const StyledContainer = styled('div')`
    border: 1px solid white;
    border-radius: 10px;
    margin-top: 2rem;
+   width: 37%;
    height: 100%;
 `
 const StyledHeader = styled('div')`
@@ -288,7 +250,7 @@ const StyleStatus = styled('div')({
 })
 
 const StyledContent = styled('div')`
-   padding: 0px 10px;
+   padding: 8px 10px;
    display: flex;
    flex-direction: column;
    gap: 1rem;

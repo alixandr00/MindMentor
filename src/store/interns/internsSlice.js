@@ -1,9 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { fetchInterns, fetchInternsDetails } from './internsThunk'
+import {
+   fetchInterns,
+   fetchInternsDelete,
+   fetchInternsDetails,
+   fetchInternsSearch,
+} from './internsThunk'
 
 const initialState = {
    interns: [],
    internsDetails: [],
+   internsSearch: [],
    isLoading: false,
    error: null,
 }
@@ -28,6 +34,19 @@ const internsSlice = createSlice({
          .addCase(fetchInternsDetails.fulfilled, (state, action) => {
             state.isLoading = false
             state.internsDetails = action.payload
+         })
+         .addCase(fetchInternsSearch.fulfilled, (state, action) => {
+            state.internsSearch = action.payload
+         })
+
+         .addCase(fetchInternsDetails.pending, (state) => {
+            state.isLoading = true
+         })
+         .addCase(fetchInternsDelete.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.interns = state.interns.filter(
+               (intern) => intern.id !== action.payload.id
+            )
          })
    },
 })

@@ -14,3 +14,17 @@ export const internsStudents = () => {
 export const internsStudentsDetails = (id) => {
    return axiosInstance.get(`/interns/${id}/`)
 }
+
+export const internsStudentsDelete = (id) => {
+   return axiosInstance.delete(`/interns/${id}/`)
+}
+
+export const internsSearchStudents = ({ inputValue, selectedValue }) => {
+   return axiosInstance.get(
+      `/interns/?search=${inputValue}&status=${selectedValue}`
+   )
+}
+
+export const addedInterns = () => {
+   return axiosInstance.post('/interns/create/')
+}

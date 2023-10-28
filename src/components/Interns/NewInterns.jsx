@@ -1,3 +1,5 @@
+import { useDispatch } from 'react-redux'
+// import { useNavigate } from 'react-router-dom'
 import {
    FormControl,
    IconButton,
@@ -5,17 +7,24 @@ import {
    Select,
    styled,
 } from '@mui/material'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { UiButton } from '../UI/button/UiButton'
 import { UiInput } from '../UI/input/UiInput'
 import { DownIcon, SearchIcon, UpIcon } from '../../assets/icons'
 import { InternsAddStudentModal } from './InternsAddStudentModal/InternsAddStudentModal'
 import { UiModal } from '../UI/modal/UiModal'
+import { fetchInternsSearch } from '../../store/interns/internsThunk'
 
 export const NewInterns = ({ children }) => {
    const [isSelectOpen, setIsSelectOpen] = useState(false)
-   const [selectedValue, setSelectedValue] = useState('Status')
+   const [selectedValue, setSelectedValue] = useState('')
    const [openModalInterns, setOpenModalInterns] = useState(false)
+   const [inputValue, setInputValue] = useState('')
+   const dispatch = useDispatch()
+   // const navigate = useNavigate()
+   useEffect(() => {
+      dispatch(fetchInternsSearch({ inputValue, selectedValue }))
+   }, [inputValue, selectedValue])
 
    const handleSelectOpen = () => {
       setIsSelectOpen(true)
@@ -25,11 +34,18 @@ export const NewInterns = ({ children }) => {
       setIsSelectOpen(false)
    }
 
+   const onChangevalue = (e) => {
+      setInputValue(e.target.value)
+   }
+
    const handleSelectChange = (event) => {
       setSelectedValue(event.target.value)
    }
    const handleOpenModalInterns = () => {
       setOpenModalInterns(true)
+   }
+   const handleCloseModalInterns = () => {
+      setOpenModalInterns(false)
    }
 
    return (
@@ -51,6 +67,8 @@ export const NewInterns = ({ children }) => {
                         colors="#FFFF"
                         placeholder="search name"
                         type="text"
+                        value={inputValue}
+                        onChange={onChangevalue}
                      />
                      <Icons>
                         <SearchIcon />
@@ -65,6 +83,7 @@ export const NewInterns = ({ children }) => {
                            onOpen={handleSelectOpen}
                            value={selectedValue}
                            onChange={handleSelectChange}
+                           placeholder="Status"
                            // eslint-disable-next-line react/no-unstable-nested-components
                            IconComponent={() => (
                               <SelectIcon
@@ -78,10 +97,15 @@ export const NewInterns = ({ children }) => {
                               </SelectIcon>
                            )}
                         >
-                           <MenuItem value="Status">Java</MenuItem>
-                           <MenuItem value={10}>JavaScrip</MenuItem>
-                           <MenuItem value={20}>Photon</MenuItem>
-                           <MenuItem value={30}>Thirty</MenuItem>
+                           <MenuItem value="Status">Status</MenuItem>
+                           <MenuItem value="New">New</MenuItem>
+                           <MenuItem value="Paid">Paid</MenuItem>
+                           <MenuItem value="Pending">Pending</MenuItem>
+                           <MenuItem value="Validated">Validated</MenuItem>
+                           <MenuItem value="Graduate">Graduate</MenuItem>
+                           <MenuItem value="Selected">Selected</MenuItem>
+                           <MenuItem value="Proposed">Proposed</MenuItem>
+                           <MenuItem value="Onboarded">Onboarded</MenuItem>
                         </SelectStyled>
                      </FormControlStyled>
                   </div>
@@ -91,8 +115,13 @@ export const NewInterns = ({ children }) => {
          {children}
 
          {openModalInterns ? (
-            <UiModal>
-               <InternsAddStudentModal />
+            <UiModal
+               open={openModalInterns}
+               onClose={handleCloseModalInterns}
+               backgroundColor="none"
+               top="43%"
+            >
+               <InternsAddStudentModal onClose={handleCloseModalInterns} />
             </UiModal>
          ) : (
             ''
