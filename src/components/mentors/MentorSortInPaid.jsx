@@ -1,15 +1,14 @@
 /* eslint-disable react/no-unstable-nested-components */
 import { FormControl, MenuItem, Select, styled } from '@mui/material'
+import { useDispatch } from 'react-redux'
 import React, { useState } from 'react'
-import { DownIcon, UpIcon } from '../../../assets/icons'
+import { DownIcon, UpIcon } from '../../assets/icons'
+import { sortHandler } from '../../store/mentors/mentor.slice'
 
-export const InternsAddStudentModalSelect = ({
-   dataMenuItem,
-   name,
-   defaultName,
-}) => {
+export const MentorSortInPaid = ({ dataMenuItem, name, defaultName }) => {
    const [isSelectOpen, setIsSelectOpen] = useState(false)
    const [value, setValue] = useState(defaultName)
+   const dispatch = useDispatch()
 
    const handleSelectClose = () => {
       setIsSelectOpen(false)
@@ -19,7 +18,10 @@ export const InternsAddStudentModalSelect = ({
    }
 
    const handleChange = (e) => {
-      setValue(e.target.value)
+      const event = e.target.value
+
+      dispatch(sortHandler(event))
+      setValue(event)
    }
 
    return (
@@ -87,7 +89,6 @@ const SelectStyle = styled(Select)(() => ({
          padding: '0.375rem 1rem !important',
       },
 
-   backgroundColor: '#252335',
    borderRadius: '0.625rem',
 
    color: '#FFF',
@@ -98,9 +99,6 @@ const SelectStyle = styled(Select)(() => ({
 }))
 
 const MenuItemStyle = styled(MenuItem)`
-   background-color: #252335 !important;
-
-   color: #fff;
    font-family: Bai Jamjuree;
    font-size: 1rem;
    font-style: normal;
@@ -108,7 +106,7 @@ const MenuItemStyle = styled(MenuItem)`
    line-height: normal;
 
    :hover {
-      background-color: #28263a !important;
+      background-color: #f0f0f0 !important;
    }
 `
 

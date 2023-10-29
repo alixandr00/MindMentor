@@ -1,38 +1,52 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { styled } from '@mui/material'
-import { mentorsCards } from '../../utils/general'
+import { useDispatch, useSelector } from 'react-redux'
 import { GmailIcon, PhoneIcon } from '../../assets/icons'
+import { getMentors } from '../../store/mentors/mentor.thunk'
+import { MentorResumeModal } from './MentorResumeModal'
 
 export const MentorsCards = () => {
+   const dispatch = useDispatch()
+   const { mentorData } = useSelector((state) => state.mentor)
+
+   useEffect(() => {
+      dispatch(getMentors())
+   }, [])
+
+   const db = false
+
    return (
       <Container>
-         {mentorsCards.map((mentor) => (
+         {mentorData?.map((mentor) => (
             <ContainerCards key={mentor.id}>
-               <MentorNameText>{mentor.mentorName}</MentorNameText>
+               <MentorNameText>
+                  {mentor.first_name} {mentor.last_name}
+               </MentorNameText>
                <MainWrapper>
-                  <MentorTexts>{mentor.title}</MentorTexts>
+                  <MentorTexts>{mentor.work_experiance}JavaScript</MentorTexts>
                   <MainContainers>
                      <PhoneIcon />
-                     <MentorTexts>{mentor.number}</MentorTexts>
+                     <MentorTexts>{mentor.phone_number}</MentorTexts>
                   </MainContainers>
                   <MainContainers>
                      <GmailIcon />
-                     <MentorTexts>{mentor.gmailAddress}</MentorTexts>
+                     <MentorTexts>{mentor.email}</MentorTexts>
                   </MainContainers>
                </MainWrapper>
             </ContainerCards>
          ))}
+
+         {db && <MentorResumeModal />}
       </Container>
    )
 }
 
 const Container = styled('div')(() => ({
    width: '100%',
-   // height: '100%',
    marginTop: '2rem',
    display: 'flex',
    flexWrap: 'wrap',
-   gap: '1.31rem',
+   gap: '2rem',
    maxHeight: '67vh',
    overflowY: 'auto',
    scrollbarWidth: 'thin',
@@ -47,26 +61,39 @@ const Container = styled('div')(() => ({
       backgroundColor: ' #fff',
       borderRadius: '0.25rem',
    },
+
+   padding: '0.5rem',
 }))
 
 const ContainerCards = styled('div')(() => ({
-   width: '14.375rem',
-   height: '10.4375rem',
+   width: '19.2vw',
    borderRadius: '0.625rem',
    border: '1px solid #FFF',
    transition: 'transform 0.3s, background 0.3s',
+   padding: '26px 32px',
+
    '&:hover': {
       background: 'linear-gradient(7.1875deg, #49318C, #3F5FB0)',
       transform: 'scale(1.05)',
    },
+
+   color: '#FFF',
+   fontFamily: 'Bai Jamjuree',
+   fontSize: '13px',
+   fontStyle: 'normal',
+   fontWeight: '500',
+   lineHeight: 'normal',
+
+   cursor: 'pointer',
 }))
 
 const MentorNameText = styled('p')({
    color: '#FFF',
-   fontSize: '1rem',
+   fontSize: '18px',
    fontWeight: 500,
+   fontFamily: 'Bai Jamjuree',
    textAlign: 'center',
-   marginTop: '1.63rem',
+   margin: '0',
 })
 
 const MainContainers = styled('div')({
@@ -78,7 +105,7 @@ const MainContainers = styled('div')({
 const MentorTexts = styled('p')({
    color: '#ECECEC',
 
-   fontSize: '0.8125rem',
+   fontSize: '1rem',
    fontWeight: 500,
 })
 
@@ -86,6 +113,6 @@ const MainWrapper = styled('div')({
    display: 'flex',
    flexDirection: 'column',
    gap: '0.52rem',
-   marginLeft: '2.12rem',
+   margin: '0',
    marginTop: '1.37rem',
 })
