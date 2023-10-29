@@ -153,7 +153,7 @@ export const TableInterviow = ({ headerArray, onOpenDeleteModal }) => {
                               </p>
                            </StyledTableCellForData>
                            <StyledTableCellForData align="center">
-                              <p>{item.time}</p>
+                              <p>{item.start_time}</p>
                            </StyledTableCellForData>
                            <StyledTableCellForData align="center">
                               {item.date}
