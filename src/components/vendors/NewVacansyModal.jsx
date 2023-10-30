@@ -129,7 +129,6 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
          email: valueEmail,
          contact_number: valueNum,
          about_company: valueDesc,
-         vacancy: valueId,
          user: 1,
       }
       dispatch(addNewCart(data))

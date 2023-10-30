@@ -1,4 +1,3 @@
-/* eslint-disable object-shorthand */
 /* eslint-disable camelcase */
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -16,8 +15,15 @@ import { showSnackbar } from '../UI/snackbar/Snackbar'
 
 export const EditModal = ({ onCloseEditModal }) => {
    const dispatch = useDispatch()
-   const { id, name, email, contact_number, about_company, address, vacancy } =
-      useSelector((state) => state.vendor.vendorsDetail)
+   const {
+      id,
+      name,
+      email,
+      contact_number,
+      about_company,
+      address,
+      vacancy: vacancyId,
+   } = useSelector((state) => state.vendor.vendorsDetail)
 
    const schemaEmail = z.object({
       email: z
@@ -46,7 +52,7 @@ export const EditModal = ({ onCloseEditModal }) => {
             'Длина текста превышает допустимый лимит. Пожалуйста, сократите текст.'
          ),
    })
-   const [valueId, setValueId] = useState(vacancy)
+   const [valueId, setValueId] = useState(vacancyId)
    const [valueName, setValueName] = useState(name)
    const [valueEmail, setValueEmail] = useState(email)
    const [valueAdress, setValueAdress] = useState(address)
@@ -64,12 +70,12 @@ export const EditModal = ({ onCloseEditModal }) => {
       setValueName(e.target.value)
    }
    const onChangeEmail = (e) => {
-      const email = e.target.value
-      setValueEmail(email)
+      const emails = e.target.value
+      setValueEmail(emails)
 
       try {
          schemaEmail.parse({
-            email: email,
+            email: emails,
          })
          setEmailError('')
       } catch (error) {
@@ -82,12 +88,12 @@ export const EditModal = ({ onCloseEditModal }) => {
       setValueAdress(e.target.value)
    }
    const onChangeNum = (e) => {
-      const phoneNumber = e.target.value
-      setValueNum(phoneNumber)
+      const phoneNumbers = e.target.value
+      setValueNum(phoneNumbers)
 
       try {
          schemaPhoneNumber.parse({
-            phoneNumber: phoneNumber,
+            phoneNumber: phoneNumbers,
          })
          setPhoneNumberError('')
       } catch (error) {
@@ -97,12 +103,12 @@ export const EditModal = ({ onCloseEditModal }) => {
       }
    }
    const onChangeDesc = (e) => {
-      const descriptions = e.target.value
-      setValueDesc(descriptions)
+      const description = e.target.value
+      setValueDesc(description)
 
       try {
          schemaDescription.parse({
-            descriptions: descriptions,
+            descriptions: description,
          })
          setDescriptionsErrorss('')
       } catch (error) {
@@ -128,7 +134,7 @@ export const EditModal = ({ onCloseEditModal }) => {
          email: valueEmail,
          contact_number: valueNum,
          about_company: valueDesc,
-         vacancy: vacancy,
+         vacancy: vacancyId,
          user: 1,
       }
       dispatch(editDetailCart({ id, data }))
