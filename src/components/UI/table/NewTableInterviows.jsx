@@ -9,18 +9,12 @@ import { useState } from 'react'
 import { DownIcon, SearchIcon, UpIcon } from '../../../assets/icons'
 import { UiInput } from '../input/UiInput'
 import { UiButton } from '../button/UiButton'
-import { EventsModal } from '../../events/EventsModal'
-import { DeleteModal } from '../deleteModal/DeleteModal'
+import { AddInterviewModal } from './interviewModal/InterviewModal'
 
-export const NewInterviews = ({
-   children,
-   openDeleteModal,
-   onCloseDeleteModal,
-}) => {
+export const NewInterviews = ({ children }) => {
    const [isSelectOpen, setIsSelectOpen] = useState(false)
    const [selectedValue, setSelectedValue] = useState('Tech Stack')
    const [openModal, setOpenModal] = useState(false)
-
    const onOpenHandleModal = () => {
       setOpenModal(true)
    }
@@ -97,8 +91,7 @@ export const NewInterviews = ({
             </div>
          </ContIntern>
          {children}
-         {openModal ? <EventsModal onClose={onCloseHandleModal} /> : ''}
-         {openDeleteModal ? <DeleteModal unClick={onCloseDeleteModal} /> : ''}
+         {openModal ? <AddInterviewModal onClose={onCloseHandleModal} /> : ''}
       </Container>
    )
 }

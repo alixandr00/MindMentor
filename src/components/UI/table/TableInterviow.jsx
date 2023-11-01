@@ -11,19 +11,45 @@ import {
    IconButton,
    styled,
 } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { ReactComponent as DeleteIcon } from '../../../assets/icons/deleteicon.svg'
 import { ReactComponent as EditIcon } from '../../../assets/icons/editIcon.svg'
 import { ReactComponent as NextIcon } from '../../../assets/icons/NextIcon.svg'
 import { ReactComponent as PrevIcon } from '../../../assets/icons/PrevIcon.svg'
-import ProfileImage from '../../../assets/images/profileImage.jpg'
-import { interviewThunk } from '../../../store/interview/interview.thunk'
+import {
+   deleteInterviewThunk,
+   interviewThunk,
+} from '../../../store/interview/interview.thunk'
+import { EditInterviewModal } from './interviewModal/EditIntervieModal'
+import { DeleteModal } from '../deleteModal/DeleteModal'
 
-export const TableInterviow = ({ headerArray, onOpenDeleteModal }) => {
+export const TableInterviow = ({ headerArray }) => {
    const dispatch = useDispatch()
+   const navigate = useNavigate()
    const getInterviews = useSelector((state) => state.interview.getInterview)
-
    const [loading, setLoading] = useState(true)
+   const [openModal, setOpenModal] = useState(false)
+   const [openDeleteModal, setOpenDeleteModal] = useState(false)
+   const [getId, setGetId] = useState(null)
+
+   const onOpenModalHandler = () => {
+      setOpenModal(true)
+   }
+   const onCloseModalHandler = () => {
+      setOpenModal(false)
+   }
+   const onOpenDeleteModals = () => {
+      setOpenDeleteModal(true)
+   }
+   const onCloseDeleteModal = () => {
+      setOpenDeleteModal(false)
+   }
+
+   const deleteInterviewHandler = () => {
+      dispatch(deleteInterviewThunk(getId))
+      onCloseDeleteModal()
+   }
 
    useEffect(() => {
       dispatch(interviewThunk())
@@ -121,23 +147,21 @@ export const TableInterviow = ({ headerArray, onOpenDeleteModal }) => {
                   ) : (
                      getInterviews?.map((item) => (
                         <StyledTableRow key={item.id}>
-                           <StyledTableCellForData>
+                           <StyledTableCellForData
+                              onClick={() => navigate(`detail/${item.id}`)}
+                           >
                               <StyledContainerImageName>
-                                 <StyledImage
-                                    src={
-                                       item.image !== 'null'
-                                          ? item.image
-                                          : ProfileImage
-                                    }
-                                    alt="photo"
-                                 />
-                                 <p>{item.name}</p>
+                                 <p>{item.name_interview}</p>
                               </StyledContainerImageName>
                            </StyledTableCellForData>
-                           <StyledTableCellForData align="center">
+                           <StyledTableCellForData
+                              onClick={() => navigate(`detail/${item.id}`)}
+                              align="center"
+                           >
                               <p>{item.email}</p>
                            </StyledTableCellForData>
                            <StyledTableCellForData
+                              onClick={() => navigate(`detail/${item.id}`)}
                               align="center"
                               className="red"
                            >
@@ -151,23 +175,37 @@ export const TableInterviow = ({ headerArray, onOpenDeleteModal }) => {
                                  {item.techStack}
                               </p>
                            </StyledTableCellForData>
-                           <StyledTableCellForData align="center">
+                           <StyledTableCellForData
+                              onClick={() => navigate(`detail/${item.id}`)}
+                              align="center"
+                           >
                               <p>{item.start_time}</p>
                            </StyledTableCellForData>
-                           <StyledTableCellForData align="center">
+                           <StyledTableCellForData
+                              onClick={() => navigate(`detail/${item.id}`)}
+                              align="center"
+                           >
                               {item.date}
                            </StyledTableCellForData>
-                           <StyledTableCellForData align="center">
+                           <StyledTableCellForData
+                              onClick={() => navigate(`detail/${item.id}`)}
+                              align="center"
+                           >
                               {item.location}
                            </StyledTableCellForData>
-                           <StyledTableCellForData align="center">
+                           <StyledTableCellForDatas align="center">
                               <IconButton>
-                                 <EditIcon />
+                                 <EditIcon onClick={onOpenModalHandler} />
                               </IconButton>
                               <IconButton>
-                                 <DeleteIcon onClick={onOpenDeleteModal} />
+                                 <DeleteIcon
+                                    onClick={() => {
+                                       onOpenDeleteModals()
+                                       setGetId(item.id)
+                                    }}
+                                 />
                               </IconButton>
-                           </StyledTableCellForData>
+                           </StyledTableCellForDatas>
                         </StyledTableRow>
                      ))
                   )}
@@ -193,6 +231,15 @@ export const TableInterviow = ({ headerArray, onOpenDeleteModal }) => {
                </StyledUl>
             </nav>
          </StyledContainer>
+         {openModal ? <EditInterviewModal onClose={onCloseModalHandler} /> : ''}
+         {openDeleteModal ? (
+            <DeleteModal
+               onClick={deleteInterviewHandler}
+               unClick={onCloseDeleteModal}
+            />
+         ) : (
+            ''
+         )}
       </>
    )
 }
@@ -295,6 +342,12 @@ const StyledTableCellForData = styled(TableCell)`
    font-size: 1rem;
    border: none;
 `
+const StyledTableCellForDatas = styled(TableCell)`
+   padding: 20px 8px 8px 20px;
+   color: white;
+   font-size: 1rem;
+   border: none;
+`
 
 const StyledSpan = styled('span')`
    font-size: 0.9rem;
@@ -305,11 +358,6 @@ const StyledContainer = styled('div')`
    display: flex;
    justify-content: end;
    margin-right: 15px;
-`
-const StyledImage = styled('img')`
-   width: 40px;
-   height: 40px;
-   border-radius: 100%;
 `
 
 const StyledContainerImageName = styled('div')`

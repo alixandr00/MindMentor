@@ -30,11 +30,10 @@ export const TableStudents = ({
    useEffect(() => {
       const fetchData = () => {
          setTimeout(() => {
-            // Simulated data
             const mockData = array
             setData(mockData)
             setLoading(false)
-         }, 1000) // Simulated delay of 2 seconds
+         }, 1000)
       }
       fetchData()
    }, [])
@@ -46,22 +45,22 @@ export const TableStudents = ({
    const npage = Math.ceil(data.length / recordsPerPage)
 
    function prevPage() {
-      setLoading(true) // Set loading state to true when starting the loading process
+      setLoading(true)
       setTimeout(() => {
          if (currentPage !== 1) {
             setCurrentPage(currentPage - 1)
          }
-         setLoading(false) // Set loading state to false after loading is done
+         setLoading(false)
       }, 1500)
    }
 
    function nextPage() {
-      setLoading(true) // Set loading state to true when starting the loading process
+      setLoading(true)
       setTimeout(() => {
          if (currentPage !== npage) {
             setCurrentPage(currentPage + 1)
          }
-         setLoading(false) // Set loading state to false after loading is done
+         setLoading(false)
       }, 1500)
    }
 

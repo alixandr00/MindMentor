@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { styled } from '@mui/material'
+import { Outlet } from 'react-router-dom'
 import { TableInterviow } from '../UI/table/TableInterviow'
 import {
    arrayInterviow,
@@ -16,6 +17,7 @@ export const Schedule = () => {
    const onCloseDeleteModal = () => {
       setOpenDeleteModal(false)
    }
+
    return (
       <Container>
          <NewInterviews
@@ -28,6 +30,7 @@ export const Schedule = () => {
                headerArray={headerArrayInterview}
             />
          </NewInterviews>
+         <Outlet />
       </Container>
    )
 }
