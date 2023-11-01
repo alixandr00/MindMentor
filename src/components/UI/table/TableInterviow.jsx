@@ -22,7 +22,6 @@ import { interviewThunk } from '../../../store/interview/interview.thunk'
 export const TableInterviow = ({ headerArray, onOpenDeleteModal }) => {
    const dispatch = useDispatch()
    const getInterviews = useSelector((state) => state.interview.getInterview)
-   console.log(getInterviews)
 
    const [loading, setLoading] = useState(true)
 
