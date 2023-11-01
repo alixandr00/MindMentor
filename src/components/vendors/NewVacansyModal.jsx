@@ -39,7 +39,6 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
          ),
    })
 
-   const [valueId, setValueId] = useState('')
    const [valueName, setValueName] = useState('')
    const [valueEmail, setValueEmail] = useState('')
    const [valueAdress, setValueAdress] = useState('')
@@ -50,9 +49,6 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
    const [descriptionsErrorss, setDescriptionsErrorss] = useState(false)
    const [isSubmitDisabled, setIsSubmitDisabled] = useState(true)
 
-   const onChangeValueId = (e) => {
-      setValueId(e.target.value)
-   }
    const onChangeValue = (e) => {
       setValueName(e.target.value)
    }
@@ -106,14 +102,24 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
    }
 
    const canSubmit = () => {
-      if (valueNum && !phoneNumberError) {
+      if (
+         valueNum &&
+         !phoneNumberError &&
+         !emailrError &&
+         !descriptionsErrorss
+      ) {
          setIsSubmitDisabled(false)
       } else {
          setIsSubmitDisabled(true)
       }
    }
 
-   useEffect(canSubmit, [valueNum, phoneNumberError])
+   useEffect(canSubmit, [
+      valueNum,
+      phoneNumberError,
+      emailrError,
+      descriptionsErrorss,
+   ])
 
    const addNewUserCards = () => {
       if (phoneNumberError) {
@@ -164,20 +170,6 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
          border="1px solid #fff"
       >
          <Container>
-            <div>
-               <InputTitle>Vacancy ID</InputTitle>
-               <UiInput
-                  value={valueId}
-                  onChange={onChangeValueId}
-                  background="#252335"
-                  width="30.8125rem"
-                  height="2.0625rem"
-                  type="text"
-                  colors="#fff"
-                  borderColor="#fff"
-                  borderradius="0.626rem"
-               />
-            </div>
             <div>
                <InputTitle>Company Name</InputTitle>
                <UiInput

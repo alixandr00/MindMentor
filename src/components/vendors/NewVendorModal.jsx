@@ -9,11 +9,13 @@ import { ReactComponent as Icon } from '../../assets/images/Ellipse 5 (1).svg'
 import {
    addNewVacancy,
    getSearchVendors,
+   getVacansy,
+   getVendorsDetailCart,
 } from '../../store/vendors/vendors.thunk'
 import { DateOfCartDetail } from '../UI/dateOfCartDetail/DateOfCartDetail'
 import { showSnackbar } from '../UI/snackbar/Snackbar'
 
-export const NewVendorModal = ({ onCloseModalHandlerVacansy }) => {
+export const NewVendorModal = ({ id, onCloseModalHandlerVacansy }) => {
    const dispatch = useDispatch()
    const [selectedLevel, setSelectedLevel] = useState('Junior')
    const [value, setValue] = useState('')
@@ -42,6 +44,7 @@ export const NewVendorModal = ({ onCloseModalHandlerVacansy }) => {
          vacancy_name: value,
          level: selectedLevel,
          requirements_vacancy: description,
+         vendor: id,
       }
       dispatch(addNewVacancy(data))
          .unwrap()
@@ -52,6 +55,8 @@ export const NewVendorModal = ({ onCloseModalHandlerVacansy }) => {
             })
             onCloseModalHandlerVacansy()
             dispatch(getSearchVendors(''))
+            dispatch(getVendorsDetailCart(id))
+            dispatch(getVacansy())
          })
          .catch(() => {
             showSnackbar({

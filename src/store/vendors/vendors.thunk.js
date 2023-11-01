@@ -4,6 +4,7 @@ import {
    editCartDetailRequest,
    editVacansyRequest,
    getSearchVendorRequest,
+   getVacancyRequest,
    getVacansyDetailRequest,
    postNewCartRequest,
    postVacansyDetailRequest,
@@ -61,11 +62,21 @@ export const addNewCart = createAsyncThunk(
 
 export const editDetailCart = createAsyncThunk(
    'vendor/editDetailCart',
-   async (data, { dispatch, rejectWithValue }) => {
+   async (data, { rejectWithValue }) => {
       try {
          const response = await editCartDetailRequest(data)
-         dispatch(getSearchVendors())
-         dispatch(getVendorsDetailCart(data.id))
+         return response.data
+      } catch (error) {
+         return rejectWithValue(error)
+      }
+   }
+)
+export const getVacansy = createAsyncThunk(
+   'vendor/getVacansy',
+   async (_, { dispatch, rejectWithValue }) => {
+      try {
+         const response = await getVacancyRequest()
+         dispatch(getSearchVendors(''))
          return response.data
       } catch (error) {
          return rejectWithValue(error)

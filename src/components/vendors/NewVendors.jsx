@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { IconButton, styled } from '@mui/material'
+import { useParams } from 'react-router-dom'
 import { UiButton } from '../UI/button/UiButton'
 import { UiInput } from '../UI/input/UiInput'
 import { SearchIcon } from '../../assets/icons'
@@ -14,6 +15,8 @@ import {
 
 export const NewVendors = ({ children }) => {
    const dispatch = useDispatch()
+   const param = useParams()
+   const { dd } = useSelector((state) => state.vendor)
    const [openModalVendors, setOpenModalVendors] = useState(false)
    const [openModalVacansy, setOpenModalVacansy] = useState(false)
    const { setParam, deleteParam } = useCustomSearchParams()
@@ -71,9 +74,14 @@ export const NewVendors = ({ children }) => {
                      </Icons>
                   </Input>
                   <ButtonBlock>
-                     <ButtonStyled onClick={onOpenModalHandlerVacansy}>
-                        + New Vacancy
-                     </ButtonStyled>
+                     {dd ? (
+                        <ButtonStyled onClick={onOpenModalHandlerVacansy}>
+                           + New Vacancy
+                        </ButtonStyled>
+                     ) : (
+                        ''
+                     )}
+
                      <UiButtonStyled onClick={onOpenModalHandler}>
                         + New vendor
                      </UiButtonStyled>
@@ -89,6 +97,7 @@ export const NewVendors = ({ children }) => {
          )}
          {openModalVacansy ? (
             <NewVendorModal
+               id={param.id}
                onCloseModalHandlerVacansy={onCloseModalHandlerVacansy}
             />
          ) : (

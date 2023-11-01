@@ -1,3 +1,4 @@
+/* eslint-disable react/button-has-type */
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { NavLink, useLocation } from 'react-router-dom'
@@ -11,6 +12,7 @@ import {
    getVendorsDetailCart,
 } from '../../store/vendors/vendors.thunk'
 import { showSnackbar } from '../UI/snackbar/Snackbar'
+import { vendorsSlice } from '../../store/vendors/vendors.slice'
 
 export const VendorsCards = () => {
    const dispatch = useDispatch()
@@ -56,7 +58,10 @@ export const VendorsCards = () => {
             <ContainerCards
                key={card.id}
                to={`vendorsDetail/${card.id}`}
-               onClick={() => setSelId(card.id)}
+               onClick={() => {
+                  setSelId(card.id)
+                  dispatch(vendorsSlice.actions.dd())
+               }}
                className={({ isActive }) => (isActive ? 'active' : '')}
             >
                <CardHead>
@@ -78,7 +83,6 @@ export const VendorsCards = () => {
                      </DeleteIconContainer>
                   )}
                </CardHead>
-
                <CardMain>
                   <MainContainers>
                      <GmailIcon />

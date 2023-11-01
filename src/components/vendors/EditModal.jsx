@@ -52,7 +52,6 @@ export const EditModal = ({ onCloseEditModal }) => {
             'Длина текста превышает допустимый лимит. Пожалуйста, сократите текст.'
          ),
    })
-   const [valueId, setValueId] = useState(vacancyId)
    const [valueName, setValueName] = useState(name)
    const [valueEmail, setValueEmail] = useState(email)
    const [valueAdress, setValueAdress] = useState(address)
@@ -63,9 +62,6 @@ export const EditModal = ({ onCloseEditModal }) => {
    const [descriptionsErrorss, setDescriptionsErrorss] = useState(false)
    const [isSubmitDisabled, setIsSubmitDisabled] = useState(true)
 
-   const onChangeValueId = (e) => {
-      setValueId(e.target.value)
-   }
    const onChangeValue = (e) => {
       setValueName(e.target.value)
    }
@@ -118,14 +114,24 @@ export const EditModal = ({ onCloseEditModal }) => {
       }
    }
    const canSubmit = () => {
-      if (valueNum && !phoneNumberError) {
+      if (
+         valueNum &&
+         !phoneNumberError &&
+         !emailrError &&
+         !descriptionsErrorss
+      ) {
          setIsSubmitDisabled(false)
       } else {
          setIsSubmitDisabled(true)
       }
    }
 
-   useEffect(canSubmit, [valueNum, phoneNumberError])
+   useEffect(canSubmit, [
+      valueNum,
+      phoneNumberError,
+      emailrError,
+      descriptionsErrorss,
+   ])
 
    const editUserCards = () => {
       const data = {
@@ -150,14 +156,13 @@ export const EditModal = ({ onCloseEditModal }) => {
             setValueDesc('')
             setIsSubmitDisabled(true)
             showSnackbar({
-               message: 'Данные о студенте успешно обнавлены!',
+               message: 'Данные о компании успешно обнавлены!',
                severity: 'success',
             })
          })
          .catch(() => {
             showSnackbar({
-               message:
-                  'Не удалось удалить вакансию! Пожалуйста, попробуйте ещё раз.',
+               message: 'Не удалось обновить! Пожалуйста, попробуйте ещё раз.',
                severity: 'warning',
             })
          })
@@ -172,20 +177,6 @@ export const EditModal = ({ onCloseEditModal }) => {
          onClose={onCloseEditModal}
       >
          <Container>
-            <div>
-               <InputTitle>Vacancy ID</InputTitle>
-               <UiInput
-                  value={valueId}
-                  onChange={onChangeValueId}
-                  background="#252335"
-                  width="30.8125rem"
-                  height="2.0625rem"
-                  type="text"
-                  colors="#fff"
-                  borderColor="#fff"
-                  borderradius="0.626rem"
-               />
-            </div>
             <div>
                <InputTitle>Company Name</InputTitle>
                <UiInput

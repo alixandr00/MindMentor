@@ -10,6 +10,7 @@ import { ReactComponent as Icon } from '../../assets/images/Ellipse 5 (1).svg'
 import {
    editVacancyThunk,
    getSearchVendors,
+   getVacansy,
    getVacansyDetail,
 } from '../../store/vendors/vendors.thunk'
 import { DateOfCartDetail } from '../UI/dateOfCartDetail/DateOfCartDetail'
@@ -17,12 +18,10 @@ import { showSnackbar } from '../UI/snackbar/Snackbar'
 
 export const EditVacancyModal = ({ onCloseModalHandlerVacansy, id }) => {
    const dispatch = useDispatch()
-   const {
-      vacancy_name,
-      level,
-      requirements_vacancy,
-      id: iD,
-   } = useSelector((state) => state.vendor.vacansyGetDetail)
+
+   const { vacancy_name, level, requirements_vacancy } = useSelector(
+      (state) => state.vendor.vacansyGetDetail
+   )
 
    const [selectedLevel, setSelectedLevel] = useState(level)
    const [value, setValue] = useState(vacancy_name)
@@ -50,12 +49,14 @@ export const EditVacancyModal = ({ onCloseModalHandlerVacansy, id }) => {
          vacancy_name: value,
          level: selectedLevel,
          requirements_vacancy: description,
+         vendor: 1,
       }
       dispatch(editVacancyThunk({ id, data }))
+      dispatch(getVacansyDetail(id))
          .unwrap()
          .then(() => {
             dispatch(getSearchVendors(''))
-            dispatch(getVacansyDetail(iD))
+            dispatch(getVacansy())
             onCloseModalHandlerVacansy()
             showSnackbar({
                message: 'Успешно обновлено!',

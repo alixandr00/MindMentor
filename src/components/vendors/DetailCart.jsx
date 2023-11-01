@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Outlet, useNavigate, useParams } from 'react-router-dom'
 import CloseIcon from '@mui/icons-material/Close'
+import Pagination from '@mui/material/Pagination'
+import Stack from '@mui/material/Stack'
 import { ReactComponent as Message } from '../../assets/icons/message.svg'
 import { ReactComponent as Telephon } from '../../assets/icons/Tel.svg'
 import { ReactComponent as Location } from '../../assets/icons/Location.svg'
@@ -16,7 +18,7 @@ import {
    deleteVacancyThunk,
    deleteVendors,
    getSearchVendors,
-   getVacansyDetail,
+   getVacansy,
    getVendorsDetailCart,
 } from '../../store/vendors/vendors.thunk'
 import { showSnackbar } from '../UI/snackbar/Snackbar'
@@ -24,28 +26,37 @@ import { ReactComponent as Calendar } from '../../assets/icons/Calendar Date.svg
 import { EditModal } from './EditModal'
 import { DeleteModal } from '../UI/deleteModal/DeleteModal'
 import { EditVacancyModal } from './EditVacancyModal'
+import { vendorsSlice } from '../../store/vendors/vendors.slice'
 
 export const DetailCart = () => {
    const dispatch = useDispatch()
    const navigate = useNavigate()
    const param = useParams()
 
-   const { id, name, email, contact_number, about_company, address, vacancy } =
+   const { id, name, email, contact_number, about_company, address } =
       useSelector((state) => state.vendor.vendorsDetail)
-   const { level, creation_date, vacancy_name } = useSelector(
-      (state) => state.vendor.vacansyGetDetail
-   )
+
+   const vacancyGet = useSelector((state) => state.vendor.vacancyGet)
    const [openDeleteModal, setOpenDeleteModal] = useState(false)
    const [openDeleteVacancyModal, setOpenDeletevacancyModal] = useState(false)
    const [openEditModal, setOpenEditModal] = useState(false)
    const [openModalVacansy, setOpenModalVacansy] = useState(false)
+   const [getId, setGetId] = useState(null)
+   const [getEditId, setGetEditId] = useState(null)
+   const [currentPage, setCurrentPage] = useState(1)
+   const itemsPerPage = 3
+   const startIndex = (currentPage - 1) * itemsPerPage
+   const endIndex = startIndex + itemsPerPage
+   const visibleVacancies = vacancyGet.slice(startIndex, endIndex)
+   const handlePageChange = (event, page) => {
+      setCurrentPage(page)
+   }
 
    const onCloseModalHandlerVacansy = () => {
       setOpenModalVacansy(false)
    }
    const onOpenModalHandlerVacansy = () => {
       setOpenModalVacansy(true)
-      dispatch(getVacansyDetail(vacancy))
    }
 
    const onOpendeleteVacancyModal = () => {
@@ -73,7 +84,7 @@ export const DetailCart = () => {
    }
 
    const onDeleteVacancy = () => {
-      dispatch(deleteVacancyThunk(vacancy))
+      dispatch(deleteVacancyThunk(getId))
          .unwrap()
          .then(() => {
             showSnackbar({
@@ -81,7 +92,8 @@ export const DetailCart = () => {
                severity: 'success',
             })
             dispatch(getSearchVendors(''))
-            navigate('/admin/vendors')
+            dispatch(getVendorsDetailCart(id))
+            dispatch(getVacansy())
          })
          .catch(() => {
             showSnackbar({
@@ -95,23 +107,21 @@ export const DetailCart = () => {
    const onDeleteCart = () => {
       dispatch(deleteVendors(id))
          .unwrap()
-         .then((resultAction) => {
+         .then(() => {
             dispatch(getSearchVendors(''))
             dispatch(getVendorsDetailCart(id))
-            const { error } = resultAction
-            if (!error) {
-               showSnackbar({
-                  message: 'Успешно удалено!',
-                  severity: 'success',
-               })
-               navigate('/admin/vendors')
-            } else {
-               showSnackbar({
-                  message:
-                     'Не удалось удалить элемент. Пожалуйста, попробуйте еще раз.',
-                  severity: 'warning',
-               })
-            }
+            showSnackbar({
+               message: 'Успешно удалено!',
+               severity: 'success',
+            })
+            navigate('/admin/vendors')
+         })
+         .catch(() => {
+            showSnackbar({
+               message:
+                  'Не удалось удалить элемент. Пожалуйста, попробуйте еще раз.',
+               severity: 'warning',
+            })
          })
    }
 
@@ -119,9 +129,9 @@ export const DetailCart = () => {
       dispatch(getVendorsDetailCart(param.id))
          .unwrap()
          .then(() => {
-            dispatch(getVacansyDetail(vacancy))
+            dispatch(getVacansy())
          })
-   }, [vacancy])
+   }, [])
 
    return (
       <Container>
@@ -130,7 +140,12 @@ export const DetailCart = () => {
                <DeleteStyle onClick={onOpenDeleteModalHandler} />
                <EditStyle onClick={onOpenEditModal} />
             </DeleteAndEdit>
-            <IconsClose onClick={navigatePrevPage} />
+            <IconsClose
+               onClick={() => {
+                  navigatePrevPage()
+                  dispatch(vendorsSlice.actions.dd())
+               }}
+            />
          </CloseIconBlock>
          <ContainerChilde>
             <Title>{name}</Title>
@@ -157,33 +172,47 @@ export const DetailCart = () => {
             <p>Vacancy</p>
          </UserBlock>
          <VacancyBlock>
-            <ContainerChildrenArrow>
-               <JsBlock>
-                  <JavaScriptText>{vacancy_name}</JavaScriptText>
-                  <ArrowStyle onClick={() => navigate(`modal/${vacancy}`)} />
-               </JsBlock>
-               <BlockArrow>
-                  <SquareBlock>
-                     <Square />
-                     <p>{level}</p>
-                  </SquareBlock>
-                  <CalendarStyle>
-                     <Calendar />
-                     <p>{creation_date}</p>
-                  </CalendarStyle>
-                  <DeleteStyles
-                     onClick={() => {
-                        onOpendeleteVacancyModal()
-                     }}
-                  />
-                  <EditStyles
-                     onClick={() => {
-                        onOpenModalHandlerVacansy()
-                     }}
-                  />
-               </BlockArrow>
-            </ContainerChildrenArrow>
+            {visibleVacancies.map((el) => (
+               <ContainerChildrenArrow>
+                  <JsBlock>
+                     <JavaScriptText>{el.vacancy_name}</JavaScriptText>
+                     <ArrowStyle onClick={() => navigate(`modal/${el.id}`)} />
+                  </JsBlock>
+                  <BlockArrow>
+                     <SquareBlock>
+                        <Square />
+                        <p>{el.level}</p>
+                     </SquareBlock>
+                     <CalendarStyle>
+                        <Calendar />
+                        <p>{el.creation_date}</p>
+                     </CalendarStyle>
+                     <DeleteStyles
+                        onClick={() => {
+                           onOpendeleteVacancyModal()
+                           setGetId(el.id)
+                        }}
+                     />
+                     <EditStyles
+                        onClick={() => {
+                           setGetEditId(el.id)
+                           onOpenModalHandlerVacansy()
+                        }}
+                     />
+                  </BlockArrow>
+               </ContainerChildrenArrow>
+            ))}
          </VacancyBlock>
+         <PaginationStyle>
+            <Stack spacing={2}>
+               <Pagination
+                  count={Math.ceil(vacancyGet.length / itemsPerPage)}
+                  color="secondary"
+                  page={currentPage}
+                  onChange={handlePageChange}
+               />
+            </Stack>
+         </PaginationStyle>
          {openDeleteModal ? (
             <DeleteModal
                onClose={onCloseDeleteModalHandler}
@@ -215,7 +244,7 @@ export const DetailCart = () => {
          )}
          {openModalVacansy ? (
             <EditVacancyModal
-               id={vacancy}
+               id={getEditId}
                onCloseModalHandlerVacansy={onCloseModalHandlerVacansy}
             />
          ) : (
@@ -388,4 +417,13 @@ const SquareBlock = styled('div')`
 `
 const ArrowStyle = styled(Arrow)`
    cursor: pointer;
+`
+const PaginationStyle = styled('div')`
+   display: flex;
+   justify-content: center;
+   margin-top: auto;
+   padding-top: 0.5rem;
+   .MuiPaginationItem-root {
+      color: #fff;
+   }
 `

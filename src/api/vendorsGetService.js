@@ -15,6 +15,9 @@ export const postNewCartRequest = (data) => {
 export const editCartDetailRequest = ({ id, data }) => {
    return axiosInstance.put(`/vendors/${id}/`, data)
 }
+export const getVacancyRequest = () => {
+   return axiosInstance.get('/vacancy/')
+}
 export const getVacansyDetailRequest = (id) => {
    return axiosInstance.get(`/vacancy/${id}/`)
 }
