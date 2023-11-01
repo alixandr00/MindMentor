@@ -5,7 +5,6 @@ import { useDispatch } from 'react-redux'
 import { UiModal } from '../UI/modal/UiModal'
 import { UiInput } from '../UI/input/UiInput'
 import { UiButton } from '../UI/button/UiButton'
-import { ReactComponent as Icon } from '../../assets/images/Ellipse 5 (1).svg'
 import {
    addNewVacancy,
    getSearchVendors,
@@ -74,19 +73,18 @@ export const NewVendorModal = ({ id, onCloseModalHandlerVacansy }) => {
          border="1px solid #fff"
       >
          <Container>
-            <BrandBlock>
-               <UiButton
-                  width="6.625rem"
+            <div>
+               <InputTitle>Company Name</InputTitle>
+               <UiInput
+                  background="#252335"
+                  width="30.8125rem"
                   height="2.0625rem"
-                  border="1px solid #F9F9F9"
-                  borderRadius="0.625rem"
-                  background="rgba(84, 71, 170, 0.93)"
-               >
-                  Company
-               </UiButton>
-               <Icon />
-               <Brand>Nike</Brand>
-            </BrandBlock>
+                  type="tel"
+                  colors="#fff"
+                  borderColor="#fff"
+                  borderradius="0.626rem"
+               />
+            </div>
             <div>
                <InputTitle>Vacancy Name</InputTitle>
                <UiInput
@@ -207,16 +205,7 @@ const LevelContainer = styled('div')`
    align-items: center;
    gap: 1rem;
 `
-const Brand = styled('p')`
-   font-size: 1rem;
-   font-weight: 600;
-   color: #fff;
-`
-const BrandBlock = styled('div')`
-   display: flex;
-   align-items: center;
-   gap: 1rem;
-`
+
 const DateOfCartDetailStyle = styled('div')`
    margin-left: 3rem;
 `

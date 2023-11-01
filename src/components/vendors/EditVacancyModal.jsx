@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { UiModal } from '../UI/modal/UiModal'
 import { UiInput } from '../UI/input/UiInput'
 import { UiButton } from '../UI/button/UiButton'
-import { ReactComponent as Icon } from '../../assets/images/Ellipse 5 (1).svg'
 import {
    editVacancyThunk,
    getSearchVendors,
@@ -80,19 +79,6 @@ export const EditVacancyModal = ({ onCloseModalHandlerVacansy, id }) => {
          border="1px solid #fff"
       >
          <Container>
-            <BrandBlock>
-               <UiButton
-                  width="6.625rem"
-                  height="2.0625rem"
-                  border="1px solid #F9F9F9"
-                  borderRadius="0.625rem"
-                  background="rgba(84, 71, 170, 0.93)"
-               >
-                  Company
-               </UiButton>
-               <Icon />
-               <Brand>Nike</Brand>
-            </BrandBlock>
             <div>
                <InputTitle>Vacancy Name</InputTitle>
                <UiInput
@@ -209,16 +195,6 @@ const Level = styled('p')`
    font-size: 1.25rem;
 `
 const LevelContainer = styled('div')`
-   display: flex;
-   align-items: center;
-   gap: 1rem;
-`
-const Brand = styled('p')`
-   font-size: 1rem;
-   font-weight: 600;
-   color: #fff;
-`
-const BrandBlock = styled('div')`
    display: flex;
    align-items: center;
    gap: 1rem;
