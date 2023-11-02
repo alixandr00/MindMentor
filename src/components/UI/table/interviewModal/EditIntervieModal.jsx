@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React, { useState } from 'react'
 import { styled } from '@mui/material'
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo'
@@ -7,16 +8,19 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import CloseIcon from '@mui/icons-material/Close'
 import dayjs from 'dayjs'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { UiModal } from '../../modal/UiModal'
 import { UiInput } from '../../input/UiInput'
 import { UiButton } from '../../button/UiButton'
-import { newInterviewPostThunk } from '../../../../store/interview/interview.thunk'
+import { editInterviewThunk } from '../../../../store/interview/interview.thunk'
 
 export const EditInterviewModal = ({ onClose }) => {
    const dispatch = useDispatch()
+   const { id, name_interview } = useSelector(
+      (state) => state.interview.getInterviewDetail
+   )
    const [name, setName] = useState('')
-   const [nameInterview, setNameInterview] = useState('')
+   const [nameInterview, setNameInterview] = useState(name_interview)
    const [selectedDateTime, setSelectedDateTime] = useState(null)
    const [selectedDateTimes, setSelectedDateTimes] = useState(null)
    const [loc, setLocation] = useState('')
@@ -47,7 +51,7 @@ export const EditInterviewModal = ({ onClose }) => {
       setDesc(e.target.value)
    }
 
-   const addNewInterview = () => {
+   const editNewInterview = () => {
       const data = {
          name_interview: name,
          date: 2021 - 12 - 10,
@@ -56,9 +60,10 @@ export const EditInterviewModal = ({ onClose }) => {
          location: loc,
          descriptions: desc,
       }
-      dispatch(newInterviewPostThunk(data))
+      dispatch(editInterviewThunk({ id, data }))
       onClose()
    }
+
    return (
       <UiModal
          open
@@ -180,9 +185,9 @@ export const EditInterviewModal = ({ onClose }) => {
                   borderRadius="1.25rem"
                   variant="outlined"
                   background="rgba(84, 71, 170, 0.93)"
-                  onClick={addNewInterview}
+                  onClick={editNewInterview}
                >
-                  Save
+                  Edit
                </UiButton>
             </ButtonBlock>
          </Container>
@@ -192,13 +197,6 @@ export const EditInterviewModal = ({ onClose }) => {
 
 const Container = styled('div')`
    margin-left: 3rem;
-   /* .css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root {
-      width: 7.625rem;
-      height: 3.125rem;
-      border-radius: 1.25rem;
-      border: 1px solid #fff;
-      background: rgba(84, 71, 170, 0.93);
-   } */
 `
 
 const CalendarContainer = styled('div')`

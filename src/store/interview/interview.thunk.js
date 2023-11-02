@@ -4,6 +4,7 @@ import {
    getInterviewDetailRequest,
    getInterviewRequest,
    postNewInterviewRequest,
+   putInterviewRequest,
 } from '../../api/interview'
 
 export const interviewThunk = createAsyncThunk(
@@ -46,6 +47,17 @@ export const deleteInterviewThunk = createAsyncThunk(
    async (id, { dispatch, rejectWithValue }) => {
       try {
          await deleteInterviewRequest(id)
+         dispatch(interviewThunk())
+      } catch (error) {
+         return rejectWithValue(error)
+      }
+   }
+)
+export const editInterviewThunk = createAsyncThunk(
+   'interview/editInterviewThunk',
+   async (data, { dispatch, rejectWithValue }) => {
+      try {
+         await putInterviewRequest(data)
          dispatch(interviewThunk())
       } catch (error) {
          return rejectWithValue(error)

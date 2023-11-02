@@ -19,6 +19,7 @@ import { ReactComponent as NextIcon } from '../../../assets/icons/NextIcon.svg'
 import { ReactComponent as PrevIcon } from '../../../assets/icons/PrevIcon.svg'
 import {
    deleteInterviewThunk,
+   interviewDetailThunk,
    interviewThunk,
 } from '../../../store/interview/interview.thunk'
 import { EditInterviewModal } from './interviewModal/EditIntervieModal'
@@ -195,7 +196,12 @@ export const TableInterviow = ({ headerArray }) => {
                            </StyledTableCellForData>
                            <StyledTableCellForDatas align="center">
                               <IconButton>
-                                 <EditIcon onClick={onOpenModalHandler} />
+                                 <EditIcon
+                                    onClick={() => {
+                                       onOpenModalHandler()
+                                       dispatch(interviewDetailThunk(item.id))
+                                    }}
+                                 />
                               </IconButton>
                               <IconButton>
                                  <DeleteIcon
