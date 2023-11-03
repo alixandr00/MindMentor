@@ -11,7 +11,7 @@ import { UiInput } from '../input/UiInput'
 import { UiButton } from '../button/UiButton'
 import { AddInterviewModal } from './interviewModal/InterviewModal'
 
-export const NewInterviews = ({ children }) => {
+export const NewInterviews = ({ intId, setIntId, children }) => {
    const [isSelectOpen, setIsSelectOpen] = useState(false)
    const [selectedValue, setSelectedValue] = useState('Tech Stack')
    const [openModal, setOpenModal] = useState(false)
@@ -91,7 +91,15 @@ export const NewInterviews = ({ children }) => {
             </div>
          </ContIntern>
          {children}
-         {openModal ? <AddInterviewModal onClose={onCloseHandleModal} /> : ''}
+         {openModal ? (
+            <AddInterviewModal
+               intId={intId}
+               setIntId={setIntId}
+               onClose={onCloseHandleModal}
+            />
+         ) : (
+            ''
+         )}
       </Container>
    )
 }

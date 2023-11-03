@@ -10,6 +10,7 @@ import { NewInterviews } from '../UI/table/NewTableInterviows'
 
 export const Schedule = () => {
    const [openDeleteModal, setOpenDeleteModal] = useState(false)
+   const [intId, setIntId] = useState(null)
 
    const onOpenDeleteModal = () => {
       setOpenDeleteModal(true)
@@ -21,10 +22,13 @@ export const Schedule = () => {
    return (
       <Container>
          <NewInterviews
+            intId={intId}
+            setIntId={setIntId}
             openDeleteModal={openDeleteModal}
             onCloseDeleteModal={onCloseDeleteModal}
          >
             <TableInterviow
+               intId={intId}
                onOpenDeleteModal={onOpenDeleteModal}
                array={arrayInterviow}
                headerArray={headerArrayInterview}

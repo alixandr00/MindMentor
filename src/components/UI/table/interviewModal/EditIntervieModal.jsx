@@ -12,14 +12,17 @@ import { useDispatch, useSelector } from 'react-redux'
 import { UiModal } from '../../modal/UiModal'
 import { UiInput } from '../../input/UiInput'
 import { UiButton } from '../../button/UiButton'
-import { editInterviewThunk } from '../../../../store/interview/interview.thunk'
+import {
+   editInterviewThunk,
+   interviewThunk,
+} from '../../../../store/interview/interview.thunk'
+import { showSnackbar } from '../../snackbar/Snackbar'
 
 export const EditInterviewModal = ({ onClose }) => {
    const dispatch = useDispatch()
    const { id, name_interview } = useSelector(
       (state) => state.interview.getInterviewDetail
    )
-   const [name, setName] = useState('')
    const [nameInterview, setNameInterview] = useState(name_interview)
    const [selectedDateTime, setSelectedDateTime] = useState(null)
    const [selectedDateTimes, setSelectedDateTimes] = useState(null)
@@ -37,9 +40,6 @@ export const EditInterviewModal = ({ onClose }) => {
    const handleDateTimeChanges = (newDateTime) => {
       setSelectedDateTimes(newDateTime)
    }
-   const onChangeName = (e) => {
-      setName(e.target.value)
-   }
    const onChangeNameOfInt = (e) => {
       setNameInterview(e.target.value)
    }
@@ -53,8 +53,8 @@ export const EditInterviewModal = ({ onClose }) => {
 
    const editNewInterview = () => {
       const data = {
-         name_interview: name,
-         date: 2021 - 12 - 10,
+         name_interview: nameInterview,
+         date: '2021-12-10',
          start_time: timeStart,
          end_time: timeEnd,
          location: loc,
@@ -62,6 +62,20 @@ export const EditInterviewModal = ({ onClose }) => {
       }
       dispatch(editInterviewThunk({ id, data }))
       onClose()
+      dispatch(interviewThunk())
+         .unwrap()
+         .then(() => {
+            showSnackbar({
+               message: 'Данные успешно обновлены!',
+               severity: 'success',
+            })
+         })
+         .catch(() => {
+            showSnackbar({
+               message: 'Произошла ошибка. Пожалуйста, попробуйте еще раз.',
+               severity: 'warning',
+            })
+         })
    }
 
    return (
@@ -79,23 +93,20 @@ export const EditInterviewModal = ({ onClose }) => {
          </CloseIconContainer>
          <Container>
             <StyleBlocks>
-               <UiInput
-                  value={name}
-                  onChange={onChangeName}
-                  bordercolor="#fff"
-                  type="text"
+               <UiButtonStyle
                   width="9.3125rem"
                   height="3.125rem"
-                  borderradius="1.25rem"
-                  placeholder="Intern Name "
-                  backgroundColor="rgba(84, 71, 170, 0.93)"
-               />
+                  background="rgba(84, 71, 170, 0.93)"
+               >
+                  Intern name
+               </UiButtonStyle>
             </StyleBlocks>
             <StyleBlock>
                <UiInput
                   value={nameInterview}
                   onChange={onChangeNameOfInt}
                   bordercolor="#fff"
+                  colors="#fff"
                   width="26rem"
                   height="3.125rem"
                   borderradius="1.25rem"
@@ -144,6 +155,7 @@ export const EditInterviewModal = ({ onClose }) => {
                   value={loc}
                   onChange={onChangeLoc}
                   bordercolor="#fff"
+                  colors="#fff"
                   width="26rem"
                   height="3.125rem"
                   borderradius="1.25rem"
@@ -156,6 +168,7 @@ export const EditInterviewModal = ({ onClose }) => {
                   value={desc}
                   onChange={onChangeDesc}
                   bordercolor="#fff"
+                  colors="#fff"
                   className="custom-width-input"
                   id="outlined-multiline-static"
                   multiline
@@ -276,4 +289,8 @@ const CloseIconBlock = styled('div')`
       width: 1rem;
       color: #fff;
    }
+`
+const UiButtonStyle = styled(UiButton)`
+   border: 1px solid #fff;
+   border-radius: 1.25rem;
 `

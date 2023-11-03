@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React, { useState, useEffect } from 'react'
 import {
    Table,
@@ -15,20 +16,24 @@ import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { ReactComponent as DeleteIcon } from '../../../assets/icons/deleteicon.svg'
 import { ReactComponent as EditIcon } from '../../../assets/icons/editIcon.svg'
-import { ReactComponent as NextIcon } from '../../../assets/icons/NextIcon.svg'
-import { ReactComponent as PrevIcon } from '../../../assets/icons/PrevIcon.svg'
 import {
    deleteInterviewThunk,
+   // internsDetailGetThunk,
    interviewDetailThunk,
    interviewThunk,
 } from '../../../store/interview/interview.thunk'
 import { EditInterviewModal } from './interviewModal/EditIntervieModal'
 import { DeleteModal } from '../deleteModal/DeleteModal'
+import { showSnackbar } from '../snackbar/Snackbar'
 
 export const TableInterviow = ({ headerArray }) => {
    const dispatch = useDispatch()
    const navigate = useNavigate()
    const getInterviews = useSelector((state) => state.interview.getInterview)
+   const { name, email, tech_stack } = useSelector(
+      (state) => state.interview.getDetailInters
+   )
+
    const [loading, setLoading] = useState(true)
    const [openModal, setOpenModal] = useState(false)
    const [openDeleteModal, setOpenDeleteModal] = useState(false)
@@ -49,7 +54,20 @@ export const TableInterviow = ({ headerArray }) => {
 
    const deleteInterviewHandler = () => {
       dispatch(deleteInterviewThunk(getId))
-      onCloseDeleteModal()
+         .unwrap()
+         .then(() => {
+            onCloseDeleteModal()
+            showSnackbar({
+               message: 'Успешно удалено!',
+               severity: 'success',
+            })
+         })
+         .catch(() => {
+            showSnackbar({
+               message: 'Произошла ошибка. Пожалуйста, попробуйте еще раз.',
+               severity: 'warning',
+            })
+         })
    }
 
    useEffect(() => {
@@ -146,60 +164,60 @@ export const TableInterviow = ({ headerArray }) => {
                         </StyledTableRowOne>
                      </>
                   ) : (
-                     getInterviews?.map((item) => (
-                        <StyledTableRow key={item.id}>
+                     getInterviews?.map((el) => (
+                        <StyledTableRow key={el.id}>
                            <StyledTableCellForData
-                              onClick={() => navigate(`detail/${item.id}`)}
+                              onClick={() => navigate(`detail/${el.id}`)}
                            >
                               <StyledContainerImageName>
-                                 <p>{item.name_interview}</p>
+                                 <p>{name}</p>
                               </StyledContainerImageName>
                            </StyledTableCellForData>
                            <StyledTableCellForData
-                              onClick={() => navigate(`detail/${item.id}`)}
+                              onClick={() => navigate(`detail/${el.id}`)}
                               align="center"
                            >
-                              <p>{item.email}</p>
+                              <p>{email}</p>
                            </StyledTableCellForData>
                            <StyledTableCellForData
-                              onClick={() => navigate(`detail/${item.id}`)}
+                              onClick={() => navigate(`detail/${el.id}`)}
                               align="center"
                               className="red"
                            >
                               <p
                                  className={
-                                    item.techStack === 'Project Manager'
+                                    tech_stack === 'Project Manager'
                                        ? 'ProjectManager'
-                                       : item.techStack
+                                       : tech_stack
                                  }
                               >
-                                 {item.techStack}
+                                 {tech_stack}
                               </p>
                            </StyledTableCellForData>
                            <StyledTableCellForData
-                              onClick={() => navigate(`detail/${item.id}`)}
+                              onClick={() => navigate(`detail/${el.id}`)}
                               align="center"
                            >
-                              <p>{item.start_time}</p>
+                              <p>{el.start_time}</p>
                            </StyledTableCellForData>
                            <StyledTableCellForData
-                              onClick={() => navigate(`detail/${item.id}`)}
+                              onClick={() => navigate(`detail/${el.id}`)}
                               align="center"
                            >
-                              {item.date}
+                              {el.date}
                            </StyledTableCellForData>
                            <StyledTableCellForData
-                              onClick={() => navigate(`detail/${item.id}`)}
+                              onClick={() => navigate(`detail/${el.id}`)}
                               align="center"
                            >
-                              {item.location}
+                              {el.location}
                            </StyledTableCellForData>
                            <StyledTableCellForDatas align="center">
                               <IconButton>
                                  <EditIcon
                                     onClick={() => {
                                        onOpenModalHandler()
-                                       dispatch(interviewDetailThunk(item.id))
+                                       dispatch(interviewDetailThunk(el.id))
                                     }}
                                  />
                               </IconButton>
@@ -207,7 +225,7 @@ export const TableInterviow = ({ headerArray }) => {
                                  <DeleteIcon
                                     onClick={() => {
                                        onOpenDeleteModals()
-                                       setGetId(item.id)
+                                       setGetId(el.id)
                                     }}
                                  />
                               </IconButton>
@@ -218,7 +236,7 @@ export const TableInterviow = ({ headerArray }) => {
                </StyleTableBody>
             </Table>
          </StyledTableContainer>
-         <StyledContainer>
+         {/* <StyledContainer>
             <nav>
                <StyledUl>
                   <li>
@@ -236,7 +254,7 @@ export const TableInterviow = ({ headerArray }) => {
                   </li>
                </StyledUl>
             </nav>
-         </StyledContainer>
+         </StyledContainer> */}
          {openModal ? <EditInterviewModal onClose={onCloseModalHandler} /> : ''}
          {openDeleteModal ? (
             <DeleteModal
@@ -249,11 +267,6 @@ export const TableInterviow = ({ headerArray }) => {
       </>
    )
 }
-
-const StyledUl = styled('ul')`
-   display: flex;
-   gap: 0.8rem;
-`
 
 const StyleTableBody = styled(TableBody)({
    backgroundColor: '#2B2D31',
@@ -353,17 +366,6 @@ const StyledTableCellForDatas = styled(TableCell)`
    color: white;
    font-size: 1rem;
    border: none;
-`
-
-const StyledSpan = styled('span')`
-   font-size: 0.9rem;
-   color: #ffff;
-`
-
-const StyledContainer = styled('div')`
-   display: flex;
-   justify-content: end;
-   margin-right: 15px;
 `
 
 const StyledContainerImageName = styled('div')`
