@@ -16,12 +16,12 @@ import {
 export const NewVendors = ({ children }) => {
    const dispatch = useDispatch()
    const param = useParams()
-   const { dd } = useSelector((state) => state.vendor)
    const [openModalVendors, setOpenModalVendors] = useState(false)
    const [openModalVacansy, setOpenModalVacansy] = useState(false)
    const { setParam, deleteParam } = useCustomSearchParams()
 
    const [value, setValue] = useState('')
+   const ddValue = useSelector((state) => state.vendor.dd)
 
    const onChangeValue = (e) => {
       setValue(e.target.value)
@@ -74,7 +74,7 @@ export const NewVendors = ({ children }) => {
                      </Icons>
                   </Input>
                   <ButtonBlock>
-                     {dd ? (
+                     {ddValue ? (
                         <ButtonStyled onClick={onOpenModalHandlerVacansy}>
                            + New Vacancy
                         </ButtonStyled>

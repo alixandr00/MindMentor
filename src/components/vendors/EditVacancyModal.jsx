@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { styled } from '@mui/material'
 import dayjs from 'dayjs'
 import { useDispatch, useSelector } from 'react-redux'
@@ -11,13 +11,13 @@ import {
    getSearchVendors,
    getVacansy,
    getVacansyDetail,
+   getVendorsDetailCart,
 } from '../../store/vendors/vendors.thunk'
 import { DateOfCartDetail } from '../UI/dateOfCartDetail/DateOfCartDetail'
 import { showSnackbar } from '../UI/snackbar/Snackbar'
 
 export const EditVacancyModal = ({ onCloseModalHandlerVacansy, id }) => {
    const dispatch = useDispatch()
-
    const { vacancy_name, level, requirements_vacancy } = useSelector(
       (state) => state.vendor.vacansyGetDetail
    )
@@ -51,10 +51,10 @@ export const EditVacancyModal = ({ onCloseModalHandlerVacansy, id }) => {
          vendor: 1,
       }
       dispatch(editVacancyThunk({ id, data }))
-      dispatch(getVacansyDetail(id))
          .unwrap()
          .then(() => {
             dispatch(getSearchVendors(''))
+            dispatch(getVendorsDetailCart(id))
             dispatch(getVacansy())
             onCloseModalHandlerVacansy()
             showSnackbar({
@@ -69,6 +69,10 @@ export const EditVacancyModal = ({ onCloseModalHandlerVacansy, id }) => {
             })
          })
    }
+
+   useEffect(() => {
+      dispatch(getVacansyDetail(id))
+   }, [])
 
    return (
       <ModalComponent

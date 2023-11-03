@@ -1,3 +1,4 @@
+/* eslint-disable no-unsafe-optional-chaining */
 /* eslint-disable camelcase */
 import { styled } from '@mui/material'
 import React, { useEffect, useState } from 'react'
@@ -33,10 +34,16 @@ export const DetailCart = () => {
    const navigate = useNavigate()
    const param = useParams()
 
-   const { id, name, email, contact_number, about_company, address } =
-      useSelector((state) => state.vendor.vendorsDetail)
+   const {
+      id,
+      name,
+      email,
+      contact_number,
+      about_company,
+      address,
+      vacancies,
+   } = useSelector((state) => state.vendor.vendorsDetail)
 
-   const vacancyGet = useSelector((state) => state.vendor.vacancyGet)
    const [openDeleteModal, setOpenDeleteModal] = useState(false)
    const [openDeleteVacancyModal, setOpenDeletevacancyModal] = useState(false)
    const [openEditModal, setOpenEditModal] = useState(false)
@@ -47,7 +54,7 @@ export const DetailCart = () => {
    const itemsPerPage = 3
    const startIndex = (currentPage - 1) * itemsPerPage
    const endIndex = startIndex + itemsPerPage
-   const visibleVacancies = vacancyGet.slice(startIndex, endIndex)
+   const visibleVacancies = vacancies?.slice(startIndex, endIndex)
    const handlePageChange = (event, page) => {
       setCurrentPage(page)
    }
@@ -55,8 +62,9 @@ export const DetailCart = () => {
    const onCloseModalHandlerVacansy = () => {
       setOpenModalVacansy(false)
    }
-   const onOpenModalHandlerVacansy = () => {
+   const onOpenModalHandlerVacansy = (vacancyId) => {
       setOpenModalVacansy(true)
+      setGetEditId(vacancyId)
    }
 
    const onOpendeleteVacancyModal = () => {
@@ -172,7 +180,7 @@ export const DetailCart = () => {
             <p>Vacancy</p>
          </UserBlock>
          <VacancyBlock>
-            {visibleVacancies.map((el) => (
+            {visibleVacancies?.map((el) => (
                <ContainerChildrenArrow>
                   <JsBlock>
                      <JavaScriptText>{el.vacancy_name}</JavaScriptText>
@@ -195,8 +203,7 @@ export const DetailCart = () => {
                      />
                      <EditStyles
                         onClick={() => {
-                           setGetEditId(el.id)
-                           onOpenModalHandlerVacansy()
+                           onOpenModalHandlerVacansy(el.id)
                         }}
                      />
                   </BlockArrow>
@@ -206,7 +213,7 @@ export const DetailCart = () => {
          <PaginationStyle>
             <Stack spacing={2}>
                <Pagination
-                  count={Math.ceil(vacancyGet.length / itemsPerPage)}
+                  count={Math.ceil(vacancies?.length / itemsPerPage)}
                   color="secondary"
                   page={currentPage}
                   onChange={handlePageChange}
