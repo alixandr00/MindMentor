@@ -142,6 +142,7 @@ export const AddInterviewModal = ({ onClose, iD = 8 }) => {
                                  value={selectedDateTime}
                                  onChange={handleDateTimeChange}
                                  views={['hours', 'minutes']}
+                                 autoOpen={false}
                               />
                            </DemoItem>
                         </DemoContainer>
