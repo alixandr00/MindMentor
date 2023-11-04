@@ -60,7 +60,7 @@ export const VendorsCards = () => {
                to={`vendorsDetail/${card.id}`}
                onClick={() => {
                   setSelId(card.id)
-                  dispatch(vendorsSlice.actions.dd())
+                  dispatch(vendorsSlice.actions.dd(true))
                }}
                className={({ isActive }) => (isActive ? 'active' : '')}
             >
@@ -103,19 +103,13 @@ export const VendorsCards = () => {
             <Modal open>
                <p>Are you sure that you want to delete this Vendor?</p>
                <UiButtonBlock>
-                  <Button
-                     onClick={onCloseDeleteModalHandler}
-                     backgroundColor="linear-gradient(180deg, rgba(4, 1, 22, 0.93) 0%, rgba(43, 45, 49, 0.00) 100%)"
-                  >
-                     No
-                  </Button>
+                  <Button onClick={onCloseDeleteModalHandler}>No</Button>
 
                   <Button
                      onClick={() => {
                         onDeleteCart()
                         onCloseDeleteModalHandler()
                      }}
-                     backgroundColor="linear-gradient(180deg, rgba(4, 1, 22, 0.93) 0%, rgba(43, 45, 49, 0.00) 100%)"
                   >
                      Yes
                   </Button>

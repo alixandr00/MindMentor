@@ -20,6 +20,7 @@ import {
    deleteVendors,
    getSearchVendors,
    getVacansy,
+   getVacansyDetail,
    getVendorsDetailCart,
 } from '../../store/vendors/vendors.thunk'
 import { showSnackbar } from '../UI/snackbar/Snackbar'
@@ -43,7 +44,6 @@ export const DetailCart = () => {
       address,
       vacancies,
    } = useSelector((state) => state.vendor.vendorsDetail)
-
    const [openDeleteModal, setOpenDeleteModal] = useState(false)
    const [openDeleteVacancyModal, setOpenDeletevacancyModal] = useState(false)
    const [openEditModal, setOpenEditModal] = useState(false)
@@ -135,6 +135,7 @@ export const DetailCart = () => {
 
    useEffect(() => {
       dispatch(getVendorsDetailCart(param.id))
+      dispatch(getVacansyDetail(id))
          .unwrap()
          .then(() => {
             dispatch(getVacansy())

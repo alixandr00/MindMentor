@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { IconButton, styled } from '@mui/material'

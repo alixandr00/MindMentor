@@ -6,26 +6,34 @@ import {
    getVendorsDetailCart,
 } from './vendors.thunk'
 
+const storedState = JSON.parse(localStorage.getItem('appState'))
 const initialState = {
    vendorSearch: [],
    vendorsDetail: [],
    vacancyGet: [],
    vacansyGetDetail: [],
    vendorState: [],
-   dd: false,
+   dd: storedState ? storedState.dd : false,
+   isLoading: false,
 }
 
 export const vendorsSlice = createSlice({
    name: 'vendor',
    initialState,
    reducers: {
-      dd(state) {
-         return { ...state, dd: !state.dd }
+      dd(state, action) {
+         const newState = { ...state, dd: action.payload }
+         localStorage.setItem('appState', JSON.stringify(newState))
+         return newState
       },
    },
    extraReducers: (builder) => {
       builder
+         .addCase(getVendorsDetailCart.pending, (state) => {
+            state.isLoading = true
+         })
          .addCase(getVendorsDetailCart.fulfilled, (state, action) => {
+            state.isLoading = false
             state.vendorsDetail = action.payload
          })
          .addCase(getVacansy.fulfilled, (state, action) => {
