@@ -89,6 +89,7 @@ export const getVacansyDetail = createAsyncThunk(
    async (id, { dispatch, rejectWithValue }) => {
       try {
          const response = await getVacansyDetailRequest(id)
+
          dispatch(getSearchVendors(''))
          return response.data
       } catch (error) {

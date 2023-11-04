@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { styled } from '@mui/material'
 import dayjs from 'dayjs'
 import { useDispatch, useSelector } from 'react-redux'
@@ -10,7 +10,7 @@ import {
    editVacancyThunk,
    getSearchVendors,
    getVacansy,
-   // getVacansyDetail,
+   getVacansyDetail,
    getVendorsDetailCart,
 } from '../../store/vendors/vendors.thunk'
 import { DateOfCartDetail } from '../UI/dateOfCartDetail/DateOfCartDetail'
@@ -30,9 +30,19 @@ export const EditVacancyModal = ({ onCloseModalHandlerVacansy, id }) => {
    const [description, setDescription] = useState(requirements_vacancy)
    const [selectedDate, setSelectedDate] = useState('')
    const formattedDate = dayjs(selectedDate).format('YYYY-MM-DD')
+
    const onChangeInputValue = (e) => {
       setValue(e.target.value)
    }
+
+   useEffect(() => {
+      if (selectedLevel) {
+         setValue(vacancy_name)
+         setDescription(requirements_vacancy)
+         setSelectedLevel(level)
+      }
+   }, [vacancy_name])
+
    const onChangeInputValueDescription = (e) => {
       setDescription(e.target.value)
    }
@@ -73,9 +83,9 @@ export const EditVacancyModal = ({ onCloseModalHandlerVacansy, id }) => {
          })
    }
 
-   // useEffect(() => {
-   //    dispatch(getVacansyDetail(id))
-   // }, [id])
+   useEffect(() => {
+      dispatch(getVacansyDetail(id))
+   }, [id])
 
    return (
       <ModalComponent

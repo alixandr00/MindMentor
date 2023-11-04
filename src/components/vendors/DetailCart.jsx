@@ -20,7 +20,6 @@ import {
    deleteVendors,
    getSearchVendors,
    getVacansy,
-   getVacansyDetail,
    getVendorsDetailCart,
 } from '../../store/vendors/vendors.thunk'
 import { showSnackbar } from '../UI/snackbar/Snackbar'
@@ -66,21 +65,18 @@ export const DetailCart = () => {
       setOpenModalVacansy(true)
       setGetEditId(vacancyId)
    }
-
    const onOpendeleteVacancyModal = () => {
       setOpenDeletevacancyModal(true)
    }
    const onCloseDeleteVacancyModal = () => {
       setOpenDeletevacancyModal(false)
    }
-
    const onOpenEditModal = () => {
       setOpenEditModal(true)
    }
    const onCloseEditModal = () => {
       setOpenEditModal(false)
    }
-
    const onCloseDeleteModalHandler = () => {
       setOpenDeleteModal(false)
    }
@@ -135,7 +131,6 @@ export const DetailCart = () => {
 
    useEffect(() => {
       dispatch(getVendorsDetailCart(param.id))
-      dispatch(getVacansyDetail(id))
          .unwrap()
          .then(() => {
             dispatch(getVacansy())
