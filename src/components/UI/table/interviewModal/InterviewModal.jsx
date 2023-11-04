@@ -18,6 +18,7 @@ import {
 } from '../../../../store/interview/interview.thunk'
 import { showSnackbar } from '../../snackbar/Snackbar'
 import { InternData } from './InternsData'
+import { Npm } from './Npm'
 
 export const AddInterviewModal = ({ onClose, iD = 8 }) => {
    const dispatch = useDispatch()
@@ -163,6 +164,7 @@ export const AddInterviewModal = ({ onClose, iD = 8 }) => {
                      </LocalizationProvider>
                   </StyleBlockDate>
                </CalendarContainer>
+               <Npm />
                <StyleBlock>
                   <UiInput
                      value={loc}
