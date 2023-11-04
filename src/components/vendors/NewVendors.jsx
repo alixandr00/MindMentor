@@ -9,10 +9,7 @@ import { SearchIcon } from '../../assets/icons'
 import { VendorsModal } from './NewVacansyModal'
 import { NewVendorModal } from './NewVendorModal'
 import { useCustomSearchParams } from '../../utils/CustomSearchParams'
-import {
-   getSearchVendors,
-   getVacansyDetail,
-} from '../../store/vendors/vendors.thunk'
+import { getSearchVendors } from '../../store/vendors/vendors.thunk'
 
 export const NewVendors = ({ children }) => {
    const dispatch = useDispatch()
@@ -46,10 +43,6 @@ export const NewVendors = ({ children }) => {
    }
    useEffect(() => {
       dispatch(getSearchVendors(value))
-         .unwrap()
-         .then(() => {
-            dispatch(getVacansyDetail())
-         })
    }, [value])
    return (
       <Container>

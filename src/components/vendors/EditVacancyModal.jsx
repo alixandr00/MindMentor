@@ -19,16 +19,16 @@ import { showSnackbar } from '../UI/snackbar/Snackbar'
 export const EditVacancyModal = ({ onCloseModalHandlerVacansy, id }) => {
    const dispatch = useDispatch()
    const {
-      vacancy_name,
       level,
       requirements_vacancy,
       vendor: vendors,
+      creation_date,
+      vacancy_name,
    } = useSelector((state) => state.vendor.vacansyGetDetail)
-
    const [selectedLevel, setSelectedLevel] = useState(level)
    const [value, setValue] = useState(vacancy_name)
    const [description, setDescription] = useState(requirements_vacancy)
-   const [selectedDate, setSelectedDate] = useState('')
+   const [selectedDate, setSelectedDate] = useState(dayjs(creation_date))
    const formattedDate = dayjs(selectedDate).format('YYYY-MM-DD')
 
    const onChangeInputValue = (e) => {
@@ -38,13 +38,17 @@ export const EditVacancyModal = ({ onCloseModalHandlerVacansy, id }) => {
    useEffect(() => {
       if (vacancy_name) {
          setValue(vacancy_name)
+      }
+      if (requirements_vacancy) {
          setDescription(requirements_vacancy)
-         setSelectedLevel(level)
       }
       if (level) {
          setSelectedLevel(level)
       }
-   }, [vacancy_name])
+      if (creation_date) {
+         setSelectedDate(dayjs(creation_date))
+      }
+   }, [vacancy_name, requirements_vacancy, level, creation_date])
 
    const onChangeInputValueDescription = (e) => {
       setDescription(e.target.value)

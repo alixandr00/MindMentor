@@ -307,13 +307,6 @@ const BlockBtn = styled('div')`
    justify-content: flex-end;
    margin-top: 0.56rem;
 `
-// const Image = styled('img')`
-//    position: relative;
-//    left: 10rem;
-//    width: 9.875rem;
-//    height: 9.875rem;
-//    border-radius: 100%;
-// `
 const ErrorText = styled('p')`
    color: red;
    font-size: 0.8125rem;

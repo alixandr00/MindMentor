@@ -29,11 +29,7 @@ export const vendorsSlice = createSlice({
    },
    extraReducers: (builder) => {
       builder
-         .addCase(getVendorsDetailCart.pending, (state) => {
-            state.isLoading = true
-         })
          .addCase(getVendorsDetailCart.fulfilled, (state, action) => {
-            state.isLoading = false
             state.vendorsDetail = action.payload
          })
          .addCase(getVacansy.fulfilled, (state, action) => {
@@ -42,7 +38,11 @@ export const vendorsSlice = createSlice({
          .addCase(getVacansyDetail.fulfilled, (state, action) => {
             state.vacansyGetDetail = action.payload
          })
+         .addCase(getSearchVendors.pending, (state) => {
+            state.isLoading = true
+         })
          .addCase(getSearchVendors.fulfilled, (state, action) => {
+            state.isLoading = false
             state.vendorSearch = action.payload
          })
    },

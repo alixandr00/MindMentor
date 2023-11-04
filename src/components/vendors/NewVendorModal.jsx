@@ -74,18 +74,6 @@ export const NewVendorModal = ({ id, onCloseModalHandlerVacansy }) => {
       >
          <Container>
             <div>
-               <InputTitle>Company Name</InputTitle>
-               <UiInput
-                  background="#252335"
-                  width="30.8125rem"
-                  height="2.0625rem"
-                  type="tel"
-                  colors="#fff"
-                  borderColor="#fff"
-                  borderradius="0.626rem"
-               />
-            </div>
-            <div>
                <InputTitle>Vacancy Name</InputTitle>
                <UiInput
                   value={value}
