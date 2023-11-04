@@ -36,9 +36,12 @@ export const EditVacancyModal = ({ onCloseModalHandlerVacansy, id }) => {
    }
 
    useEffect(() => {
-      if (selectedLevel) {
+      if (vacancy_name) {
          setValue(vacancy_name)
          setDescription(requirements_vacancy)
+         setSelectedLevel(level)
+      }
+      if (level) {
          setSelectedLevel(level)
       }
    }, [vacancy_name])
