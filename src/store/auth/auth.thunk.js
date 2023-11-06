@@ -63,10 +63,6 @@ export const signIn = createAsyncThunk(
    }
 )
 
-// export const logOut = createAsyncThunk('admin/logOut', async () => {
-//    localStorage.removeItem(LOGIN_USER_KEY)
-// })
-
 export const logOut = () => {
    window.location.pathname = '/'
    return localStorage.removeItem(LOGIN_USER_KEY)
