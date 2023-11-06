@@ -30,7 +30,7 @@ export const signIn = createAsyncThunk(
          const response = await signInRequest(data)
 
          const result = {
-            auth_token: 'YWRtaW46MTIz',
+            auth_token: 'YWRtaW46YWRtaW4=',
             token: response.data,
          }
 
