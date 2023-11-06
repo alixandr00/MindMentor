@@ -18,7 +18,7 @@ import { ReactComponent as DeleteIcon } from '../../../assets/icons/deleteicon.s
 import { ReactComponent as EditIcon } from '../../../assets/icons/editIcon.svg'
 import {
    deleteInterviewThunk,
-   // internsDetailGetThunk,
+   internsDetailGetThunk,
    interviewDetailThunk,
    interviewThunk,
 } from '../../../store/interview/interview.thunk'
@@ -26,7 +26,7 @@ import { EditInterviewModal } from './interviewModal/EditIntervieModal'
 import { DeleteModal } from '../deleteModal/DeleteModal'
 import { showSnackbar } from '../snackbar/Snackbar'
 
-export const TableInterviow = ({ headerArray }) => {
+export const TableInterviow = ({ headerArray, intern }) => {
    const dispatch = useDispatch()
    const navigate = useNavigate()
    const getInterviews = useSelector((state) => state.interview.getInterview)
@@ -72,6 +72,7 @@ export const TableInterviow = ({ headerArray }) => {
 
    useEffect(() => {
       dispatch(interviewThunk())
+      dispatch(internsDetailGetThunk(intern))
       const fetchData = () => {
          setTimeout(() => {
             setLoading(false)

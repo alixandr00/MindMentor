@@ -1,12 +1,12 @@
 /* eslint-disable no-unneeded-ternary */
 import React, { useEffect, useState } from 'react'
 import { styled } from '@mui/material'
-import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo'
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import CloseIcon from '@mui/icons-material/Close'
+import { TimePicker } from '@mui/x-date-pickers/TimePicker'
 import dayjs from 'dayjs'
 import { useDispatch, useSelector } from 'react-redux'
 import { UiModal } from '../../modal/UiModal'
@@ -18,7 +18,6 @@ import {
 } from '../../../../store/interview/interview.thunk'
 import { showSnackbar } from '../../snackbar/Snackbar'
 import { InternData } from './InternsData'
-import { Npm } from './Npm'
 
 export const AddInterviewModal = ({ onClose, iD = 8 }) => {
    const dispatch = useDispatch()
@@ -136,35 +135,29 @@ export const AddInterviewModal = ({ onClose, iD = 8 }) => {
 
                   <StyleBlockDate>
                      <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DemoContainer components={['DateTimePicker']}>
-                           <DemoItem>
-                              <DateTimePicker
-                                 ampm={false}
-                                 value={selectedDateTime}
-                                 onChange={handleDateTimeChange}
-                                 views={['hours', 'minutes']}
-                                 autoOpen={false}
-                              />
-                           </DemoItem>
+                        <DemoContainer components={['TimePicker']}>
+                           <TimePicker
+                              label="Start time"
+                              ampm={false}
+                              value={selectedDateTime}
+                              onChange={handleDateTimeChange}
+                           />
                         </DemoContainer>
                      </LocalizationProvider>
                   </StyleBlockDate>
                   <StyleBlockDate>
                      <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DemoContainer components={['DateTimePicker']}>
-                           <DemoItem>
-                              <DateTimePicker
-                                 ampm={false}
-                                 value={selectedDateTimes}
-                                 onChange={handleDateTimeChanges}
-                                 views={['hours', 'minutes']}
-                              />
-                           </DemoItem>
+                        <DemoContainer components={['TimePicker']}>
+                           <TimePicker
+                              label="End time"
+                              ampm={false}
+                              value={selectedDateTimes}
+                              onChange={handleDateTimeChanges}
+                           />
                         </DemoContainer>
                      </LocalizationProvider>
                   </StyleBlockDate>
                </CalendarContainer>
-               <Npm />
                <StyleBlock>
                   <UiInput
                      value={loc}
@@ -273,6 +266,9 @@ const StyleBlockDate = styled('div')`
       border-radius: 1.25rem;
       border: 1px solid #fff;
    }
+   .MuiStack-root > .MuiTextField-root {
+      min-width: 20px !important;
+   }
    .MuiInputLabel-root {
       color: #fff;
    }
@@ -280,7 +276,6 @@ const StyleBlockDate = styled('div')`
       display: none;
    }
    .MuiSvgIcon-root {
-      font-size: 1rem;
       color: #fff;
    }
 `

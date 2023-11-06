@@ -1,10 +1,10 @@
 /* eslint-disable camelcase */
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { styled } from '@mui/material'
-import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo'
+import { TimePicker } from '@mui/x-date-pickers/TimePicker'
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import CloseIcon from '@mui/icons-material/Close'
 import dayjs from 'dayjs'
@@ -20,14 +20,14 @@ import { showSnackbar } from '../../snackbar/Snackbar'
 
 export const EditInterviewModal = ({ onClose }) => {
    const dispatch = useDispatch()
-   const { id, name_interview } = useSelector(
+   const { id, name_interview, location, descriptions } = useSelector(
       (state) => state.interview.getInterviewDetail
    )
    const [nameInterview, setNameInterview] = useState(name_interview)
    const [selectedDateTime, setSelectedDateTime] = useState(null)
    const [selectedDateTimes, setSelectedDateTimes] = useState(null)
-   const [loc, setLocation] = useState('')
-   const [desc, setDesc] = useState('')
+   const [loc, setLocation] = useState(location)
+   const [desc, setDesc] = useState(descriptions)
 
    const date = dayjs(selectedDateTime)
    const timeStart = date.format('HH:mm')
@@ -78,6 +78,18 @@ export const EditInterviewModal = ({ onClose }) => {
          })
    }
 
+   useEffect(() => {
+      if (name_interview) {
+         setNameInterview(name_interview)
+      }
+      if (location) {
+         setLocation(location)
+      }
+      if (descriptions) {
+         setDesc(descriptions)
+      }
+   }, [name_interview, location, descriptions])
+
    return (
       <UiModal
          open
@@ -123,29 +135,25 @@ export const EditInterviewModal = ({ onClose }) => {
 
                <StyleBlockDate>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
-                     <DemoContainer components={['DateTimePicker']}>
-                        <DemoItem>
-                           <DateTimePicker
-                              ampm={false}
-                              value={selectedDateTime}
-                              onChange={handleDateTimeChange}
-                              views={['hours', 'minutes']}
-                           />
-                        </DemoItem>
+                     <DemoContainer components={['TimePicker']}>
+                        <TimePicker
+                           label="Start time"
+                           ampm={false}
+                           value={selectedDateTime}
+                           onChange={handleDateTimeChange}
+                        />
                      </DemoContainer>
                   </LocalizationProvider>
                </StyleBlockDate>
                <StyleBlockDate>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
-                     <DemoContainer components={['DateTimePicker']}>
-                        <DemoItem>
-                           <DateTimePicker
-                              ampm={false}
-                              value={selectedDateTimes}
-                              onChange={handleDateTimeChanges}
-                              views={['hours', 'minutes']}
-                           />
-                        </DemoItem>
+                     <DemoContainer components={['TimePicker']}>
+                        <TimePicker
+                           label="End time"
+                           ampm={false}
+                           value={selectedDateTimes}
+                           onChange={handleDateTimeChanges}
+                        />
                      </DemoContainer>
                   </LocalizationProvider>
                </StyleBlockDate>
@@ -251,6 +259,9 @@ const StyleBlockDate = styled('div')`
       height: 3.125rem;
       border-radius: 1.25rem;
       border: 1px solid #fff;
+   }
+   .MuiStack-root > .MuiTextField-root {
+      min-width: 20px !important;
    }
    .MuiInputLabel-root {
       color: #fff;
