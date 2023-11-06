@@ -20,21 +20,27 @@ import { showSnackbar } from '../../snackbar/Snackbar'
 
 export const EditInterviewModal = ({ onClose }) => {
    const dispatch = useDispatch()
-   const { id, name_interview, location, descriptions } = useSelector(
-      (state) => state.interview.getInterviewDetail
-   )
+   const {
+      id,
+      name_interview,
+      location,
+      descriptions,
+      start_time,
+      end_time,
+      date: dates,
+   } = useSelector((state) => state.interview.getInterviewDetail)
+
    const [nameInterview, setNameInterview] = useState(name_interview)
-   const [selectedDate, setSelectedDate] = useState(null)
-   console.log(selectedDate, 'selectedDate')
-   const [selectedDateTime, setSelectedDateTime] = useState(null)
-   const [selectedDateTimes, setSelectedDateTimes] = useState(null)
+   const [selectedDate, setSelectedDate] = useState(dayjs(dates))
+   const [selectedDateTime, setSelectedDateTime] = useState(dayjs(start_time))
+   const [selectedDateTimes, setSelectedDateTimes] = useState(dayjs(end_time))
    const [loc, setLocation] = useState(location)
    const [desc, setDesc] = useState(descriptions)
-
    const date = dayjs(selectedDateTime)
    const timeStart = date.format('HH:mm')
    const dateEnd = dayjs(selectedDateTimes)
    const timeEnd = dateEnd.format('HH:mm')
+   const formattedDate = dayjs(selectedDate).format('YYYY-MM-DD')
 
    const handleDateTimeChange = (newDateTime) => {
       setSelectedDateTime(newDateTime)
@@ -56,7 +62,7 @@ export const EditInterviewModal = ({ onClose }) => {
    const editNewInterview = () => {
       const data = {
          name_interview: nameInterview,
-         date: '2021-12-10',
+         date: formattedDate,
          start_time: timeStart,
          end_time: timeEnd,
          location: loc,
