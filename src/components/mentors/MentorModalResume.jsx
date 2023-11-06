@@ -6,25 +6,45 @@ import { UiButton } from '../UI/button/UiButton'
 import {
    formValidHandler,
    onChangeDataMentorForm,
+   openAndCloseCreateMentor,
    resetValidHandler,
    statusHandler,
+   validStack,
 } from '../../store/mentors/mentor.slice'
 import { PDFMentor } from './PDFMentor'
 import { showSnackbar } from '../UI/snackbar/Snackbar'
 import { MentorModalTextarea } from './textarea/MentorModalTextarea'
+import {
+   createMentor,
+   postCVMentor,
+   putEditMentor,
+} from '../../store/mentors/mentor.thunk'
+import { globalError, statusRequest } from '../../utils/common/constants/mentor'
 
-export const MentorModalResume = ({ open, onClose }) => {
+export const MentorModalResume = ({ open, onClose, getMentor }) => {
    const dispatch = useDispatch()
-   const { createMentorForm, valid } = useSelector((state) => state.mentor)
+   const {
+      createMentorForm,
+      stackPostId,
+      valid,
+      stack,
+      missingLanguages,
+      createAMentorOrConfirm,
+   } = useSelector((state) => state.mentor)
    const [validForm, setValidForm] = useState(false)
-   const [createAMentorOrConfirm, setCreateAMentorOrConfirm] = useState(true)
 
    const onCloseHandler = () => {
-      setCreateAMentorOrConfirm(false)
+      dispatch(openAndCloseCreateMentor(false))
       setValidForm(false)
       dispatch(resetValidHandler())
       onClose()
    }
+
+   useEffect(() => {
+      if (createAMentorOrConfirm) {
+         dispatch(validStack({ valueStack: createMentorForm.stack, stack }))
+      }
+   }, [createAMentorOrConfirm, createMentorForm])
 
    const onChangeHandlerForm = (event) => {
       const { name, value } = event.target
@@ -47,16 +67,124 @@ export const MentorModalResume = ({ open, onClose }) => {
       }
    }
 
+   const globalErrorFunc = () => {
+      showSnackbar({
+         message: globalError,
+         severity: 'error',
+      })
+   }
+
    const inValid = valid !== ''
 
-   const onSaveHandler = () => {
-      if (!createAMentorOrConfirm) {
-         dispatch(formValidHandler('one'))
-      } else {
-         dispatch(formValidHandler('two'))
+   const onSubmitHandler = () => {
+      const dataCV = {
+         first_name: createMentorForm.name,
+         last_name: createMentorForm.surname,
+         status: statusRequest[createMentorForm.status],
+         resume: createMentorForm.pdf,
       }
 
-      setCreateAMentorOrConfirm(true)
+      const dataCreate = {
+         first_name: createMentorForm.name,
+         last_name: createMentorForm.surname,
+         stack: stackPostId,
+         phone_number: createMentorForm.phones,
+         email: createMentorForm.email,
+         education: createMentorForm.education,
+         work_experiance: createMentorForm.workExperience,
+         skills: createMentorForm.skills,
+         status: statusRequest[createMentorForm.status],
+      }
+
+      if (!createAMentorOrConfirm) {
+         dispatch(formValidHandler('one'))
+         if (valid === '') {
+            dispatch(
+               postCVMentor({
+                  data: dataCV,
+                  navigate: openAndCloseCreateMentor,
+                  get: getMentor,
+               })
+            )
+         } else {
+            globalErrorFunc()
+         }
+      } else if (stackPostId.length !== 0) {
+         dispatch(formValidHandler('two'))
+         if (valid === '') {
+            dispatch(
+               createMentor({
+                  data: dataCreate,
+                  get: getMentor,
+                  snackbar: showSnackbar,
+                  close: onCloseHandler,
+               })
+            )
+         } else {
+            globalErrorFunc()
+         }
+      } else if (stackPostId.length === 0) {
+         globalErrorFunc()
+      } else {
+         showSnackbar({
+            message: `К сожалению, мы не поддерживаем ${missingLanguages.join(
+               ', '
+            )} язык в нашей компании`,
+            severity: 'error',
+         })
+      }
+   }
+
+   const url = window.location.href
+   const [edit, mentorDataUrl] = (url.split('?')[1] || '').split('=')
+
+   const onEditHandler = () => {
+      const parts = mentorDataUrl.split('-')
+      const id = parts[1]
+
+      const dataEdit = {
+         first_name: createMentorForm.name,
+         last_name: createMentorForm.surname,
+         stack: stackPostId,
+         phone_number: createMentorForm.phones,
+         email: createMentorForm.email,
+         education: createMentorForm.education,
+         work_experiance: createMentorForm.workExperience,
+         skills: createMentorForm.skills,
+         status: statusRequest[createMentorForm.status],
+      }
+      if (stackPostId.length !== 0) {
+         dispatch(formValidHandler('two'))
+
+         if (valid === '') {
+            dispatch(
+               putEditMentor({
+                  data: dataEdit,
+                  get: getMentor,
+                  snackbar: showSnackbar,
+                  close: onCloseHandler,
+                  id,
+               })
+            )
+         } else {
+            globalErrorFunc()
+         }
+      } else {
+         showSnackbar({
+            message: `К сожалению, мы не поддерживаем ${missingLanguages.join(
+               ', '
+            )} язык в нашей компании`,
+            severity: 'error',
+         })
+      }
+   }
+
+   const onSaveHandler = () => {
+      if (edit === 'edit') {
+         onEditHandler()
+      } else {
+         onSubmitHandler()
+      }
    }
 
    useEffect(() => {
@@ -68,6 +196,8 @@ export const MentorModalResume = ({ open, onClose }) => {
       }
    }, [valid])
 
+   const textarea = createMentorForm.skills || createMentorForm.workExperience
+
    return (
       <WrapperContainer open={open} onClose={onCloseHandler}>
          <ContainerModal>
@@ -78,7 +208,7 @@ export const MentorModalResume = ({ open, onClose }) => {
                   </Paid>
                )}
 
-               <ContainerInputs>
+               <ContainerInputs marginTop="1.75rem">
                   <WrapperInput>
                      {!createAMentorOrConfirm && (
                         <StyledLabel htmlFor="name">Name</StyledLabel>
@@ -146,40 +276,48 @@ export const MentorModalResume = ({ open, onClose }) => {
                   </div>
                ) : (
                   <TwoContainerInput>
-                     <InputStyle
-                        type="text"
-                        bordercolor="#fff"
-                        borderradius="0.625rem"
-                        width="17.2vw"
-                        onChange={onChangeHandlerForm}
-                        value={createMentorForm.stack}
-                        name="stack"
-                        error={validForm && createMentorForm.stack === ''}
-                     />
+                     <ContainerInputs marginTop="-10px">
+                        <InputStyle
+                           type="text"
+                           bordercolor="#fff"
+                           borderradius="0.625rem"
+                           placeholder="Email"
+                           width="17.2vw"
+                           onChange={onChangeHandlerForm}
+                           value={createMentorForm.email}
+                           name="email"
+                           error={validForm && createMentorForm.email === ''}
+                        />
+                        <InputStyle
+                           type="text"
+                           bordercolor="#fff"
+                           borderradius="0.625rem"
+                           placeholder="Phone"
+                           width="17.2vw"
+                           onChange={onChangeHandlerForm}
+                           value={createMentorForm.phones}
+                           name="phones"
+                           error={validForm && createMentorForm.phones === ''}
+                        />
+                     </ContainerInputs>
+
                      <InputStyle
                         type="text"
                         bordercolor="#fff"
                         borderradius="0.625rem"
                         width="38vw"
+                        placeholder="Tech Stack"
                         onChange={onChangeHandlerForm}
-                        name="email"
-                        value={createMentorForm.email}
-                        error={validForm && createMentorForm.email === ''}
+                        name="stack"
+                        value={createMentorForm.stack}
+                        error={validForm && createMentorForm.stack === ''}
                      />
-                     {/* <textarea
-                        onChange={onChangeHandlerForm}
-                        value={createMentorForm.education}
-                        name="education"
-                     />
-                     <textarea
-                        onChange={onChangeHandlerForm}
-                        value={createMentorForm.workExperience}
-                        name="workExperience"
-                     /> */}
-                     <MentorModalTextarea
-                        onChangeHandlerForm={onChangeHandlerForm}
-                        createMentorForm={createMentorForm}
-                     />
+
+                     {textarea && (
+                        <MentorModalTextarea
+                           createMentorForm={createMentorForm}
+                        />
+                     )}
                   </TwoContainerInput>
                )}
                <ContainerButtons>
@@ -250,8 +388,8 @@ const Paid = styled('button')`
    padding: 0.25rem 1.875rem;
 `
 
-const ContainerInputs = styled('div')(() => ({
-   marginTop: '1.75rem',
+const ContainerInputs = styled('div')(({ marginTop }) => ({
+   marginTop,
    display: 'flex',
    gap: '3.81rem',
 }))

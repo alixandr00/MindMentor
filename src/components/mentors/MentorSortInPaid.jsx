@@ -1,13 +1,13 @@
 /* eslint-disable react/no-unstable-nested-components */
 import { FormControl, MenuItem, Select, styled } from '@mui/material'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import React, { useState } from 'react'
 import { DownIcon, UpIcon } from '../../assets/icons'
 import { sortHandler } from '../../store/mentors/mentor.slice'
 
-export const MentorSortInPaid = ({ dataMenuItem, name, defaultName }) => {
+export const MentorSortInPaid = ({ dataMenuItem, name }) => {
    const [isSelectOpen, setIsSelectOpen] = useState(false)
-   const [value, setValue] = useState(defaultName)
+   const { sort } = useSelector((state) => state.mentor)
    const dispatch = useDispatch()
 
    const handleSelectClose = () => {
@@ -21,7 +21,6 @@ export const MentorSortInPaid = ({ dataMenuItem, name, defaultName }) => {
       const event = e.target.value
 
       dispatch(sortHandler(event))
-      setValue(event)
    }
 
    return (
@@ -41,7 +40,7 @@ export const MentorSortInPaid = ({ dataMenuItem, name, defaultName }) => {
                      border: '0 !important',
                   },
                }}
-               value={value}
+               value={sort}
                onClose={handleSelectClose}
                onOpen={handleSelectOpen}
                onChange={handleChange}
@@ -82,7 +81,7 @@ const FormControlStyle = styled(FormControl)(() => ({
 }))
 
 const SelectStyle = styled(Select)(() => ({
-   width: '8.4vw',
+   width: '8.8vw',
 
    '& .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input':
       {

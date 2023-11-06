@@ -1,21 +1,33 @@
+import { useDispatch, useSelector } from 'react-redux'
 import { styled } from '@mui/material'
 import { EditorProvider } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import React, { useState } from 'react'
 import { MenuBar } from './MenuBar'
-
-const content = '<div></div>'
+import { chengTextarea } from '../../../store/mentors/mentor.slice'
 
 const extensions = [StarterKit]
 
-export const MentorModalTextarea = ({ createMentorForm }) => {
+export const MentorModalTextarea = () => {
+   const dispatch = useDispatch()
+   const { createMentorForm } = useSelector((state) => state.mentor)
    const [focusTextareaEducation, setFocusTextareaEducation] = useState(false)
    const [focusTextareaExtensions, setFocusTextareaExtensions] = useState(false)
-   const [value, setValue] = useState('')
-   console.log('value: ', value)
+   const [focusTextareaSkills, setFocusTextareaSkills] = useState(false)
+   const [educationValue, setEducationValue] = useState('')
+   const [workExperienceValue, setWorkExperience] = useState('')
+   const [skillsValue, setSkills] = useState('')
 
-   const onCollectorValue = (e) => {
-      setValue(e)
+   const onCollectorEducationValue = (e) => {
+      setEducationValue(e)
+   }
+
+   const onCollectorWorkExperienceValue = (e) => {
+      setWorkExperience(e)
+   }
+
+   const onCollectorSkills = (e) => {
+      setSkills(e)
    }
 
    const onFocusEducationHandler = () => {
@@ -24,6 +36,14 @@ export const MentorModalTextarea = ({ createMentorForm }) => {
 
    const onBlurEducationHandler = () => {
       setFocusTextareaEducation(false)
+
+      dispatch(
+         chengTextarea({
+            education: educationValue,
+            workExperience: workExperienceValue,
+            skills: skillsValue,
+         })
+      )
    }
 
    const onFocusExtensionsHandler = () => {
@@ -32,24 +52,55 @@ export const MentorModalTextarea = ({ createMentorForm }) => {
 
    const onBlurExtensionsHandler = () => {
       setFocusTextareaExtensions(false)
+
+      dispatch(
+         chengTextarea({
+            education: educationValue,
+            workExperience: workExperienceValue,
+            skills: skillsValue,
+         })
+      )
+   }
+
+   const onFocusSkillsHandler = () => {
+      setFocusTextareaSkills(true)
+   }
+
+   const onBlurSkillsHandler = () => {
+      setFocusTextareaSkills(false)
+
+      dispatch(
+         chengTextarea({
+            education: educationValue,
+            workExperience: workExperienceValue,
+            skills: skillsValue,
+         })
+      )
    }
 
    return (
       <Container
          focusTextareaOne={focusTextareaEducation}
          focusTextareaTwo={focusTextareaExtensions}
+         focusTextareaThree={focusTextareaSkills}
       >
+         <BoxTextarea className="three">
+            <EditorProviderStyle
+               slotBefore={<MenuBar onCollectorValue={onCollectorSkills} />}
+               onFocus={onFocusSkillsHandler}
+               extensions={extensions}
+               content={createMentorForm.skills || 'Skills'}
+               onBlur={onBlurSkillsHandler}
+            />
+         </BoxTextarea>
+
          <BoxTextarea className="one">
             <EditorProviderStyle
                slotBefore={
-                  <MenuBar
-                     focusTextareaEducation={focusTextareaEducation}
-                     onCollectorValue={onCollectorValue}
-                     createMentorForm={createMentorForm.education}
-                  />
+                  <MenuBar onCollectorValue={onCollectorEducationValue} />
                }
                extensions={extensions}
-               content={content}
+               content={createMentorForm.education || 'Education'}
                onBlur={onBlurEducationHandler}
                onFocus={onFocusEducationHandler}
             />
@@ -57,9 +108,12 @@ export const MentorModalTextarea = ({ createMentorForm }) => {
 
          <BoxTextarea className="two">
             <EditorProviderStyle
+               slotBefore={
+                  <MenuBar onCollectorValue={onCollectorWorkExperienceValue} />
+               }
                onFocus={onFocusExtensionsHandler}
                extensions={extensions}
-               content={content}
+               content={createMentorForm.workExperience || 'work Experience'}
                onBlur={onBlurExtensionsHandler}
             />
          </BoxTextarea>
@@ -67,18 +121,29 @@ export const MentorModalTextarea = ({ createMentorForm }) => {
    )
 }
 
-const Container = styled('div')(({ focusTextareaOne, focusTextareaTwo }) => {
-   const minHeight = '4hv'
-   const maxHeight = '38vh'
-   let heightOne = '16.4vh'
-   let heightTwo = '16.4vh'
+const Container = styled('div')(({
+   focusTextareaOne,
+   focusTextareaTwo,
+   focusTextareaThree,
+}) => {
+   const minHeight = '4.7hv'
+   const maxHeight = '26.6vh'
+   let heightOne = '12vh'
+   let heightTwo = '12vh'
+   let heightThree = '12vh'
 
    if (focusTextareaOne) {
-      heightOne = '38vh'
-      heightTwo = '4vh'
+      heightOne = '26.6vh'
+      heightTwo = '4.7vh'
+      heightThree = '4.7vh'
    } else if (focusTextareaTwo) {
-      heightOne = '4vh'
-      heightTwo = '38vh'
+      heightOne = '4.7vh'
+      heightTwo = '26.6vh'
+      heightThree = '4.7vh'
+   } else if (focusTextareaThree) {
+      heightOne = '12vh'
+      heightTwo = '12vh'
+      heightThree = '12vh'
    }
 
    return {
@@ -115,14 +180,27 @@ const Container = styled('div')(({ focusTextareaOne, focusTextareaTwo }) => {
             },
          },
       },
+
+      '& .three': {
+         '& .ProseMirror': {
+            minHeight,
+            height: heightThree,
+            maxHeight: '12vh',
+            transition: '0.8s',
+
+            overflowY: 'auto',
+
+            '&::-webkit-scrollbar': {
+               display: 'none',
+            },
+         },
+      },
    }
 })
 
 const BoxTextarea = styled('label')`
    width: 38vw;
-
    /* min-height: 3vh; */
-
    border: 1px solid #f9f9f9;
    background: #252335;
    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);

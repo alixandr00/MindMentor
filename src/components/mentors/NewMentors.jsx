@@ -1,78 +1,162 @@
 import { IconButton, styled } from '@mui/material'
+import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 import { UiButton } from '../UI/button/UiButton'
 import { UiInput } from '../UI/input/UiInput'
 import { SearchIcon } from '../../assets/icons'
 import { MentorModalResume } from './MentorModalResume'
 import { MentorSortInPaid } from './MentorSortInPaid'
+import {
+   deleteMentor,
+   getStack,
+   getStatusMentors,
+} from '../../store/mentors/mentor.thunk'
+import { statusData } from '../../utils/common/constants/mentor'
+import { Loading } from '../UI/loading/Loading'
+import { MentorsCards } from './MentorsCards'
+import { resetForm } from '../../store/mentors/mentor.slice'
 
-export const NewMentors = ({ children }) => {
-   const [searchParams, setSearchParams] = useSearchParams()
+export const NewMentors = () => {
+   const dispatch = useDispatch()
+   const [valueSearchParams, setValueSearchParams] = useSearchParams()
+   const [valueSearch, setValueSearch] = useState(
+      valueSearchParams.get('search') || ''
+   )
+   const { sort, mentorData, isLoading } = useSelector((state) => state.mentor)
 
    const updateSearchParam = () => {
-      setSearchParams({ create: 'Mentor' })
+      valueSearchParams.set('create', 'Mentor')
+      setValueSearchParams(valueSearchParams)
    }
+
+   useEffect(() => {
+      dispatch(getStack())
+   }, [])
 
    const onCloseHandler = () => {
-      searchParams.delete('create')
-      setSearchParams(searchParams)
+      if (valueSearchParams.has('create')) {
+         valueSearchParams.delete('create')
+         setValueSearchParams(valueSearchParams)
+      } else {
+         valueSearchParams.delete('edit')
+         setValueSearchParams(valueSearchParams)
+      }
+
+      dispatch(resetForm())
    }
 
+   const onChangeHandler = (event) => {
+      const { value } = event.target
+      setValueSearch(value)
+   }
+
+   const onBlurAndGetSearchHandler = () => {
+      if (valueSearch !== '') {
+         valueSearchParams.set('search', valueSearch)
+         setValueSearchParams(valueSearchParams)
+      } else {
+         valueSearchParams.delete('search')
+         setValueSearchParams(valueSearchParams)
+      }
+   }
+
+   const getMentor = () => {
+      dispatch(
+         getStatusMentors({ status: statusData[sort], search: valueSearch })
+      )
+   }
+
+   const deleteMentors = (id) => {
+      dispatch(
+         deleteMentor({
+            id,
+            get: getMentor,
+         })
+      )
+   }
+
+   useEffect(() => {
+      getMentor()
+   }, [sort, valueSearchParams.get('search')])
+
+   const isOpen =
+      valueSearchParams.has('create') || valueSearchParams.has('edit')
+
    return (
-      <Container>
-         <MentorModalResume
-            open={searchParams.has('create')}
-            onClose={onCloseHandler}
-         />
-         <ContIntern>
-            <div>
-               <AdminCont>
-                  <p className="adminText">Hello, Super Admin!</p>
-               </AdminCont>
+      <>
+         {isLoading && <Loading />}
+
+         <Container>
+            <MentorModalResume
+               getMentor={getMentor}
+               open={isOpen}
+               onClose={onCloseHandler}
+            />
+            <ContIntern>
                <div>
-                  <InternBox>
-                     <p className="Interns">Mentors</p>
-                     <div>{}</div>
-                  </InternBox>
-                  <InputBox>
-                     <Input>
-                        <UiInputStyled
-                           colors="#FFFF"
-                           placeholder="search name"
-                           type="text"
-                        />
-                        <Icons>
-                           <SearchIcon />
-                        </Icons>
-                     </Input>
-                     <BoxSortAndCreateMentor>
-                        <ContainerSelect>
-                           <span>Sort by</span>
-
-                           <MentorSortInPaid
-                              defaultName="All"
-                              name="status"
-                              dataMenuItem={[
-                                 { id: 1, name: 'All' },
-                                 { id: 2, name: 'Paid' },
-                                 { id: 3, name: 'Un Paid' },
-                              ]}
+                  <AdminCont>
+                     <p className="adminText">Hello, Super Admin!</p>
+                  </AdminCont>
+                  <div>
+                     <InternBox>
+                        <p className="Interns">Mentors</p>
+                     </InternBox>
+                     <InputBox>
+                        <Input>
+                           <UiInputStyled
+                              colors="#FFFF"
+                              placeholder="search name"
+                              type="text"
+                              value={valueSearch}
+                              onChange={onChangeHandler}
+                              onBlur={onBlurAndGetSearchHandler}
                            />
-                        </ContainerSelect>
+                           <Icons>
+                              <SearchIcon />
+                           </Icons>
+                        </Input>
+                        <BoxSortAndCreateMentor>
+                           <ContainerSelect>
+                              <span>Sort by</span>
 
-                        <div>
-                           <UiButtonStyled onClick={updateSearchParam}>
-                              <p>+ New mentor</p>
-                           </UiButtonStyled>
-                        </div>
-                     </BoxSortAndCreateMentor>
-                  </InputBox>
+                              <MentorSortInPaid
+                                 name="status"
+                                 dataMenuItem={[
+                                    { id: 1, name: 'All' },
+                                    { id: 2, name: 'Billable' },
+                                    { id: 3, name: 'Non billable' },
+                                 ]}
+                              />
+                           </ContainerSelect>
+
+                           <div>
+                              <UiButtonStyled onClick={updateSearchParam}>
+                                 <p>+ New mentor</p>
+                              </UiButtonStyled>
+                           </div>
+                        </BoxSortAndCreateMentor>
+                     </InputBox>
+                  </div>
                </div>
-            </div>
-         </ContIntern>
+            </ContIntern>
 
-         <ChildrenContainer>{children}</ChildrenContainer>
-      </Container>
+            <ChildrenContainer>
+               <ContainerMentorCard>
+                  {mentorData?.map((mentor) => (
+                     <MentorsCards
+                        mentorData={mentorData}
+                        setValueSearchParams={setValueSearchParams}
+                        key={mentor.id}
+                        deleteMentors={deleteMentors}
+                        mentor={mentor}
+                        valueSearchParams={valueSearchParams}
+                     />
+                  ))}
+               </ContainerMentorCard>
+            </ChildrenContainer>
+         </Container>
+      </>
    )
 }
 
@@ -191,3 +275,27 @@ const UiButtonStyled = styled(UiButton)({
    fontWeight: '500',
    lineHeight: 'normal',
 })
+
+const ContainerMentorCard = styled('div')(() => ({
+   width: '100%',
+   marginTop: '2rem',
+   display: 'flex',
+   flexWrap: 'wrap',
+   gap: '2rem',
+   maxHeight: '67vh',
+   overflowY: 'auto',
+   scrollbarWidth: 'thin',
+   scrollbarColor: ' #b3b3b30 transparent',
+   '&::-webkit-scrollbar ': {
+      width: '0.3rem',
+   },
+   '&::-webkit-scrollbar-track': {
+      backgroundColor: ' #fff white',
+   },
+   '&::-webkit-scrollbar-thumb ': {
+      backgroundColor: ' #fff',
+      borderRadius: '0.25rem',
+   },
+
+   padding: '0.5rem',
+}))

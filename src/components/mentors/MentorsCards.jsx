@@ -1,69 +1,101 @@
-import React, { useEffect } from 'react'
-import { styled } from '@mui/material'
-import { useDispatch, useSelector } from 'react-redux'
-import { GmailIcon, PhoneIcon } from '../../assets/icons'
-import { getMentors } from '../../store/mentors/mentor.thunk'
+import { useDispatch } from 'react-redux'
+import { IconButton, styled } from '@mui/material'
+import { GmailIcon, PhoneIcon, DeleteIcon, EditIcon } from '../../assets/icons'
 import { MentorResumeModal } from './MentorResumeModal'
+import { getMentorDetail } from '../../store/mentors/mentor.thunk'
+import {
+   openAndCloseCreateMentor,
+   openModalEditMentor,
+} from '../../store/mentors/mentor.slice'
 
-export const MentorsCards = () => {
+export const MentorsCards = ({
+   mentor,
+   deleteMentors,
+   valueSearchParams,
+   setValueSearchParams,
+   mentorData,
+}) => {
    const dispatch = useDispatch()
-   const { mentorData } = useSelector((state) => state.mentor)
 
-   useEffect(() => {
-      dispatch(getMentors())
-   }, [])
+   const onOpenResumeHandler = () => {
+      valueSearchParams.set(
+         'resume',
+         `${mentor.first_name}-${mentor.id}-${mentor.stack[0]}`
+      )
+      setValueSearchParams(valueSearchParams)
 
-   const db = false
+      dispatch(getMentorDetail(mentor.id))
+   }
+
+   const closeResumeHandler = () => {
+      valueSearchParams.delete('resume')
+      setValueSearchParams(valueSearchParams)
+   }
+
+   const openResume = valueSearchParams.has('resume')
+
+   const onDeleteMentorHandler = (event) => {
+      event.stopPropagation()
+      deleteMentors(mentor.id)
+   }
+
+   const onEditMentorHandler = (event) => {
+      event.stopPropagation()
+      dispatch(openAndCloseCreateMentor(true))
+
+      valueSearchParams.set(
+         'edit',
+         `${mentor.first_name}-${mentor.id}-${mentor.stack[0]}`
+      )
+
+      setValueSearchParams(valueSearchParams)
+      dispatch(openModalEditMentor({ id: mentor.id, mentorData }))
+   }
 
    return (
-      <Container>
-         {mentorData?.map((mentor) => (
-            <ContainerCards key={mentor.id}>
-               <MentorNameText>
-                  {mentor.first_name} {mentor.last_name}
-               </MentorNameText>
-               <MainWrapper>
-                  <MentorTexts>{mentor.work_experiance}JavaScript</MentorTexts>
-                  <MainContainers>
-                     <PhoneIcon />
-                     <MentorTexts>{mentor.phone_number}</MentorTexts>
-                  </MainContainers>
-                  <MainContainers>
-                     <GmailIcon />
-                     <MentorTexts>{mentor.email}</MentorTexts>
-                  </MainContainers>
-               </MainWrapper>
-            </ContainerCards>
-         ))}
+      <>
+         <ContainerCards onClick={onOpenResumeHandler}>
+            <div className="action-icon-container">
+               <div className="action-icon-box">
+                  <ContainerActionIcon>
+                     <IconButton className="edit" onClick={onEditMentorHandler}>
+                        <EditIcon />
+                     </IconButton>
 
-         {db && <MentorResumeModal />}
-      </Container>
+                     <IconButton
+                        className="del"
+                        onClick={onDeleteMentorHandler}
+                     >
+                        <DeleteIcon />
+                     </IconButton>
+                  </ContainerActionIcon>
+               </div>
+            </div>
+
+            <MentorNameText>
+               {mentor.first_name} {mentor.last_name}
+            </MentorNameText>
+            <MainWrapper>
+               <MentorTexts>{mentor.stack[0]}</MentorTexts>
+               <MainContainers>
+                  <div>
+                     <PhoneIcon />
+                  </div>
+                  <MentorTexts>{mentor.phone_number}</MentorTexts>
+               </MainContainers>
+               <MainContainers>
+                  <div>
+                     <GmailIcon />
+                  </div>
+                  <MentorTexts>{mentor.email}</MentorTexts>
+               </MainContainers>
+            </MainWrapper>
+         </ContainerCards>
+
+         <MentorResumeModal open={openResume} onClose={closeResumeHandler} />
+      </>
    )
 }
-
-const Container = styled('div')(() => ({
-   width: '100%',
-   marginTop: '2rem',
-   display: 'flex',
-   flexWrap: 'wrap',
-   gap: '2rem',
-   maxHeight: '67vh',
-   overflowY: 'auto',
-   scrollbarWidth: 'thin',
-   scrollbarColor: ' #b3b3b30 transparent',
-   '&::-webkit-scrollbar ': {
-      width: '0.3rem',
-   },
-   '&::-webkit-scrollbar-track': {
-      backgroundColor: ' #fff white',
-   },
-   '&::-webkit-scrollbar-thumb ': {
-      backgroundColor: ' #fff',
-      borderRadius: '0.25rem',
-   },
-
-   padding: '0.5rem',
-}))
 
 const ContainerCards = styled('div')(() => ({
    width: '19.2vw',
@@ -75,6 +107,10 @@ const ContainerCards = styled('div')(() => ({
    '&:hover': {
       background: 'linear-gradient(7.1875deg, #49318C, #3F5FB0)',
       transform: 'scale(1.05)',
+
+      '& .action-icon-box': {
+         display: 'block',
+      },
    },
 
    color: '#FFF',
@@ -85,11 +121,63 @@ const ContainerCards = styled('div')(() => ({
    lineHeight: 'normal',
 
    cursor: 'pointer',
+
+   '& .action-icon-container': {
+      height: '2rem',
+      margin: '-1.5rem -2rem 0.5rem 0',
+   },
+
+   '& .action-icon-box': {
+      display: 'none',
+   },
 }))
+
+const ContainerActionIcon = styled('div')`
+   display: flex;
+   justify-content: flex-end;
+   align-items: center;
+
+   .del {
+      svg {
+         width: 25px;
+         height: 25px;
+         margin-top: -4px;
+
+         path {
+            stroke: #d0d0d0;
+         }
+      }
+
+      margin-bottom: 2px;
+      :hover {
+         svg {
+            path {
+               stroke: #fff;
+            }
+         }
+      }
+   }
+
+   .edit {
+      svg {
+         path {
+            stroke: #d0d0d0;
+         }
+      }
+
+      :hover {
+         svg {
+            path {
+               stroke: #fff;
+            }
+         }
+      }
+   }
+`
 
 const MentorNameText = styled('p')({
    color: '#FFF',
-   fontSize: '18px',
+   fontSize: '1.125rem',
    fontWeight: 500,
    fontFamily: 'Bai Jamjuree',
    textAlign: 'center',
