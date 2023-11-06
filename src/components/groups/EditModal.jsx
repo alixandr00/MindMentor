@@ -1,35 +1,44 @@
 import React, { useState } from 'react'
-import CloseIcon from '@mui/icons-material/Close'
-import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { IconButton, styled } from '@mui/material'
+import CloseIcon from '@mui/icons-material/Close'
 import { LocalizationProvider } from '@mui/x-date-pickers'
-import dayjs from 'dayjs'
+import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-import { useDispatch } from 'react-redux'
+import dayjs from 'dayjs'
+import { useDispatch, useSelector } from 'react-redux'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { UiModal } from '../UI/modal/UiModal'
+import 'dayjs/locale/en'
 import { UiInput } from '../UI/input/UiInput'
 import { UiButton } from '../UI/button/UiButton'
-import 'dayjs/locale/en'
 import { AddedInternsModal } from './AddedInternsModal'
-import { postGroups } from '../../store/groups/groupThunk'
 import { headerArray } from '../../utils/table-students'
+import { putGroupById } from '../../store/groups/groupThunk'
 
 dayjs.extend(customParseFormat)
 dayjs.locale('en')
 
-export const CreateGroupModal = ({ openModal, oncloseModal }) => {
-   const [openModalInterns, setOpenModalInterns] = useState(false)
+export const EditModal = ({ openEditModal, closeModalHandlerEdit }) => {
+   const { getGroupId } = useSelector((state) => state.groups)
+   console.log('getGroupId: ', getGroupId)
+   const [groupName, setGroupName] = useState(getGroupId?.name || '')
+   const [status, setStatus] = useState(getGroupId?.status || '')
+   const peopleId = getGroupId.people?.map((el) => el.id)
+   const peopleName = getGroupId.people?.map(
+      (el) => `${el.name} ${el.surname} ,`
+   )
+
+   const [startData, setStartData] = useState(dayjs(getGroupId.start_date))
+   const [endData, setEndData] = useState(dayjs(getGroupId.end_date))
    const [state, setState] = useState({ name: [], internId: [] })
 
-   const [internName, setInternName] = useState([])
-   const [internId, setInternId] = useState([])
+   const [internName, setInternName] = useState(peopleName)
+   const [internId, setInternId] = useState(peopleId)
+
+   const [openModalInterns, setOpenModalInterns] = useState(false)
+
    const dispatch = useDispatch()
 
-   const [groupName, setGroupName] = useState('')
-   const [status, setStatus] = useState('')
-   const [startData, setStartData] = useState(null)
-   const [endData, setEndData] = useState(null)
    const openModalHandler = () => {
       setOpenModalInterns(true)
    }
@@ -41,7 +50,7 @@ export const CreateGroupModal = ({ openModal, oncloseModal }) => {
       event.preventDefault()
       const formattedStartData = dayjs(startData).format('YYYY-MM-DD')
       const formattedEndData = dayjs(endData).format('YYYY-MM-DD')
-
+      const groupId = getGroupId.id
       const formData = {
          name: groupName,
          status,
@@ -49,128 +58,114 @@ export const CreateGroupModal = ({ openModal, oncloseModal }) => {
          end_date: formattedEndData,
          people: state.internId,
       }
-      dispatch(postGroups({ formData, oncloseModal }))
+      dispatch(putGroupById({ formData, groupId, closeModalHandlerEdit }))
       console.log(formData)
    }
 
    return (
-      <UiModal open={openModal} onClose={oncloseModal}>
+      <UiModal open={openEditModal} onClose={closeModalHandlerEdit}>
          <Container>
-            <IconButtonStyled onClick={oncloseModal}>
+            <IconButtonStyled onClick={closeModalHandlerEdit}>
                <CloseIconBlock>
                   <CloseIcon />
                </CloseIconBlock>
             </IconButtonStyled>
-            <form onSubmit={handleFormSubmit}>
-               <FirstWrapper>
-                  <GroupText>Group Name</GroupText>
-                  <UiInputStyled
-                     placeholder="group name"
-                     value={groupName}
-                     onChange={(e) => setGroupName(e.target.value)}
-                     type="text"
+            <FirstWrapper>
+               <GroupText>Group Name</GroupText>
+               <UiInputStyled
+                  placeholder="group name"
+                  value={groupName}
+                  onChange={(e) => setGroupName(e.target.value)}
+                  type="text"
+               />
+            </FirstWrapper>
+            <SecondWrapper>
+               <UiButtonStyled onClick={openModalHandler}>Group</UiButtonStyled>
+               <WrapperInternName>
+                  {internName.map((el) => (
+                     <TextInternName>{el}</TextInternName>
+                  )) ?? (
+                     <TextInternNameNo>
+                        There are no interns here yet .
+                     </TextInternNameNo>
+                  )}
+               </WrapperInternName>
+               {openModalInterns ? (
+                  <AddedInternsModal
+                     setState={setState}
+                     state={state}
+                     internName={internName}
+                     setInternName={setInternName}
+                     internId={internId}
+                     setInternId={setInternId}
+                     openModal={openModalHandler}
+                     oncloseModal={closeModalHandler}
+                     headerArray={headerArray}
                   />
-               </FirstWrapper>
-               <SecondWrapper>
-                  <UiButtonStyled onClick={openModalHandler}>
-                     Group
-                  </UiButtonStyled>
-                  <WrapperInternName>
-                     {state.name.length > 0 ? (
-                        state.name.map((el) => (
-                           <TextInternName>{el}</TextInternName>
-                        ))
-                     ) : (
-                        <TextInternNameNo>
-                           There are no interns here yet.
-                        </TextInternNameNo>
-                     )}
-                  </WrapperInternName>
-                  {openModalInterns ? (
-                     <AddedInternsModal
-                        setState={setState}
-                        state={state}
-                        internName={internName}
-                        setInternName={setInternName}
-                        internId={internId}
-                        setInternId={setInternId}
-                        openModal={openModalHandler}
-                        oncloseModal={closeModalHandler}
-                        headerArray={headerArray}
-                     />
-                  ) : null}
-               </SecondWrapper>
-               <MentorWrapper>
-                  <h1>hello</h1>
-               </MentorWrapper>
-               <ThirdWrapper>
-                  <StatusText>Status</StatusText>
-                  <WrapperButtons>
-                     <StatusButtonsStyled
-                        onClick={() => setStatus('ACTIVE')}
-                        style={{
-                           backgroundColor:
-                              status === 'ACTIVE'
-                                 ? 'rgba(84, 71, 170, 0.93)'
-                                 : 'transparent',
-                        }}
-                     >
-                        ACTIVE
-                     </StatusButtonsStyled>
-                     <StatusButtonsStyled
-                        onClick={() => setStatus('INACTIVE')}
-                        style={{
-                           backgroundColor:
-                              status === 'INACTIVE'
-                                 ? 'rgba(84, 71, 170, 0.93)'
-                                 : 'transparent',
-                        }}
-                     >
-                        INACTIVE
-                     </StatusButtonsStyled>
-                     <StatusButtonsStyled
-                        onClick={() => setStatus('FINISHED')}
-                        style={{
-                           backgroundColor:
-                              status === 'FINISHED'
-                                 ? 'rgba(84, 71, 170, 0.93)'
-                                 : 'transparent',
-                        }}
-                     >
-                        FINISHED
-                     </StatusButtonsStyled>
-                  </WrapperButtons>
-                  <WrapperData>
-                     <StyleBlockCalendar>
-                        <DataTexts>Start data</DataTexts>
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                           <DatePicker
-                              value={startData}
-                              onChange={setStartData}
-                           />
-                        </LocalizationProvider>
-                     </StyleBlockCalendar>
-                     <StyleBlockCalendar>
-                        <DataTexts>End data</DataTexts>
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                           <DatePicker value={endData} onChange={setEndData} />
-                        </LocalizationProvider>
-                     </StyleBlockCalendar>
-                  </WrapperData>
-                  <ButtonWrapper>
-                     <ButtonsStyled onClick={oncloseModal}>
-                        Cancel
-                     </ButtonsStyled>
-                     <ButtonsStyled type="submit">Save</ButtonsStyled>
-                  </ButtonWrapper>
-               </ThirdWrapper>
-            </form>
+               ) : null}
+            </SecondWrapper>
+            <ThirdWrapper>
+               <StatusText>Status</StatusText>
+               <WrapperButtons>
+                  <StatusButtonsStyled
+                     onClick={() => setStatus('ACTIVE')}
+                     style={{
+                        backgroundColor:
+                           status === 'ACTIVE'
+                              ? 'rgba(84, 71, 170, 0.93)'
+                              : 'transparent',
+                     }}
+                  >
+                     ACTIVE
+                  </StatusButtonsStyled>
+                  <StatusButtonsStyled
+                     onClick={() => setStatus('INACTIVE')}
+                     style={{
+                        backgroundColor:
+                           status === 'INACTIVE'
+                              ? 'rgba(84, 71, 170, 0.93)'
+                              : 'transparent',
+                     }}
+                  >
+                     INACTIVE
+                  </StatusButtonsStyled>
+                  <StatusButtonsStyled
+                     onClick={() => setStatus('FINISHED')}
+                     style={{
+                        backgroundColor:
+                           status === 'FINISHED'
+                              ? 'rgba(84, 71, 170, 0.93)'
+                              : 'transparent',
+                     }}
+                  >
+                     FINISHED
+                  </StatusButtonsStyled>
+               </WrapperButtons>
+               <WrapperData>
+                  <StyleBlockCalendar>
+                     <DataTexts>Start data</DataTexts>
+                     <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker value={startData} onChange={setStartData} />
+                     </LocalizationProvider>
+                  </StyleBlockCalendar>
+                  <StyleBlockCalendar>
+                     <DataTexts>End data</DataTexts>
+                     <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker value={endData} onChange={setEndData} />
+                     </LocalizationProvider>
+                  </StyleBlockCalendar>
+               </WrapperData>
+               <ButtonWrapper>
+                  <ButtonsStyled onClick={closeModalHandlerEdit}>
+                     Cancel
+                  </ButtonsStyled>
+                  <ButtonsStyled onClick={handleFormSubmit}>Save</ButtonsStyled>
+               </ButtonWrapper>
+            </ThirdWrapper>
          </Container>
       </UiModal>
    )
 }
-
-const MentorWrapper = styled('div')({})
 
 const TextInternName = styled('p')({
    color: '#FFF',
@@ -278,10 +273,9 @@ const SecondWrapper = styled('div')({
    width: '30rem',
    height: '12rem',
    marginTop: '1rem',
-   flexDirection: 'column',
-   border: '1px solid white',
+   flexWrap: 'wrap',
    gap: '1rem',
-   maxHeight: '11rem',
+   maxHeight: '12rem',
    overflowY: 'auto',
    scrollbarWidth: 'thin',
    scrollbarColor: ' #b3b3b30 transparent',
@@ -341,6 +335,9 @@ const StatusButtonsStyled = styled('div')({
    width: '6.25rem',
    height: '2.0625rem',
    cursor: 'pointer',
+   // '& :hover': {
+   //    backgroundColor: 'rgba(84, 71, 170, 0.93)',
+   // },
 })
 const ButtonsStyled = styled(UiButton)({
    borderRadius: '0.625rem',
@@ -358,5 +355,5 @@ const ButtonWrapper = styled('div')({
    gap: '2rem',
    justifyContent: 'flex-end',
    marginRight: '11rem',
-   marginTop: '2rem',
+   marginTop: '3rem',
 })

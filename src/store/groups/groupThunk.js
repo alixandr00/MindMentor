@@ -18,7 +18,6 @@ export const getGroupsBySearch = createAsyncThunk(
    async (data, { rejectWithValue }) => {
       try {
          const response = await axiosInstance.get(`/group/?search=${data}`)
-         console.log('response: ', response)
          return response.data
       } catch (error) {
          return rejectWithValue(error)
@@ -85,21 +84,44 @@ export const deleteGroups = createAsyncThunk(
 export const getGroupById = createAsyncThunk(
    'groups/getGroupById',
    async (id, { rejectWithValue }) => {
-      console.log('id: ', id)
       try {
-         const response = await axiosInstance.get(`/group/${id}/`)
-         console.log('response: ', response)
-         // data.setDeleteOpenModal(false)
+         const response = await axiosInstance.get(`/group/${id}/get`)
          showSnackbar({
             severity: 'success',
             message: 'Successfully get group',
          })
-         // dispatch(getGroups())console.log();
          return response.data
       } catch (error) {
          showSnackbar({
             severity: 'error',
             message: 'Cannot get group !',
+         })
+         return rejectWithValue(error)
+      }
+   }
+)
+export const putGroupById = createAsyncThunk(
+   'groups/putGroupById',
+   async (
+      { formData, groupId, closeModalHandlerEdit },
+      { rejectWithValue, dispatch }
+   ) => {
+      try {
+         const response = await axiosInstance.put(
+            `/group/${groupId}/up`,
+            formData
+         )
+         closeModalHandlerEdit()
+         dispatch(getGroups())
+         showSnackbar({
+            severity: 'success',
+            message: 'Successfully put group',
+         })
+         return response.data
+      } catch (error) {
+         showSnackbar({
+            severity: 'error',
+            message: 'Cannot put group !',
          })
          return rejectWithValue(error)
       }

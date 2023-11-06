@@ -2,7 +2,9 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { IconButton, styled } from '@mui/material'
+// import { useSearchParams } from 'react-router-dom'
 import { ReactComponent as DeleteIcon } from '../../assets/icons/deleteicon.svg'
+import { ReactComponent as EditIcon } from '../../assets/icons/editIcon.svg'
 import { NotesIcon, PeopleIcon, ProgressIcon } from '../../assets/icons'
 import {
    deleteGroups,
@@ -13,10 +15,20 @@ import { Loading } from '../UI/loading/Loading'
 import { DeleteGroupModal } from './DeleteGroupModal'
 import { GetGroupModal } from './GetGroupModal'
 import { showSnackbar } from '../UI/snackbar/Snackbar'
+// import { CreateGroupModal } from './CreateGroupModal'
+import { EditModal } from './EditModal'
+import { fetchInterns } from '../../store/interns/internsThunk'
 
-export const GroupsCards = ({ groups }) => {
+export const GroupsCards = ({
+   groups,
+   // openModal,
+   // openModalHandlerEdit,
+   // closeModalHandlerEdit,
+}) => {
    const [deleteOpenModal, setDeleteOpenModal] = useState(false)
    const [groupOpenModal, setGroupOpenModal] = useState(false)
+   const [openEditModal, setOpenEditModal] = useState(false)
+   // const { getGroupId } = useSelector((state) => state.groups)
 
    const { isLoading } = useSelector((state) => state.groups)
    const [getId, setGetId] = useState(null)
@@ -42,9 +54,16 @@ export const GroupsCards = ({ groups }) => {
    const closeModalHandler = () => {
       setGroupOpenModal(false)
    }
+   const openModalHandlerEdit = () => {
+      setOpenEditModal(true)
+      dispatch(fetchInterns())
+   }
+   const closeModalHandlerEdit = () => {
+      setOpenEditModal(false)
+   }
 
    const getGroupsById = (id) => {
-      console.log('id: ', id)
+      // console.log('id: ', id)
       dispatch(getGroupById(id))
          .unwrap()
          .then(() => {
@@ -57,6 +76,16 @@ export const GroupsCards = ({ groups }) => {
             })
          })
    }
+   const editModalHandler = (id) => {
+      dispatch(getGroupById(id))
+         .unwrap()
+         .then(() => {
+            openModalHandlerEdit()
+         })
+         .catch((err) => {
+            console.log(err, 'error getting group')
+         })
+   }
 
    return (
       <Container>
@@ -67,6 +96,20 @@ export const GroupsCards = ({ groups }) => {
                   <GetGroupModal
                      openModal={() => openModalHandler()}
                      oncloseModal={closeModalHandler}
+                  />
+               ) : null}
+               <IconButtonEditStyled
+                  className="dd"
+                  onClick={() => editModalHandler(card.id)}
+               >
+                  <EditIcon />
+               </IconButtonEditStyled>
+               {openEditModal ? (
+                  <EditModal
+                     openModalHandlerEdit={openModalHandlerEdit}
+                     closeModalHandlerEdit={closeModalHandlerEdit}
+                     openEditModal={openEditModal}
+                     // getGroupId={getGroupId}
                   />
                ) : null}
                <IconButtonStyled
@@ -117,7 +160,12 @@ const IconButtonStyled = styled(IconButton)({
    top: '-0.3rem',
    right: 0,
    display: 'none',
-   // visibility: 'hidden', // Иконка по умолчанию скрыта
+})
+const IconButtonEditStyled = styled(IconButton)({
+   position: 'absolute',
+   top: '-0.3rem',
+   right: '2rem',
+   display: 'none',
 })
 const Container = styled('div')(() => ({
    marginTop: '2rem',

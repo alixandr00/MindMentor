@@ -22,22 +22,19 @@ export const DeleteGroupModal = ({ onOpen, onCloseModal, deleteGroupById }) => {
       </UiModalStyled>
    )
 }
-const UiModalStyled = styled(UiModal)({
-   width: '34.1875rem',
-   height: '16.8125rem',
-   background:
-      'linear-gradient(176deg, #252335 26.77%, rgba(84, 71, 170, 0.93) 97.4%)',
-   borderRadius: '0.625rem',
-   border: ' 1px solid #FFF',
-})
+const UiModalStyled = styled(UiModal)({})
 const Container = styled('div')({
    display: 'flex',
    justifyContent: 'center',
    flexDirection: 'column',
    alignItems: 'center',
    gap: '2rem',
-   width: '100%',
-   height: '100%',
+   width: '34.1875rem',
+   height: '16.8125rem',
+   background:
+      'linear-gradient(176deg, #252335 26.77%, rgba(84, 71, 170, 0.93) 97.4%)',
+   borderRadius: '0.625rem',
+   border: ' 1px solid #FFF',
 })
 const WrapperButtons = styled('div')({
    display: 'flex',

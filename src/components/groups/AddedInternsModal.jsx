@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
    Table,
    TableBody,
@@ -31,28 +31,42 @@ export const AddedInternsModal = ({
    openModal,
    oncloseModal,
 }) => {
+   const [selectedRows, setSelectedRows] = useState({})
+
    const dispatch = useDispatch()
    const interns = useSelector((state) => state.interns.interns)
    const loading = useSelector((state) => state.interns.isLoading)
 
+   const handleRowClick = (internId) => {
+      setSelectedRows((prevSelectedRows) => ({
+         ...prevSelectedRows,
+         [internId]: !prevSelectedRows[internId],
+      }))
+   }
    useEffect(() => {
-      const fetchData = async () => {
-         dispatch(fetchInterns())
-      }
-      fetchData()
+      dispatch(fetchInterns())
    }, [dispatch])
 
    const getInternById = (intern) => {
-      const fullName = [intern.name, intern.surname].filter(Boolean).join(' ')
-      internName.push(fullName)
-      internId.push(intern.id)
-      state = {
+      const fullName = [intern.name, intern.surname ? `${intern.surname},` : '']
+         .filter(Boolean)
+         .join(' ')
+
+      if (!state.internId.includes(intern.id)) {
+         internId.push(intern.id)
+      }
+
+      if (!state.name.includes(fullName)) {
+         internName.push(fullName)
+      }
+
+      const newState = {
          name: internName,
          internId,
       }
-      setState(state)
-   }
 
+      setState(newState)
+   }
    return (
       <UiModalStyled open={openModal} onClose={oncloseModal}>
          <IconButtonStyled onClick={oncloseModal}>
@@ -98,7 +112,13 @@ export const AddedInternsModal = ({
                      {interns?.map((intern) => (
                         <StyledTableRow
                            key={intern.id}
-                           onClick={() => getInternById(intern)}
+                           onClick={() => {
+                              handleRowClick(intern.id)
+                              getInternById(intern)
+                           }}
+                           className={
+                              selectedRows[intern.id] ? 'selected-row' : ''
+                           }
                         >
                            <StyledTableCellForData>
                               <p className="internName">
@@ -163,8 +183,8 @@ export const AddedInternsModal = ({
 }
 const IconButtonStyled = styled(IconButton)({
    position: 'absolute',
-   right: '1.3rem',
-   top: '1.3rem',
+   right: '1rem',
+   top: '0.2rem',
 })
 const CloseIconBlock = styled('div')`
    display: flex;
@@ -184,24 +204,42 @@ const UiModalStyled = styled(UiModal)({
    width: '55rem',
    maxHeight: '40rem',
    minHeight: '40rem',
-   backgroundColor: '#1E1F22',
    borderRadius: '0.625rem',
    border: ' 1px solid #FFF',
-   scrollbarWidth: 'thin',
-   scrollbarColor: ' #b3b3b30 transparent',
-   '&::-webkit-scrollbar ': {
-      width: '0.2rem',
-   },
-   '&::-webkit-scrollbar-track': {
-      backgroundColor: ' #fff white',
-   },
-   '&::-webkit-scrollbar-thumb ': {
-      backgroundColor: ' #fff',
-      borderRadius: '0.25rem',
-   },
+   backgroundColor: '#1e1f22',
+   // scrollbarWidth: 'thin',
+   // scrollbarColor: ' #b3b3b30 transparent',
+   // '&::-webkit-scrollbar ': {
+   //    width: '0.2rem',
+   // },
+   // '&::-webkit-scrollbar-track': {
+   //    backgroundColor: ' #fff white',
+   // },
+   // '&::-webkit-scrollbar-thumb ': {
+   //    backgroundColor: ' #fff',
+   //    borderRadius: '0.25rem',
+   // },
 })
 
-const StyledContent = styled('div')``
+const StyledContent = styled('div')({
+   // maxHeight: '40rem',
+   // minHeight: '40rem',
+   // backgroundColor: 'red',
+   // borderRadius: '0.625rem',
+   // border: ' 1px solid #FFF',
+   // scrollbarWidth: 'thin',
+   // scrollbarColor: ' #b3b3b30 transparent',
+   // '&::-webkit-scrollbar ': {
+   //    width: '0.2rem',
+   // },
+   // '&::-webkit-scrollbar-track': {
+   //    backgroundColor: ' #fff white',
+   // },
+   // '&::-webkit-scrollbar-thumb ': {
+   //    backgroundColor: ' #fff',
+   //    borderRadius: '0.25rem',
+   // },
+})
 const StyleTableBody = styled(TableBody)({
    backgroundColor: '#2B2D31',
    border: 'none',
@@ -260,15 +298,31 @@ const StyleTableBody = styled(TableBody)({
    },
 })
 
-const StyledTableContainer = styled(TableContainer)`
-   border-radius: 10px;
-   margin-top: 2rem;
-`
+const StyledTableContainer = styled(TableContainer)({
+   borderRadius: '10px',
+   marginTop: '2rem',
+   maxHeight: '38rem',
+   minHeight: '38rem',
+   // border: ' 1px solid #FFF',
+   scrollbarWidth: 'thin',
+   scrollbarColor: ' #b3b3b30 transparent',
+   '&::-webkit-scrollbar ': {
+      width: '0.2rem',
+   },
+   '&::-webkit-scrollbar-track': {
+      backgroundColor: ' #fff white',
+   },
+   '&::-webkit-scrollbar-thumb ': {
+      backgroundColor: ' #fff',
+      borderRadius: '0.25rem',
+   },
+})
 const StyledTableRow = styled(TableRow)`
    &:nth-of-type(even) {
       width: 100px;
    }
    border: none;
+   cursor: pointer;
 
    :hover {
       background: linear-gradient(
@@ -276,6 +330,10 @@ const StyledTableRow = styled(TableRow)`
          rgba(84, 71, 170, 0.93) 2.33%,
          rgba(0, 0, 0, 0) 181.49%
       );
+   }
+   &.selected-row {
+      background-color: rgba(84, 71, 170, 0.93); /* Цвет выделения */
+      color: white; /* Цвет текста в выделенной строке */
    }
 `
 const StyledTableCell = styled(TableCell)`
@@ -291,12 +349,12 @@ const StyledTableCellForData = styled(TableCell)`
    color: white;
    font-size: 1rem;
    border: none;
-   .internName {
+   /* .internName {
       cursor: pointer;
       width: auto;
       width: fit-content;
       :hover {
          text-decoration: underline;
       }
-   }
+   } */
 `

@@ -9,28 +9,18 @@ import {
    TableRow,
    styled,
 } from '@mui/material'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import CloseIcon from '@mui/icons-material/Close'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { NotesIcon, ProgressIcon } from '../../assets/icons'
 import { UiModal } from '../UI/modal/UiModal'
 import { headerArray } from '../../utils/table-students'
-import { fetchInterns } from '../../store/interns/internsThunk'
 import { ReactComponent as CommentIcon } from '../../assets/icons/Comment.svg'
 import { ReactComponent as History } from '../../assets/icons/History.svg'
 import { ReactComponent as DeleteIcon } from '../../assets/icons/deleteicon.svg'
 
 export const GetGroupModal = ({ openModal, oncloseModal }) => {
    const { getGroupId } = useSelector((state) => state.groups)
-   console.log('getGroupId: ', getGroupId)
-   const dispatch = useDispatch()
-
-   useEffect(() => {
-      const fetchData = async () => {
-         dispatch(fetchInterns())
-      }
-      fetchData()
-   }, [dispatch])
 
    return (
       <UiModalStyled open={openModal} onClose={oncloseModal}>
@@ -64,11 +54,11 @@ export const GetGroupModal = ({ openModal, oncloseModal }) => {
                   <StyledTableContainer component={Paper}>
                      <Table>
                         <TableHead>
-                           <TableRow>
+                           {/* <TableRow>
                               <StyledTableCell align="left" colSpan={7}>
                                  All interns
                               </StyledTableCell>
-                           </TableRow>
+                           </TableRow> */}
                            {headerArray?.map((headerArray) => (
                               <TableRow>
                                  <StyledTableCell>
@@ -232,6 +222,9 @@ const WrapperHead = styled('div')({
    borderBottom: '3px solid #FFF',
    position: 'fixed',
    width: '100%',
+   background: 'black',
+   borderTopLeftRadius: '1.25rem',
+   borderTopRightRadius: '1.25rem',
 })
 const WrapperTexts = styled('div')`
    display: flex;

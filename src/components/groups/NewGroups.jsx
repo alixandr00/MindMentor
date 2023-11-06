@@ -21,11 +21,10 @@ import {
 
 export const NewGroups = () => {
    const [isSelectOpen, setIsSelectOpen] = useState(false)
-   const [selectedValue, setSelectedValue] = useState('')
+   const [selectedValue, setSelectedValue] = useState('All')
    const [searchParams, setSearchParams] = useSearchParams()
    const [searchGroup, setSearchGroup] = useState('')
    const { groups } = useSelector((state) => state.groups)
-   // console.log('getGroupFilter: ', getGroupFilter)
    const dispatch = useDispatch()
 
    const handleSelectOpen = () => {
@@ -41,8 +40,9 @@ export const NewGroups = () => {
       setSelectedValue(newValue)
    }
    useEffect(() => {
-      console.log(selectedValue)
-      dispatch(getGroupFiltered(selectedValue))
+      const dd = selectedValue === 'All' ? '' : selectedValue
+
+      dispatch(getGroupFiltered(dd))
    }, [selectedValue])
    const openModalHandler = () => {
       setSearchParams({ create: 'Group' })
@@ -114,7 +114,7 @@ export const NewGroups = () => {
                               </SelectIcon>
                            )}
                         >
-                           <MenuItem value="">Status</MenuItem>
+                           <MenuItem value="All">All</MenuItem>
                            <MenuItem value="ACTIVE">Active</MenuItem>
                            <MenuItem value="INACTIVE">Inactive</MenuItem>
                            <MenuItem value="FINISHED">Finished</MenuItem>
@@ -124,7 +124,12 @@ export const NewGroups = () => {
                </InputBox>
             </div>
          </ContIntern>
-         <GroupsCards groups={groups} />
+         <GroupsCards
+            groups={groups}
+            openModal={openModal}
+            openModalHandlerEdit={openModalHandler}
+            closeModalHandlerEdit={closeModalHandler}
+         />
       </Container>
    )
 }
