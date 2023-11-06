@@ -3,9 +3,9 @@ import React from 'react'
 import { UiModal } from '../modal/UiModal'
 import { UiButton } from '../button/UiButton'
 
-export const DeleteModal = ({ onClick, unClick }) => {
+export const DeleteModal = ({ onClose, onClick, unClick }) => {
    return (
-      <Modal open onClose={unClick}>
+      <Modal open onClose={onClose}>
          <p>Are you sure that you want to delete this Vendor?</p>
          <UiButtonBlock>
             <Button
@@ -14,6 +14,7 @@ export const DeleteModal = ({ onClick, unClick }) => {
             >
                No
             </Button>
+
             <Button
                onClick={onClick}
                backgroundColor="linear-gradient(180deg, rgba(4, 1, 22, 0.93) 0%, rgba(43, 45, 49, 0.00) 100%)"

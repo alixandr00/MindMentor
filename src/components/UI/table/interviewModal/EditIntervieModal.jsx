@@ -264,6 +264,10 @@ const StyleBlockCalendar = styled('div')`
    }
 `
 const StyleBlockDate = styled('div')`
+   .css-md1qub .MuiInputLabel-root {
+      display: none;
+   }
+
    .MuiOutlinedInput-root {
       color: #fff;
       width: 7.625rem;

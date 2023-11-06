@@ -18,6 +18,7 @@ export const NewInterviews = ({ intId, setIntId, children }) => {
    const onOpenHandleModal = () => {
       setOpenModal(true)
    }
+
    const onCloseHandleModal = () => {
       setOpenModal(false)
    }
@@ -80,10 +81,10 @@ export const NewInterviews = ({ intId, setIntId, children }) => {
                               </SelectIcon>
                            )}
                         >
-                           <MenuItem value="Tech Stack">Tech Stack</MenuItem>
-                           <MenuItem value={10}>Ten</MenuItem>
-                           <MenuItem value={20}>Twenty</MenuItem>
-                           <MenuItem value={30}>Thirty</MenuItem>
+                           <MenuItem value="Tech Stack">JavaScript</MenuItem>
+                           <MenuItem value={10}>Java</MenuItem>
+                           <MenuItem value={20}>Python</MenuItem>
+                           <MenuItem value={30}>HR</MenuItem>
                         </SelectStyled>
                      </FormControlStyled>
                   </div>

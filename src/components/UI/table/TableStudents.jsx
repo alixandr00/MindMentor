@@ -11,61 +11,79 @@ import {
    IconButton,
    styled,
 } from '@mui/material'
+import { useSelector, useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { ReactComponent as History } from '../../../assets/icons/History.svg'
 import { ReactComponent as DeleteIcon } from '../../../assets/icons/deleteicon.svg'
 import { ReactComponent as EditIcon } from '../../../assets/icons/editIcon.svg'
 import { ReactComponent as CommentIcon } from '../../../assets/icons/Comment.svg'
 import { ReactComponent as NextIcon } from '../../../assets/icons/NextIcon.svg'
 import { ReactComponent as PrevIcon } from '../../../assets/icons/PrevIcon.svg'
+import { fetchInterns } from '../../../store/interns/internsThunk'
+import { Loading } from '../loading/Loading'
 
-export const TableStudents = ({
-   array,
-   headerArray,
-   onOpenPayModalHandler,
-}) => {
+export const TableStudents = ({ headerArray, onOpenPayModalHandler }) => {
+   const dispatch = useDispatch()
+   const interns = useSelector((state) => state.interns.interns)
+   const loading = useSelector((state) => state.interns.isLoading)
+   const error = useSelector((state) => state.interns.error)
    const [data, setData] = useState([])
-   const [loading, setLoading] = useState(true)
+   const [loadings, setLoadings] = useState(true)
    const [currentPage, setCurrentPage] = useState(1)
 
+   const navigate = useNavigate()
    useEffect(() => {
-      const fetchData = () => {
-         setTimeout(() => {
-            const mockData = array
-            setData(mockData)
-            setLoading(false)
-         }, 1000)
+      const fetchData = async () => {
+         dispatch(fetchInterns())
       }
       fetchData()
-   }, [])
+   }, [dispatch])
+
+   useEffect(() => {
+      if (interns) {
+         setData(interns)
+      }
+
+      setLoadings(false)
+   }, [interns])
 
    const recordsPerPage = 5
    const lastIndex = currentPage * recordsPerPage
    const firstIndex = lastIndex - recordsPerPage
-   const records = data.slice(firstIndex, lastIndex)
-   const npage = Math.ceil(data.length / recordsPerPage)
+   const records = data?.slice(firstIndex, lastIndex)
+   const dd = data?.length
+   const npage = Math.ceil(dd / recordsPerPage)
+
+   if (error) {
+      return <div>Error: {error}</div>
+   }
 
    function prevPage() {
-      setLoading(true)
+      setLoadings(true)
       setTimeout(() => {
          if (currentPage !== 1) {
             setCurrentPage(currentPage - 1)
          }
-         setLoading(false)
+         setLoadings(false)
       }, 1500)
    }
 
    function nextPage() {
-      setLoading(true)
+      setLoadings(true)
       setTimeout(() => {
          if (currentPage !== npage) {
             setCurrentPage(currentPage + 1)
          }
-         setLoading(false)
+         setLoadings(false)
       }, 1500)
+   }
+   const onOpenModalHandler = (e, id) => {
+      navigate(`details/${id}`)
    }
 
    return (
-      <>
+      <StyledContent>
+         {loading && <Loading />}
          <StyledTableContainer component={Paper}>
             <Table>
                <TableHead>
@@ -74,7 +92,7 @@ export const TableStudents = ({
                         All interns
                      </StyledTableCell>
                   </TableRow>
-                  {headerArray.map((headerArray) => (
+                  {headerArray?.map((headerArray) => (
                      <TableRow>
                         <StyledTableCell>{headerArray.name}</StyledTableCell>
                         <StyledTableCell align="center">
@@ -99,7 +117,7 @@ export const TableStudents = ({
                   ))}
                </TableHead>
                <StyleTableBody>
-                  {loading ? (
+                  {loadings ? (
                      <>
                         <StyledTableRowOne>
                            <StyledTableCellForData colSpan={7}>
@@ -148,13 +166,22 @@ export const TableStudents = ({
                         </StyledTableRowOne>
                      </>
                   ) : (
-                     records.map((item) => (
-                        <StyledTableRow key={item.id}>
-                           <StyledTableCellForData>
-                              {item.name}
+                     records?.map((intern) => (
+                        <StyledTableRow key={intern.id}>
+                           <StyledTableCellForData
+                              onClick={(e) => {
+                                 onOpenModalHandler(
+                                    e.preventDefault(),
+                                    intern?.id
+                                 )
+                              }}
+                           >
+                              <p className="internName">
+                                 {intern.name} {intern.surname}
+                              </p>
                            </StyledTableCellForData>
                            <StyledTableCellForData align="center">
-                              <p className={item.group}>{item.group}</p>
+                              <p className={intern.surname}>{intern.surname}</p>
                            </StyledTableCellForData>
                            <StyledTableCellForData
                               align="center"
@@ -162,27 +189,27 @@ export const TableStudents = ({
                            >
                               <p
                                  className={
-                                    item.techStack === 'Project Manager'
+                                    intern.tech_stack === 'Project Manager'
                                        ? 'ProjectManager'
-                                       : item.techStack
+                                       : intern.tech_stack
                                  }
                               >
-                                 {item.techStack}
+                                 {intern.tech_stack}
                               </p>
                            </StyledTableCellForData>
                            <StyledTableCellForData align="center">
                               <p
                                  className={
-                                    item.status === 'in progress'
+                                    intern.status === 'in progress'
                                        ? 'inprogress'
-                                       : item.status
+                                       : intern.status
                                  }
                               >
-                                 {item.status}
+                                 {intern.status}
                               </p>
                            </StyledTableCellForData>
                            <StyledTableCellForData align="center">
-                              {item.mentor}
+                              {intern.mentor}
                            </StyledTableCellForData>
                            <StyledTableCellForData align="center">
                               <IconButton>
@@ -231,7 +258,7 @@ export const TableStudents = ({
                </StyledUl>
             </nav>
          </StyledContainer>
-      </>
+      </StyledContent>
    )
 }
 
@@ -239,7 +266,9 @@ const StyledUl = styled('ul')`
    display: flex;
    gap: 0.8rem;
 `
-
+const StyledContent = styled('div')`
+   width: 100%;
+`
 const StyleTableBody = styled(TableBody)({
    backgroundColor: '#2B2D31',
    border: 'none',
@@ -296,7 +325,7 @@ const StyleTableBody = styled(TableBody)({
 })
 
 const StyledTableContainer = styled(TableContainer)`
-   width: 100%;
+   /* width: 100vh; */
    border-radius: 10px;
    margin-top: 2rem;
 `
@@ -333,6 +362,9 @@ const StyledTableCellForData = styled(TableCell)`
    color: white;
    font-size: 1rem;
    border: none;
+   .internName {
+      cursor: pointer;
+   }
 `
 
 const StyledSpan = styled('span')`

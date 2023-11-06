@@ -15,7 +15,11 @@ export const Schedule = () => {
    const getInterviews = useSelector((state) => state.interview.getInterview)
    const [openDeleteModal, setOpenDeleteModal] = useState(false)
    const [intId, setIntId] = useState(null)
+   const [names, onChangeName] = useState('')
 
+   const onChangeHandler = (e) => {
+      onChangeName(e.target.value)
+   }
    const onOpenDeleteModal = () => {
       setOpenDeleteModal(true)
    }
@@ -35,6 +39,8 @@ export const Schedule = () => {
                setIntId={setIntId}
                openDeleteModal={openDeleteModal}
                onCloseDeleteModal={onCloseDeleteModal}
+               names={names}
+               onChangeHandler={onChangeHandler}
             >
                <TableInterviow
                   intern={el.intern}

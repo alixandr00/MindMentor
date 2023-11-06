@@ -21,5 +21,5 @@ export const getInternsDetailRequest = (id) => {
    return axiosInstance.get(`/interns/${id}/`)
 }
 export const getInternsRequest = () => {
-   return axiosInstance.get('/interns/')
+   return axiosInstance.get(`/interns/`)
 }
