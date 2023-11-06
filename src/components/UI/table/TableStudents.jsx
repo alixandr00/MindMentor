@@ -25,7 +25,6 @@ import { Loading } from '../loading/Loading'
 export const TableStudents = ({ headerArray, onOpenPayModalHandler }) => {
    const dispatch = useDispatch()
    const interns = useSelector((state) => state.interns.interns)
-   console.log(interns)
    const loading = useSelector((state) => state.interns.isLoading)
    const error = useSelector((state) => state.interns.error)
    const [data, setData] = useState([])

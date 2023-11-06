@@ -1,15 +1,29 @@
+/* eslint-disable camelcase */
 import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { z } from 'zod'
-import { useDispatch } from 'react-redux'
 import { styled } from '@mui/material'
 import { UiInput } from '../UI/input/UiInput'
 import { UiModal } from '../UI/modal/UiModal'
 import { UiButton } from '../UI/button/UiButton'
-import { addNewCart, getSearchVendors } from '../../store/vendors/vendors.thunk'
+import {
+   editDetailCart,
+   getSearchVendors,
+   getVendorsDetailCart,
+} from '../../store/vendors/vendors.thunk'
 import { showSnackbar } from '../UI/snackbar/Snackbar'
 
-export const VendorsModal = ({ onCloseModalHandler }) => {
+export const EditModal = ({ onCloseEditModal }) => {
    const dispatch = useDispatch()
+   const {
+      id,
+      name,
+      email,
+      contact_number,
+      about_company,
+      address,
+      vacancy: vacancyId,
+   } = useSelector((state) => state.vendor.vendorsDetail)
 
    const schemaEmail = z.object({
       email: z
@@ -34,16 +48,15 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
          .string()
          .nonempty('Заполните обязательные поля')
          .max(
-            200,
+            290,
             'Длина текста превышает допустимый лимит. Пожалуйста, сократите текст.'
          ),
    })
-
-   const [valueName, setValueName] = useState('')
-   const [valueEmail, setValueEmail] = useState('')
-   const [valueAdress, setValueAdress] = useState('')
-   const [valueNum, setValueNum] = useState('')
-   const [valueDesc, setValueDesc] = useState('')
+   const [valueName, setValueName] = useState(name)
+   const [valueEmail, setValueEmail] = useState(email)
+   const [valueAdress, setValueAdress] = useState(address)
+   const [valueNum, setValueNum] = useState(contact_number)
+   const [valueDesc, setValueDesc] = useState(about_company)
    const [emailrError, setEmailError] = useState(false)
    const [phoneNumberError, setPhoneNumberError] = useState(false)
    const [descriptionsErrorss, setDescriptionsErrorss] = useState(false)
@@ -53,12 +66,12 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
       setValueName(e.target.value)
    }
    const onChangeEmail = (e) => {
-      const emaill = e.target.value
-      setValueEmail(emaill)
+      const emails = e.target.value
+      setValueEmail(emails)
 
       try {
          schemaEmail.parse({
-            email: emaill,
+            email: emails,
          })
          setEmailError('')
       } catch (error) {
@@ -86,12 +99,12 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
       }
    }
    const onChangeDesc = (e) => {
-      const descriptionss = e.target.value
-      setValueDesc(descriptionss)
+      const description = e.target.value
+      setValueDesc(description)
 
       try {
          schemaDescription.parse({
-            descriptions: descriptionss,
+            descriptions: description,
          })
          setDescriptionsErrorss('')
       } catch (error) {
@@ -100,7 +113,6 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
          )
       }
    }
-
    const canSubmit = () => {
       if (
          valueNum &&
@@ -121,41 +133,36 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
       descriptionsErrorss,
    ])
 
-   const addNewUserCards = () => {
-      if (phoneNumberError) {
-         showSnackbar({
-            message: phoneNumberError,
-            severity: 'error',
-         })
-         return
-      }
+   const editUserCards = () => {
       const data = {
          name: valueName,
          address: valueAdress,
          email: valueEmail,
          contact_number: valueNum,
          about_company: valueDesc,
+         vacancy: vacancyId,
          user: 1,
       }
-      dispatch(addNewCart(data))
+      dispatch(editDetailCart({ id, data }))
          .unwrap()
          .then(() => {
-            showSnackbar({
-               message: 'Данные о студенте успешно добавлены!',
-               severity: 'success',
-            })
             dispatch(getSearchVendors(''))
-            onCloseModalHandler()
+            dispatch(getVendorsDetailCart(id))
+            onCloseEditModal()
             setValueName('')
             setValueEmail('')
             setValueAdress('')
             setValueNum('')
             setValueDesc('')
             setIsSubmitDisabled(true)
+            showSnackbar({
+               message: 'Данные о компании успешно обнавлены!',
+               severity: 'success',
+            })
          })
          .catch(() => {
             showSnackbar({
-               message: 'Правильно заполните все поля!',
+               message: 'Не удалось обновить! Пожалуйста, попробуйте ещё раз.',
                severity: 'warning',
             })
          })
@@ -164,10 +171,10 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
    return (
       <ModalComponent
          open
-         onClose={onCloseModalHandler}
          width="60.4375rem"
          height="47.1875rem"
          border="1px solid #fff"
+         onClose={onCloseEditModal}
       >
          <Container>
             <div>
@@ -213,7 +220,6 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
                   borderradius="0.626rem"
                />
             </div>
-
             <div>
                <InputTitle>Phone Number</InputTitle>
                <UiInput
@@ -254,12 +260,12 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
                   border="1px solid #F9F9F9"
                   borderRadius="0.625rem"
                   background="#252335"
-                  onClick={onCloseModalHandler}
+                  onClick={onCloseEditModal}
                >
                   Сancel
                </UiButton>
                <UiButton
-                  onClick={addNewUserCards}
+                  onClick={editUserCards}
                   width="5.375rem"
                   height="2.0625rem"
                   border="1px solid #F9F9F9"
@@ -278,9 +284,8 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
 const Container = styled('div')`
    display: flex;
    flex-direction: column;
-   justify-content: center;
    gap: 1.12rem;
-   position: relative;
+   justify-content: center;
    .custom-width-input {
       width: 30.8125rem;
    }
