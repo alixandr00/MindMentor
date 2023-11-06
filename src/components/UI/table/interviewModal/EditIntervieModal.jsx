@@ -24,6 +24,8 @@ export const EditInterviewModal = ({ onClose }) => {
       (state) => state.interview.getInterviewDetail
    )
    const [nameInterview, setNameInterview] = useState(name_interview)
+   const [selectedDate, setSelectedDate] = useState(null)
+   console.log(selectedDate, 'selectedDate')
    const [selectedDateTime, setSelectedDateTime] = useState(null)
    const [selectedDateTimes, setSelectedDateTimes] = useState(null)
    const [loc, setLocation] = useState(location)
@@ -129,7 +131,10 @@ export const EditInterviewModal = ({ onClose }) => {
             <CalendarContainer>
                <StyleBlockCalendar>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
-                     <DatePicker />
+                     <DatePicker
+                        value={selectedDate}
+                        onChange={(newDate) => setSelectedDate(newDate)}
+                     />
                   </LocalizationProvider>
                </StyleBlockCalendar>
 
