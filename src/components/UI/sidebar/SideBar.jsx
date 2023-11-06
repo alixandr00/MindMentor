@@ -15,7 +15,7 @@ export const SideBar = () => {
       <Container>
          <div>
             <TitleContainer>
-               <Title>MindMentor</Title>
+               <Title>MindMento</Title>
             </TitleContainer>
          </div>
          <DescriptionContainer>

@@ -34,7 +34,7 @@ export const signIn = createAsyncThunk(
 
          const result = {
             auth_token: 'YWRtaW46YWRtaW4=',
-            token: response.data.auth_token,
+            token: response.data,
          }
 
          const existingData = localStorage.getItem(LOGIN_USER_KEY)

@@ -1,31 +1,55 @@
-import React, { useState } from 'react'
+/* eslint-disable camelcase */
+import React, { useEffect, useState } from 'react'
 import { styled } from '@mui/material'
 import dayjs from 'dayjs'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { UiModal } from '../UI/modal/UiModal'
 import { UiInput } from '../UI/input/UiInput'
 import { UiButton } from '../UI/button/UiButton'
 import {
-   addNewVacancy,
+   editVacancyThunk,
    getSearchVendors,
    getVacansy,
+   getVacansyDetail,
    getVendorsDetailCart,
 } from '../../store/vendors/vendors.thunk'
 import { DateOfCartDetail } from '../UI/dateOfCartDetail/DateOfCartDetail'
 import { showSnackbar } from '../UI/snackbar/Snackbar'
 
-export const NewVendorModal = ({ id, onCloseModalHandlerVacansy }) => {
+export const EditVacancyModal = ({ onCloseModalHandlerVacansy, id }) => {
    const dispatch = useDispatch()
-   const [selectedLevel, setSelectedLevel] = useState('Junior')
-   const [value, setValue] = useState('')
-   const [description, setDescription] = useState('')
-   const [selectedDate, setSelectedDate] = useState('')
-
+   const {
+      level,
+      requirements_vacancy,
+      vendor: vendors,
+      creation_date,
+      vacancy_name,
+   } = useSelector((state) => state.vendor.vacansyGetDetail)
+   const [selectedLevel, setSelectedLevel] = useState(level)
+   const [value, setValue] = useState(vacancy_name)
+   const [description, setDescription] = useState(requirements_vacancy)
+   const [selectedDate, setSelectedDate] = useState(dayjs(creation_date))
    const formattedDate = dayjs(selectedDate).format('YYYY-MM-DD')
 
    const onChangeInputValue = (e) => {
       setValue(e.target.value)
    }
+
+   useEffect(() => {
+      if (vacancy_name) {
+         setValue(vacancy_name)
+      }
+      if (requirements_vacancy) {
+         setDescription(requirements_vacancy)
+      }
+      if (level) {
+         setSelectedLevel(level)
+      }
+      if (creation_date) {
+         setSelectedDate(dayjs(creation_date))
+      }
+   }, [vacancy_name, requirements_vacancy, level, creation_date])
+
    const onChangeInputValueDescription = (e) => {
       setDescription(e.target.value)
    }
@@ -43,27 +67,33 @@ export const NewVendorModal = ({ id, onCloseModalHandlerVacansy }) => {
          vacancy_name: value,
          level: selectedLevel,
          requirements_vacancy: description,
-         vendor: id,
+         vendor: vendors,
       }
-      dispatch(addNewVacancy(data))
+
+      dispatch(editVacancyThunk({ id, data }))
          .unwrap()
          .then(() => {
+            dispatch(getSearchVendors(''))
+            dispatch(getVendorsDetailCart(vendors))
+            dispatch(getVacansy())
+            onCloseModalHandlerVacansy()
             showSnackbar({
-               message: 'Новая вакансия успешно добавлена!',
+               message: 'Успешно обновлено!',
                severity: 'success',
             })
-            onCloseModalHandlerVacansy()
-            dispatch(getSearchVendors(''))
-            dispatch(getVendorsDetailCart(id))
-            dispatch(getVacansy())
          })
          .catch(() => {
             showSnackbar({
-               message: 'Правильно заполните все поля!',
+               message: 'Не удалось обновить.Правильно заполните все поля!',
                severity: 'warning',
             })
          })
    }
+
+   useEffect(() => {
+      dispatch(getVacansyDetail(id))
+   }, [id])
+
    return (
       <ModalComponent
          open
@@ -135,7 +165,7 @@ export const NewVendorModal = ({ id, onCloseModalHandlerVacansy }) => {
                   background="#252335"
                   onClick={saveNewVacancy}
                >
-                  Save
+                  Edit
                </UiButton>
             </BlockBtn>
          </Container>
@@ -193,7 +223,6 @@ const LevelContainer = styled('div')`
    align-items: center;
    gap: 1rem;
 `
-
 const DateOfCartDetailStyle = styled('div')`
    margin-left: 3rem;
 `
