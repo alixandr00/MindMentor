@@ -7,6 +7,7 @@ export const InternsAddStudentModalSelect = ({
    dataMenuItem,
    name,
    defaultName,
+   colectorSelectValue,
 }) => {
    const [isSelectOpen, setIsSelectOpen] = useState(false)
    const [value, setValue] = useState(defaultName)
@@ -19,7 +20,11 @@ export const InternsAddStudentModalSelect = ({
    }
 
    const handleChange = (e) => {
-      setValue(e.target.value)
+      const event = e.target.value
+
+      colectorSelectValue(event)
+
+      setValue(event)
    }
 
    return (

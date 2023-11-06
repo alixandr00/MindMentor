@@ -4,12 +4,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { ReactComponent as DatailsClose } from '../../../assets/icons/DatailsClose.svg'
 import ProfileImage from '../../../assets/images/profileImage.jpg'
-
-// import { status } from '../../../utils/table-students'
-// import ProfileImage from '../../../assets/images/profileImage.jpg'
 import Email from '../../../assets/images/Email.png'
 import PhoneNumber from '../../../assets/images/PhoneNumber.png'
-// import ProfileImage from '../../../assets/images/profileImage.jpg'
 import { fetchInternsDetails } from '../../../store/interns/internsThunk'
 import { Loading } from '../loading/Loading'
 
@@ -49,7 +45,7 @@ export const TableStudentsDetails = () => {
                         <StyledContent key={internDetail.id}>
                            <StyledHeader>
                               <p>
-                                 {internDetail.pay}
+                                 {internDetail.balance}
                                  som
                               </p>
                               <IconButton onClick={onCloceModalHandler}>
@@ -57,14 +53,7 @@ export const TableStudentsDetails = () => {
                               </IconButton>
                            </StyledHeader>
                            <StyledStudentsInformation>
-                              <StyledImage
-                                 src={
-                                    internDetail.photo !== null
-                                       ? internDetail.photo
-                                       : ProfileImage
-                                 }
-                                 alt="photos"
-                              />
+                              <StyledImage src={ProfileImage} alt="photos" />
                               <h3>{`${internDetail.name}  ${internDetail.surname}`}</h3>
                               <p>JS/group****</p>
                               <span>Mentor-Tugolbay</span>
@@ -99,14 +88,35 @@ export const TableStudentsDetails = () => {
                            <StyledDateHistory>
                               <p>1st payment</p>
                               <span>{internDetail.first_month}</span>
+                              <p
+                                 className={
+                                    internDetail.first_month_payment_status
+                                 }
+                              >
+                                 {internDetail.first_month_payment_status}
+                              </p>
                            </StyledDateHistory>
                            <StyledDateHistory>
                               <p>2nd payment</p>
                               <span>{internDetail.second_month}</span>
+                              <p
+                                 className={
+                                    internDetail.second_month_payment_status
+                                 }
+                              >
+                                 {internDetail.second_month_payment_status}
+                              </p>
                            </StyledDateHistory>
                            <StyledDateHistory>
                               <p>3rd payment</p>
                               <span>{internDetail.third_month}</span>
+                              <p
+                                 className={
+                                    internDetail.third_month_payment_status
+                                 }
+                              >
+                                 {internDetail.third_month_payment_status}
+                              </p>
                            </StyledDateHistory>
                         </StyledContent>
                      )
@@ -141,53 +151,16 @@ const StyledDateHistory = styled('div')({
    '& > span': {
       fontSize: '0.7rem',
    },
-   '& .inprogress': {
-      padding: '2px 1px',
-
+   '& .UNPAID': {
+      padding: '3px 12px',
       borderRadius: '15px',
       color: 'white',
       border: '1px solid #F9F9F9',
    },
-   '& .New': {
-      borderRadius: '15px',
-      border: '1px solid blue',
-      padding: '2px 1px',
-      color: 'white',
-   },
-   '& .Paid': {
-      borderRadius: '15px',
-      border: '1px solid #ffd902',
-      padding: '2px 7px',
-      color: 'white',
-   },
-   '& .JavaScript': {
-      padding: '2px 1px',
-      borderRadius: '15px',
-      border: '1px solid gold',
-      color: 'white',
-   },
-   '& .cola': {
+   '& .PAID': {
       borderRadius: '15px',
       border: '1px solid green',
-      padding: '2px 1px',
-      color: 'white',
-   },
-   '& .fanta': {
-      borderRadius: '15px',
-      border: '1px solid gold',
-      padding: '2px 1px',
-      color: 'white',
-   },
-   '& .Python': {
-      borderRadius: '15px',
-      border: '1px solid  #50BF69',
-      padding: '2px 1px',
-      color: 'white',
-   },
-   '& .ProjectManager': {
-      borderRadius: '15px',
-      border: '1px solid  #4169E1',
-      padding: '2px 1px',
+      padding: '3px 12px',
       color: 'white',
    },
 })
@@ -198,12 +171,40 @@ const StyledEmailAndPhoneNumber = styled('div')`
 `
 const StyleStatus = styled('div')({
    textAlign: 'center',
-   '& .inprogress': {
+   '& .Pending': {
+      padding: '2px 1px',
+
+      borderRadius: '15px',
+      color: 'white',
+      border: '1px solid #ee0cf6',
+   },
+   '& .Validated': {
+      padding: '2px 1px',
+
+      borderRadius: '15px',
+      color: 'white',
+      border: '1px solid #ee2314',
+   },
+   '& .Proposed': {
+      padding: '2px 1px',
+
+      borderRadius: '15px',
+      color: 'white',
+      border: '1px solid #0cfc48',
+   },
+   '& .Onboarded': {
       padding: '2px 1px',
 
       borderRadius: '15px',
       color: 'white',
       border: '1px solid #F9F9F9',
+   },
+   '& .Selected': {
+      padding: '2px 1px',
+
+      borderRadius: '15px',
+      color: 'white',
+      border: '1px solid #09f697',
    },
    '& .New': {
       borderRadius: '15px',
@@ -211,7 +212,7 @@ const StyleStatus = styled('div')({
       padding: '2px 1px',
       color: 'white',
    },
-   '& .Paid': {
+   '& .Java': {
       borderRadius: '15px',
       border: '1px solid #ffd902',
       padding: '2px 1px',
@@ -223,13 +224,13 @@ const StyleStatus = styled('div')({
       border: '1px solid gold',
       color: 'white',
    },
-   '& .cola': {
+   '& .Paid': {
       borderRadius: '15px',
       border: '1px solid green',
       padding: '2px 1px',
       color: 'white',
    },
-   '& .fanta': {
+   '& .Graduate': {
       borderRadius: '15px',
       border: '1px solid gold',
       padding: '2px 1px',
@@ -241,7 +242,7 @@ const StyleStatus = styled('div')({
       padding: '2px 1px',
       color: 'white',
    },
-   '& .ProjectManager': {
+   '& .C++': {
       borderRadius: '15px',
       border: '1px solid  #4169E1',
       padding: '2px 1px',

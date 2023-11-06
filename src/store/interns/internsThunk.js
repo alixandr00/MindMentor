@@ -20,12 +20,10 @@ export const fetchInterns = createAsyncThunk(
 )
 export const postNewStudents = createAsyncThunk(
    'students/postNewStudents',
-   async ({ data, showSnackbar }, { rejectWithValue }) => {
+   async (data, { rejectWithValue }) => {
       try {
          await addedInterns(data)
-         showSnackbar('Студент успешно добавлен!', 'success')
       } catch (error) {
-         showSnackbar(error.message, 'error')
          return rejectWithValue('error')
       }
    }
@@ -57,7 +55,8 @@ export const fetchInternsSearch = createAsyncThunk(
 )
 export const fetchInternsDelete = createAsyncThunk(
    'interns/fetchInternsDelete',
-   async (payload, { rejectWithValue, dispatch }) => {
+   async (payload, { dispatch, rejectWithValue }) => {
+      // const inputValue = ''
       try {
          const response = await internsStudentsDelete(payload.id)
          payload.snackbar({
@@ -66,7 +65,6 @@ export const fetchInternsDelete = createAsyncThunk(
          })
          dispatch(fetchInterns())
          dispatch(fetchInternsDetails())
-
          return response.data
       } catch (error) {
          payload.snackbar({

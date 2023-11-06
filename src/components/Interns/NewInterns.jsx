@@ -1,5 +1,4 @@
 import { useDispatch } from 'react-redux'
-// import { useNavigate } from 'react-router-dom'
 import {
    FormControl,
    IconButton,
@@ -14,14 +13,14 @@ import { DownIcon, SearchIcon, UpIcon } from '../../assets/icons'
 import { InternsAddStudentModal } from './InternsAddStudentModal/InternsAddStudentModal'
 import { UiModal } from '../UI/modal/UiModal'
 import { fetchInternsSearch } from '../../store/interns/internsThunk'
+// import {useSearchParams} from "react-router-dom";
 
 export const NewInterns = ({ children }) => {
+   const dispatch = useDispatch()
    const [isSelectOpen, setIsSelectOpen] = useState(false)
    const [selectedValue, setSelectedValue] = useState('')
    const [openModalInterns, setOpenModalInterns] = useState(false)
    const [inputValue, setInputValue] = useState('')
-   const dispatch = useDispatch()
-   // const navigate = useNavigate()
    useEffect(() => {
       dispatch(fetchInternsSearch({ inputValue, selectedValue }))
    }, [inputValue, selectedValue])
@@ -43,11 +42,22 @@ export const NewInterns = ({ children }) => {
    }
    const handleOpenModalInterns = () => {
       setOpenModalInterns(true)
-   }
-   const handleCloseModalInterns = () => {
-      setOpenModalInterns(false)
+      const newURL = `${window.location.pathname}?modal=open`
+      window.history.pushState({}, '', newURL)
    }
 
+   const handleCloseModalInterns = () => {
+      setOpenModalInterns(false)
+      const newURL = window.location.pathname
+      window.history.pushState({}, '', newURL)
+   }
+
+   useEffect(() => {
+      const urlSearchParams = new URLSearchParams(window.location.search)
+      if (urlSearchParams.get('modal') === 'open') {
+         setOpenModalInterns(true)
+      }
+   }, [])
    return (
       <Container>
          <ContIntern>
@@ -83,7 +93,6 @@ export const NewInterns = ({ children }) => {
                            onOpen={handleSelectOpen}
                            value={selectedValue}
                            onChange={handleSelectChange}
-                           placeholder="Status"
                            // eslint-disable-next-line react/no-unstable-nested-components
                            IconComponent={() => (
                               <SelectIcon

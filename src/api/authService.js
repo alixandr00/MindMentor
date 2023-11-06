@@ -25,6 +25,6 @@ export const internsSearchStudents = ({ inputValue, selectedValue }) => {
    )
 }
 
-export const addedInterns = () => {
-   return axiosInstance.post('/interns/create/')
+export const addedInterns = (data) => {
+   return axiosInstance.post('/interns/create/', data)
 }

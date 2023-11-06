@@ -88,25 +88,67 @@ export const TableStudents = ({ headerArray }) => {
          setLoadings(false)
       }, 1500)
    }
+
    const onOpenModalHandler = (e, id) => {
       navigate(`details/${id}`)
    }
 
-   const handleModalHistory = () => setModalHistory((prev) => !prev)
-   const handleModalPay = () => setModalPay((prev) => !prev)
+   const handleModalHistoryOpen = () => {
+      setModalHistory(true)
+      const newURL = `${window.location.pathname}?modalHistory=open`
+      window.history.pushState({}, '', newURL)
+   }
+
+   const handleModalHistoryClose = () => {
+      setModalHistory(false)
+      const newURL = window.location.pathname
+      window.history.pushState({}, '', newURL)
+   }
+   const handleModalPayOpen = () => {
+      setModalPay(true)
+      const newURL = `${window.location.pathname}?modalPay=open`
+      window.history.pushState({}, '', newURL)
+   }
+
+   const handleModalPayClose = () => {
+      setModalPay(false)
+      const newURL = window.location.pathname
+      window.history.pushState({}, '', newURL)
+   }
+   // eslint-disable-next-line react-hooks/rules-of-hooks
 
    const handleOpenModalDelete = (id) => {
       setOpenModalDelete(true)
+      const newURL = `${window.location.pathname}?modalDelete=open`
+      window.history.pushState({}, '', newURL)
       setInternsId(id)
    }
-
+   // const inputValue = ''
    const handleDeleteStudents = (internId) => {
       dispatch(fetchInternsDelete({ id: internId, snackbar: showSnackbar }))
+      // .unwrap()
+      // .then(() => {
+      //    dispatch(fetchInternsSearch(inputValue))
+      // })
       navigate('/admin/interns')
       setOpenModalDelete(false)
    }
-   const handleModalDeleteClose = () => setOpenModalDelete(false)
-
+   const handleModalDeleteClose = () => {
+      setOpenModalDelete(false)
+      const newURL = window.location.pathname
+      window.history.pushState({}, '', newURL)
+   }
+   // eslint-disable-next-line react-hooks/rules-of-hooks
+   useEffect(() => {
+      const urlSearchParams = new URLSearchParams(window.location.search)
+      if (urlSearchParams.get('modalPay') === 'open') {
+         setModalPay(true)
+      } else if (urlSearchParams.get('modalHistory') === 'open') {
+         setModalHistory(true)
+      } else if (urlSearchParams.get('modalDelete') === 'open') {
+         setOpenModalDelete(true)
+      }
+   }, [])
    return (
       <StyledContent>
          {loading && <Loading />}
@@ -213,13 +255,7 @@ export const TableStudents = ({ headerArray }) => {
                               align="center"
                               className="red"
                            >
-                              <p
-                                 className={
-                                    intern.tech_stack === 'Project Manager'
-                                       ? 'ProjectManager'
-                                       : intern.tech_stack
-                                 }
-                              >
+                              <p className={intern.tech_stack}>
                                  {intern.tech_stack}
                               </p>
                            </StyledTableCellForData>
@@ -238,8 +274,8 @@ export const TableStudents = ({ headerArray }) => {
                               {intern.mentor}
                            </StyledTableCellForData>
                            <StyledTableCellForData align="center">
-                              <IconButton>
-                                 <CommentIcon onClick={handleModalPay} />
+                              <IconButton onClick={handleModalPayOpen}>
+                                 <CommentIcon />
                               </IconButton>
                            </StyledTableCellForData>
                            <StyledTableCellForData align="center">
@@ -253,7 +289,7 @@ export const TableStudents = ({ headerArray }) => {
                               >
                                  <DeleteIcon />
                               </IconButton>
-                              <IconButton onClick={handleModalHistory}>
+                              <IconButton onClick={handleModalHistoryOpen}>
                                  <History />
                               </IconButton>
                            </StyledTableCellForData>
@@ -290,16 +326,16 @@ export const TableStudents = ({ headerArray }) => {
          </StyledContainer>
          {modalPay ? (
             <PayModal
-               onClosePayModalHandler={handleModalPay}
-               open={handleModalPay}
+               onClosePayModalHandler={handleModalPayClose}
+               open={modalPay}
             />
          ) : (
             ''
          )}
          {modalHistory ? (
             <HistoryModal
-               onCloseModalHandler={handleModalHistory}
-               open={handleModalHistory}
+               onCloseModalHandler={handleModalHistoryClose}
+               open={handleModalHistoryOpen}
             />
          ) : (
             ''
@@ -328,12 +364,40 @@ const StyleTableBody = styled(TableBody)({
    backgroundColor: '#2B2D31',
    border: 'none',
 
-   '& .inprogress': {
+   '& .Pending': {
+      padding: '2px 1px',
+
+      borderRadius: '15px',
+      color: 'white',
+      border: '1px solid #ee0cf6',
+   },
+   '& .Validated': {
+      padding: '2px 1px',
+
+      borderRadius: '15px',
+      color: 'white',
+      border: '1px solid #ee2314',
+   },
+   '& .Proposed': {
+      padding: '2px 1px',
+
+      borderRadius: '15px',
+      color: 'white',
+      border: '1px solid #0cfc48',
+   },
+   '& .Onboarded': {
       padding: '2px 1px',
 
       borderRadius: '15px',
       color: 'white',
       border: '1px solid #F9F9F9',
+   },
+   '& .Selected': {
+      padding: '2px 1px',
+
+      borderRadius: '15px',
+      color: 'white',
+      border: '1px solid #09f697',
    },
    '& .New': {
       borderRadius: '15px',
@@ -353,13 +417,13 @@ const StyleTableBody = styled(TableBody)({
       border: '1px solid gold',
       color: 'white',
    },
-   '& .cola': {
+   '& .Paid': {
       borderRadius: '15px',
       border: '1px solid green',
       padding: '2px 1px',
       color: 'white',
    },
-   '& .fanta': {
+   '& .Graduate': {
       borderRadius: '15px',
       border: '1px solid gold',
       padding: '2px 1px',
@@ -371,7 +435,7 @@ const StyleTableBody = styled(TableBody)({
       padding: '2px 1px',
       color: 'white',
    },
-   '& .ProjectManager': {
+   '& .C++': {
       borderRadius: '15px',
       border: '1px solid  #4169E1',
       padding: '2px 1px',
@@ -394,6 +458,7 @@ const StyledTableRow = styled(TableRow)`
    &:nth-of-type(even) {
       width: 100px;
    }
+
    border: none;
 
    :hover {
@@ -418,6 +483,7 @@ const StyledTableCellForData = styled(TableCell)`
    color: white;
    font-size: 1rem;
    border: none;
+
    .internName {
       cursor: pointer;
    }

@@ -1,43 +1,46 @@
+/* eslint-disable prettier/prettier */
 import { styled } from '@mui/material'
+import { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { UiInput } from '../../UI/input/UiInput'
 import { InternsAddStudentModalSelect } from './InternsAddStudentModalSelect'
 import { UiButton } from '../../UI/button/UiButton'
-import { useState } from 'react'
-import { addedInterns } from '../../../api/authService'
+import { postNewStudents } from '../../../store/interns/internsThunk'
 
 export const InternsAddStudentModal = ({ onClose }) => {
-
-   const onSubmitHandler = (values) => {
-      const newData = {
-         firstName: values.firstName,
-         lastName: values.lastName,
-         phoneNumber: values.phoneNumber,
-         email: values.email,
-      }
-      addedInterns(newData)
-      onClose()
-   }
-   const formik = useFormik({
-      initialValues: {
-         firstName: '',
-         lastName: '',
-         email: '',
-         password: 'Здесь будет линк create password',
-         phoneNumber: '',
-      },
-      onSubmit: onSubmitHandler,
+   const dispatch = useDispatch()
+   const [names, setName] = useState('')
+   const [surName, setSurName] = useState('')
+   const [emailValue, setEmail] = useState('')
+   const [phoneValue, setPhone] = useState('')
+   const [paymentValue, setPayment] = useState('')
+   const [dataSelect, setDataSelect] = useState({
+      stack: '',
+      status: '',
    })
-   const { handleChange, handleSubmit, values, setFieldValue } = formik
 
-   const isEmailValid = () => {
-      return (
-         values.email.length === 0 ||
-         (values.email.length > 0 && values.email.includes('@'))
-      )
+   const addNewStudents = () => {
+      const data = {
+         name: names,
+         surname: surName,
+         email: emailValue,
+         phone_number: phoneValue,
+         payment_cost: paymentValue,
+         tech_stack: dataSelect.stack,
+         status: dataSelect.status,
+      }
+      dispatch(postNewStudents(data))
    }
-   const handlePhoneChange = (value) => {
-      setFieldValue('phoneNumber', value)
+
+   const colectorStackSelectValue = (data) => {
+      setDataSelect({ ...dataSelect, stack: data })
    }
+
+   const handleOnChangeName = (e) => setName(e.target.value)
+   const handleOnChangeSurName = (e) => setSurName(e.target.value)
+   const handleOnChangeEmail = (e) => setEmail(e.target.value)
+   const handleOnChangePhone = (e) => setPhone(e.target.value)
+   const handleOnChangePayment = (e) => setPayment(e.target.value)
    return (
       <MainContainer>
          <Container>
@@ -50,6 +53,8 @@ export const InternsAddStudentModal = ({ onClose }) => {
                            background="#252335"
                            width="32vw"
                            borderradius="0.625rem"
+                           value={names}
+                           onChange={handleOnChangeName}
                            colors="#fff"
                            bordercolor="#fff"
                            type="text"
@@ -59,6 +64,8 @@ export const InternsAddStudentModal = ({ onClose }) => {
                      <InputBox>
                         <label htmlFor="surname">Surname</label>
                         <UiInputStyle
+                           value={surName}
+                           onChange={handleOnChangeSurName}
                            background="#252335"
                            width="32vw"
                            borderradius="0.625rem"
@@ -73,6 +80,8 @@ export const InternsAddStudentModal = ({ onClose }) => {
                         <UiInputStyle
                            background="#252335"
                            width="32vw"
+                           value={emailValue}
+                           onChange={handleOnChangeEmail}
                            borderradius="0.625rem"
                            colors="#fff"
                            bordercolor="#fff"
@@ -83,6 +92,8 @@ export const InternsAddStudentModal = ({ onClose }) => {
                      <InputBox>
                         <label htmlFor="phone">Phone number</label>
                         <UiInputStyle
+                           value={phoneValue}
+                           onChange={handleOnChangePhone}
                            background="#252335"
                            width="32vw"
                            borderradius="0.625rem"
@@ -98,13 +109,13 @@ export const InternsAddStudentModal = ({ onClose }) => {
                         <label htmlFor="stack">Stack</label>
 
                         <InternsAddStudentModalSelect
+                           defaultName="Python"
                            name="stack"
                            dataMenuItem={[
-                              { id: 1, name: 'Python' },
+                              { id: 1, name: 'Javascript' },
                               { id: 2, name: 'Java' },
-                              { id: 3, name: 'Javascript' },
                            ]}
-                           defaultName="Python"
+                           colectorSelectValue={colectorStackSelectValue}
                         />
                      </BoxSelect>
 
@@ -112,12 +123,18 @@ export const InternsAddStudentModal = ({ onClose }) => {
                         <label htmlFor="status">Status</label>
                         <InternsAddStudentModalSelect
                            name="status"
+                           defaultName="New"
                            dataMenuItem={[
-                              { id: 1, name: 'In progress' },
-                              { id: 2, name: 'Hired' },
-                              { id: 3, name: 'Graduate' },
+                              { id: 1, name: 'New' },
+                              { id: 2, name: 'Paid' },
+                              { id: 3, name: 'Pending' },
+                              { id: 4, name: 'Validated' },
+                              { id: 5, name: 'Graduate' },
+                              { id: 6, name: 'Selected' },
+                              { id: 7, name: 'Proposed' },
+                              { id: 8, name: 'Onboarded' },
                            ]}
-                           defaultName="In progress"
+                           colectorSelectValue={colectorStackSelectValue}
                         />
                      </BoxSelect>
                   </ContainerSelect>
@@ -153,6 +170,8 @@ export const InternsAddStudentModal = ({ onClose }) => {
 
                      <div className="box">
                         <UiInputStyle
+                           value={paymentValue}
+                           onChange={handleOnChangePayment}
                            background="#252335"
                            width="7.4vw"
                            borderradius="0.625rem"
@@ -182,6 +201,7 @@ export const InternsAddStudentModal = ({ onClose }) => {
                         border="1px solid #fff"
                         fontSize="1.25rem"
                         type="button"
+                        onClick={addNewStudents}
                      >
                         Save
                      </UiButton>
