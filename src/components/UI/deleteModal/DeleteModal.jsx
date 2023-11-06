@@ -20,6 +20,13 @@ export const DeleteModal = ({ onClose, onClick, unClick }) => {
             >
                No
             </Button>
+
+            <Button
+               onClick={onClick}
+               backgroundColor="linear-gradient(180deg, rgba(4, 1, 22, 0.93) 0%, rgba(43, 45, 49, 0.00) 100%)"
+            >
+               Yes
+            </Button>
          </UiButtonBlock>
       </Modal>
    )

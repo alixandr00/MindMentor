@@ -51,4 +51,4 @@ const internsSlice = createSlice({
    },
 })
 
-export default internsSlice.reducer
+export default internsSlice

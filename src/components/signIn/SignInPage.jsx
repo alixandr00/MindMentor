@@ -28,7 +28,7 @@ export const SignInPage = () => {
       } else {
          showSnackbar({
             message: 'Bce поле должны быть заполнены',
-            severity: 'warning',
+            severity: 'error',
          })
 
          setValidForm(true)

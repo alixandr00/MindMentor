@@ -1,9 +1,49 @@
+/* eslint-disable no-nested-ternary */
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { IconButton, styled } from '@mui/material'
+import { useParams } from 'react-router-dom'
 import { UiButton } from '../UI/button/UiButton'
 import { UiInput } from '../UI/input/UiInput'
 import { SearchIcon } from '../../assets/icons'
+import { VendorsModal } from './NewVacansyModal'
+import { NewVendorModal } from './NewVendorModal'
+import { useCustomSearchParams } from '../../utils/CustomSearchParams'
+import { getSearchVendors } from '../../store/vendors/vendors.thunk'
 
 export const NewVendors = ({ children }) => {
+   const dispatch = useDispatch()
+   const param = useParams()
+   const [openModalVendors, setOpenModalVendors] = useState(false)
+   const [openModalVacansy, setOpenModalVacansy] = useState(false)
+   const { setParam, deleteParam } = useCustomSearchParams()
+
+   const [value, setValue] = useState('')
+   const ddValue = useSelector((state) => state.vendor.dd)
+
+   const onChangeValue = (e) => {
+      setValue(e.target.value)
+   }
+
+   const onOpenModalHandler = () => {
+      setOpenModalVendors(true)
+      setParam('ModalVendors', 'open')
+   }
+   const onCloseModalHandler = () => {
+      setOpenModalVendors(false)
+      deleteParam('ModalVendors')
+   }
+   const onOpenModalHandlerVacansy = () => {
+      setOpenModalVacansy(true)
+      setParam('ModalVacancy', 'open')
+   }
+   const onCloseModalHandlerVacansy = () => {
+      setOpenModalVacansy(false)
+      deleteParam('ModalVacancy')
+   }
+   useEffect(() => {
+      dispatch(getSearchVendors(value))
+   }, [value])
    return (
       <Container>
          <ContIntern>
@@ -13,11 +53,12 @@ export const NewVendors = ({ children }) => {
             <div>
                <InternBox>
                   <p className="Interns">Vendors</p>
-                  <div>{}</div>
                </InternBox>
                <InputBox>
                   <Input>
                      <UiInputStyled
+                        value={value}
+                        onChange={onChangeValue}
                         colors="#FFFF"
                         placeholder="search name"
                         type="text"
@@ -26,11 +67,36 @@ export const NewVendors = ({ children }) => {
                         <SearchIcon />
                      </Icons>
                   </Input>
-                  <UiButtonStyled>+ New vendor</UiButtonStyled>
+                  <ButtonBlock>
+                     {ddValue ? (
+                        <ButtonStyled onClick={onOpenModalHandlerVacansy}>
+                           + New Vacancy
+                        </ButtonStyled>
+                     ) : (
+                        ''
+                     )}
+
+                     <UiButtonStyled onClick={onOpenModalHandler}>
+                        + New vendor
+                     </UiButtonStyled>
+                  </ButtonBlock>
                </InputBox>
             </div>
          </ContIntern>
          {children}
+         {openModalVendors ? (
+            <VendorsModal onCloseModalHandler={onCloseModalHandler} />
+         ) : (
+            ''
+         )}
+         {openModalVacansy ? (
+            <NewVendorModal
+               id={param.id}
+               onCloseModalHandlerVacansy={onCloseModalHandlerVacansy}
+            />
+         ) : (
+            ''
+         )}
       </Container>
    )
 }
@@ -55,7 +121,6 @@ const Container = styled('div')({
 const ContIntern = styled('div')({
    width: '100%',
    height: '10rem',
-   //    background: 'blue',
    display: 'flex',
    flexDirection: 'column',
 })
@@ -115,3 +180,10 @@ const UiInputStyled = styled(UiInput)({
 const UiButtonStyled = styled(UiButton)({
    width: '8rem',
 })
+const ButtonStyled = styled(UiButton)({
+   width: '8.5rem',
+})
+const ButtonBlock = styled('div')`
+   display: flex;
+   gap: 1rem;
+`

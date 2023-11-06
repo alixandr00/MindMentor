@@ -7,8 +7,10 @@ import './index.css'
 import { router } from './routes/AppRoutes'
 import { store } from './store'
 import { injectStore } from './config/axiosInstants'
+import { injectFileStore } from './config/axiosFileInstants'
 
 injectStore(store)
+injectFileStore(store)
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
