@@ -7,6 +7,7 @@ export const profile = createAsyncThunk(
    async (page, { rejectWithValue }) => {
       try {
          const response = await profileRequest(page)
+         console.log('response: ', response)
 
          const existingData = localStorage.getItem(LOGIN_USER_KEY)
          // eslint-disable-next-line prefer-const
@@ -18,6 +19,7 @@ export const profile = createAsyncThunk(
 
          return response.data
       } catch (error) {
+         console.log('error: ', error)
          return rejectWithValue(error)
       }
    }
@@ -28,6 +30,7 @@ export const signIn = createAsyncThunk(
    async ({ data, snackbar }, { dispatch, rejectWithValue }) => {
       try {
          const response = await signInRequest(data)
+         console.log('response: ', response)
 
          const result = {
             auth_token: 'YWRtaW46YWRtaW4=',
@@ -60,6 +63,7 @@ export const signIn = createAsyncThunk(
    }
 )
 
-export const logOut = createAsyncThunk('admin/logOut', async () => {
-   localStorage.removeItem(LOGIN_USER_KEY)
-})
+export const logOut = () => {
+   window.location.pathname = '/'
+   return localStorage.removeItem(LOGIN_USER_KEY)
+}

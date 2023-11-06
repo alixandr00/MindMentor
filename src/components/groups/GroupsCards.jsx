@@ -1,45 +1,177 @@
-import React from 'react'
-import { styled } from '@mui/material'
-import { groupsCards } from '../../utils/general'
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { IconButton, styled } from '@mui/material'
+// import { useSearchParams } from 'react-router-dom'
+import { ReactComponent as DeleteIcon } from '../../assets/icons/deleteicon.svg'
+import { ReactComponent as EditIcon } from '../../assets/icons/editIcon.svg'
 import { NotesIcon, PeopleIcon, ProgressIcon } from '../../assets/icons'
+import {
+   deleteGroups,
+   getGroupById,
+   getGroups,
+} from '../../store/groups/groupThunk'
+import { Loading } from '../UI/loading/Loading'
+import { DeleteGroupModal } from './DeleteGroupModal'
+import { GetGroupModal } from './GetGroupModal'
+import { showSnackbar } from '../UI/snackbar/Snackbar'
+// import { CreateGroupModal } from './CreateGroupModal'
+import { EditModal } from './EditModal'
+import { fetchInterns } from '../../store/interns/internsThunk'
 
-export const GroupsCards = () => {
+export const GroupsCards = ({
+   groups,
+   // openModal,
+   // openModalHandlerEdit,
+   // closeModalHandlerEdit,
+}) => {
+   const [deleteOpenModal, setDeleteOpenModal] = useState(false)
+   const [groupOpenModal, setGroupOpenModal] = useState(false)
+   const [openEditModal, setOpenEditModal] = useState(false)
+   // const { getGroupId } = useSelector((state) => state.groups)
+
+   const { isLoading } = useSelector((state) => state.groups)
+   const [getId, setGetId] = useState(null)
+   const dispatch = useDispatch()
+
+   useEffect(() => {
+      dispatch(getGroups())
+   }, [dispatch])
+
+   const deleteOpenModalHandler = (id) => {
+      setDeleteOpenModal(true)
+      setGetId(id)
+   }
+
+   const deleteGroupById = () => {
+      dispatch(deleteGroups({ getId, setDeleteOpenModal }))
+   }
+
+   const openModalHandler = () => {
+      setGroupOpenModal(true)
+   }
+
+   const closeModalHandler = () => {
+      setGroupOpenModal(false)
+   }
+   const openModalHandlerEdit = () => {
+      setOpenEditModal(true)
+      dispatch(fetchInterns())
+   }
+   const closeModalHandlerEdit = () => {
+      setOpenEditModal(false)
+   }
+
+   const getGroupsById = (id) => {
+      // console.log('id: ', id)
+      dispatch(getGroupById(id))
+         .unwrap()
+         .then(() => {
+            setGroupOpenModal(true)
+         })
+         .catch(() => {
+            showSnackbar({
+               severity: 'error',
+               message: 'error getting group',
+            })
+         })
+   }
+   const editModalHandler = (id) => {
+      dispatch(getGroupById(id))
+         .unwrap()
+         .then(() => {
+            openModalHandlerEdit()
+         })
+         .catch((err) => {
+            console.log(err, 'error getting group')
+         })
+   }
+
    return (
       <Container>
-         {groupsCards.map((card) => (
+         {isLoading && <Loading />}
+         {groups?.map((card) => (
             <ContainerCards key={card.id}>
-               <CompanyNameText>{card.companyName}</CompanyNameText>
-               <WrapperMain>
-                  <MainContainers>
-                     <IconWrapper>
-                        <ProgressIcon />
-                     </IconWrapper>
-                     <CardTexts>{card.progress}</CardTexts>
-                  </MainContainers>
-                  <MainContainers>
-                     <IconWrapper>
-                        <PeopleIcon />
-                     </IconWrapper>
-                     <CardTexts>{card.peoples}</CardTexts>
-                  </MainContainers>
-                  <MainContainers>
-                     <IconWrapper>
-                        <NotesIcon />
-                     </IconWrapper>
-                     <CardTexts>{card.data}</CardTexts>
-                  </MainContainers>
-               </WrapperMain>
+               {groupOpenModal ? (
+                  <GetGroupModal
+                     openModal={() => openModalHandler()}
+                     oncloseModal={closeModalHandler}
+                  />
+               ) : null}
+               <IconButtonEditStyled
+                  className="dd"
+                  onClick={() => editModalHandler(card.id)}
+               >
+                  <EditIcon />
+               </IconButtonEditStyled>
+               {openEditModal ? (
+                  <EditModal
+                     openModalHandlerEdit={openModalHandlerEdit}
+                     closeModalHandlerEdit={closeModalHandlerEdit}
+                     openEditModal={openEditModal}
+                     // getGroupId={getGroupId}
+                  />
+               ) : null}
+               <IconButtonStyled
+                  className="dd"
+                  onClick={() => deleteOpenModalHandler(card.id)}
+               >
+                  <DeleteIcon />
+               </IconButtonStyled>
+               {deleteOpenModal ? (
+                  <DeleteGroupModal
+                     onOpen={deleteOpenModal}
+                     onCloseModal={setDeleteOpenModal}
+                     deleteGroupById={deleteGroupById}
+                  />
+               ) : null}
+               <div onClick={() => getGroupsById(card.id)}>
+                  <CompanyNameText>{card.name}</CompanyNameText>
+                  <WrapperMain>
+                     <MainContainers>
+                        <IconWrapper>
+                           <ProgressIcon />
+                        </IconWrapper>
+                        <CardTexts>{card.status}</CardTexts>
+                     </MainContainers>
+                     <MainContainers>
+                        <IconWrapper>
+                           <PeopleIcon />
+                        </IconWrapper>
+                        <CardTexts>{card.people} people</CardTexts>
+                     </MainContainers>
+                     <MainContainers>
+                        <IconWrapper>
+                           <NotesIcon />
+                        </IconWrapper>
+                        <CardTexts>
+                           {card.start_date}/{card.end_date}
+                        </CardTexts>
+                     </MainContainers>
+                  </WrapperMain>
+               </div>
             </ContainerCards>
          ))}
       </Container>
    )
 }
-
+const IconButtonStyled = styled(IconButton)({
+   position: 'absolute',
+   top: '-0.3rem',
+   right: 0,
+   display: 'none',
+})
+const IconButtonEditStyled = styled(IconButton)({
+   position: 'absolute',
+   top: '-0.3rem',
+   right: '2rem',
+   display: 'none',
+})
 const Container = styled('div')(() => ({
    marginTop: '2rem',
    width: '100%',
-   // height: '100%',
    display: 'flex',
+   cursor: 'pointer',
    flexWrap: 'wrap',
    gap: '1.31rem',
    maxHeight: '68vh',
@@ -62,12 +194,16 @@ const ContainerCards = styled('div')(() => ({
    width: '14.375rem',
    height: '10.4375rem',
    borderRadius: '0.625rem',
+   position: 'relative',
    border: '1px solid #FFF',
    paddingTop: '1.75rem',
    transition: 'transform 0.3s, background 0.3s',
    '&:hover': {
       background: 'linear-gradient(7.1875deg, #49318C, #3F5FB0)',
-      transform: 'scale(1.05)',
+
+      '& .dd': {
+         display: 'block',
+      },
    },
 }))
 const CompanyNameText = styled('p')({
