@@ -10,6 +10,5 @@ export const store = configureStore({
       [internsReducer.name]: internsReducer.reducer,
       [mentorSlice.name]: mentorSlice.reducer,
       [vendorsSlice.name]: vendorsSlice.reducer,
-      interns: internsReducer,
    },
 })
