@@ -70,6 +70,8 @@ export const showSnackbar = ({ message, additionalMessage, severity }) => {
       closeButtonColor = '#008000'
    } else if (severity === 'warning') {
       closeButtonColor = '#FFA500'
+   } else if (severity === 'error') {
+      closeButtonColor = '#d82f2f'
    }
 
    toast[severity](
