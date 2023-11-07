@@ -8,6 +8,7 @@ import {
    postCVMentorRequest,
    putEditMentorRequest,
 } from '../../api/mentorService'
+import { axiosInstance } from '../../config/axiosInstants'
 
 export const getStatusMentors = createAsyncThunk(
    'get/getStatusMentors',
@@ -139,6 +140,20 @@ export const putEditMentor = createAsyncThunk(
             })
          }
 
+         return rejectWithValue(error)
+      }
+   }
+)
+
+export const getMentors = createAsyncThunk(
+   'get/getMentors',
+   async (_, { rejectWithValue }) => {
+      try {
+         const response = await axiosInstance.get('/mentor/')
+         console.log('response: ', response)
+
+         return response.data
+      } catch (error) {
          return rejectWithValue(error)
       }
    }

@@ -20,7 +20,6 @@ dayjs.locale('en')
 
 export const EditModal = ({ openEditModal, closeModalHandlerEdit }) => {
    const { getGroupId } = useSelector((state) => state.groups)
-   console.log('getGroupId: ', getGroupId)
    const [groupName, setGroupName] = useState(getGroupId?.name || '')
    const [status, setStatus] = useState(getGroupId?.status || '')
    const peopleId = getGroupId.people?.map((el) => el.id)
@@ -59,7 +58,6 @@ export const EditModal = ({ openEditModal, closeModalHandlerEdit }) => {
          people: state.internId,
       }
       dispatch(putGroupById({ formData, groupId, closeModalHandlerEdit }))
-      console.log(formData)
    }
 
    return (
@@ -82,11 +80,13 @@ export const EditModal = ({ openEditModal, closeModalHandlerEdit }) => {
             <SecondWrapper>
                <UiButtonStyled onClick={openModalHandler}>Group</UiButtonStyled>
                <WrapperInternName>
-                  {internName.map((el) => (
-                     <TextInternName>{el}</TextInternName>
-                  )) ?? (
+                  {internName.length > 0 ? (
+                     internName.map((el) => (
+                        <TextInternName>{el}</TextInternName>
+                     ))
+                  ) : (
                      <TextInternNameNo>
-                        There are no interns here yet .
+                        There are no interns here yet.
                      </TextInternNameNo>
                   )}
                </WrapperInternName>
