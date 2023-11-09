@@ -4,6 +4,7 @@ import { groupsSlice } from './groups/groupSlice'
 import { vendorsSlice } from './vendors/vendors.slice'
 import internsReducer from './interns/internsSlice'
 import { mentorSlice } from './mentors/mentor.slice'
+import { calendarSlice } from './calendar/calendar.slice'
 import { interviewSlice } from './interview/interview.slice'
 
 export const store = configureStore({
@@ -14,6 +15,7 @@ export const store = configureStore({
       [internsReducer.name]: internsReducer.reducer,
       [mentorSlice.name]: mentorSlice.reducer,
       [vendorsSlice.name]: vendorsSlice.reducer,
+      [calendarSlice.name]: calendarSlice.reducer,
       [interviewSlice.name]: interviewSlice.reducer,
    },
 })

@@ -18,7 +18,6 @@ import { ReactComponent as DeleteIcon } from '../../../assets/icons/deleteicon.s
 import { ReactComponent as EditIcon } from '../../../assets/icons/editIcon.svg'
 import {
    deleteInterviewThunk,
-   internsDetailGetThunk,
    interviewAllThunk,
    interviewDetailThunk,
 } from '../../../store/interview/interview.thunk'
@@ -26,10 +25,19 @@ import { EditInterviewModal } from './interviewModal/EditIntervieModal'
 import { DeleteModal } from '../deleteModal/DeleteModal'
 import { showSnackbar } from '../snackbar/Snackbar'
 
-export const TableInterviow = ({ headerArray, id = 7 }) => {
+export const TableInterviow = ({ selectedValue, headerArray, id = 8 }) => {
    const dispatch = useDispatch()
    const navigate = useNavigate()
    const getInterviews = useSelector((state) => state.interview.getInterviewAll)
+
+   const filteredInterviewsData = getInterviews?.filter((interview) => {
+      return interview.intern.some(
+         (intern) => intern.tech_stack === selectedValue
+      )
+   })
+
+   const filteredInterviews =
+      selectedValue !== 'All' ? filteredInterviewsData : getInterviews
 
    const [loading, setLoading] = useState(true)
    const [openModal, setOpenModal] = useState(false)
@@ -53,6 +61,7 @@ export const TableInterviow = ({ headerArray, id = 7 }) => {
       dispatch(deleteInterviewThunk(getId))
          .unwrap()
          .then(() => {
+            dispatch(interviewAllThunk())
             onCloseDeleteModal()
             showSnackbar({
                message: 'Успешно удалено!',
@@ -70,7 +79,6 @@ export const TableInterviow = ({ headerArray, id = 7 }) => {
    useEffect(() => {
       dispatch(interviewAllThunk())
       dispatch(interviewDetailThunk(id))
-      dispatch(internsDetailGetThunk())
       const fetchData = () => {
          setTimeout(() => {
             setLoading(false)
@@ -163,7 +171,7 @@ export const TableInterviow = ({ headerArray, id = 7 }) => {
                         </StyledTableRowOne>
                      </>
                   ) : (
-                     getInterviews?.map((el) => {
+                     filteredInterviews?.map((el) => {
                         return el.intern.map((item) => (
                            <StyledTableRow key={el.id}>
                               <StyledTableCellForData

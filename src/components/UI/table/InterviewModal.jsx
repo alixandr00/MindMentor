@@ -71,7 +71,7 @@ export const InterviewModal = () => {
 
 const Modal = styled(UiModal)`
    border: 1px solid #fff;
-   padding-left: 2.58rem;
+   padding: 0 1.58rem 0 2.58rem;
 `
 const Title = styled('p')`
    color: #fff;
@@ -137,6 +137,7 @@ const CalendarBlock = styled('div')`
 const CloseIconBlock = styled('div')`
    display: flex;
    justify-content: flex-end;
+   margin-top: 1rem;
    cursor: pointer;
    .MuiSvgIcon-root {
       color: #fff;

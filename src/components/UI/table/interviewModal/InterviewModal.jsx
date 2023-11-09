@@ -1,5 +1,5 @@
 /* eslint-disable no-unneeded-ternary */
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { styled } from '@mui/material'
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -14,7 +14,10 @@ import { UiInput } from '../../input/UiInput'
 import { UiButton } from '../../button/UiButton'
 import { showSnackbar } from '../../snackbar/Snackbar'
 import { InternData } from './InternsData'
-import { newInterviewPostThunk } from '../../../../store/interview/interview.thunk'
+import {
+   internsDetailGetThunk,
+   newInterviewPostThunk,
+} from '../../../../store/interview/interview.thunk'
 
 export const AddInterviewModal = ({ onClose }) => {
    const dispatch = useDispatch()
@@ -80,6 +83,11 @@ export const AddInterviewModal = ({ onClose }) => {
             })
          })
    }
+
+   useEffect(() => {
+      dispatch(internsDetailGetThunk(id))
+   }, [])
+
    return (
       <div>
          <UiModal
@@ -89,97 +97,101 @@ export const AddInterviewModal = ({ onClose }) => {
             backgroundColor="rgba(84, 71, 170, 0.93)"
             onClose={onClose}
          >
-            <CloseIconContainer>
-               <CloseIconBlock onClick={onClose}>
-                  <CloseIcon />
-               </CloseIconBlock>
-            </CloseIconContainer>
-            <Container>
-               <StyleBlocks>
-                  <UiButtonStyle
-                     width="9.3125rem"
-                     height="3.125rem"
-                     background="rgba(84, 71, 170, 0.93)"
-                     onClick={onOpenIternModalHandler}
-                  >
-                     {name ? name : <p>Intern Name</p>}
-                  </UiButtonStyle>
-               </StyleBlocks>
-               <StyleBlock>
-                  <UiInput
-                     value={nameInterview}
-                     onChange={onChangeNameOfInt}
-                     bordercolor="#fff"
-                     colors="#fff"
-                     type="text"
-                     width="26rem"
-                     height="3.125rem"
-                     borderradius="1.25rem"
-                     placeholder="Name of the interview"
-                     backgroundColor="rgba(84, 71, 170, 0.93)"
-                  />
-               </StyleBlock>
-               <CalendarContainer>
-                  <StyleBlockCalendar>
-                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker />
-                     </LocalizationProvider>
-                  </StyleBlockCalendar>
+            <ContainerOfParrent>
+               <CloseIconContainer>
+                  <CloseIconBlock onClick={onClose}>
+                     <CloseIcon />
+                  </CloseIconBlock>
+               </CloseIconContainer>
+               <StyleBlocksContainer>
+                  <StyleBlocks>
+                     <UiButtonStyle
+                        width="9.3125rem"
+                        height="3.125rem"
+                        background="rgba(84, 71, 170, 0.93)"
+                        onClick={onOpenIternModalHandler}
+                     >
+                        {name ? name : <p>Intern Name</p>}
+                     </UiButtonStyle>
+                  </StyleBlocks>
+               </StyleBlocksContainer>
+               <Container>
+                  <StyleBlock>
+                     <UiInput
+                        value={nameInterview}
+                        onChange={onChangeNameOfInt}
+                        bordercolor="#fff"
+                        colors="#fff"
+                        type="text"
+                        width="26rem"
+                        height="3.125rem"
+                        borderradius="1.25rem"
+                        placeholder="Name of the interview"
+                        backgroundColor="rgba(84, 71, 170, 0.93)"
+                     />
+                  </StyleBlock>
+                  <CalendarContainer>
+                     <StyleBlockCalendar>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                           <DatePicker />
+                        </LocalizationProvider>
+                     </StyleBlockCalendar>
 
-                  <StyleBlockDate>
-                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DemoContainer components={['TimePicker']}>
-                           <TimePicker
-                              label="Start time"
-                              ampm={false}
-                              value={selectedDateTime}
-                              onChange={handleDateTimeChange}
-                           />
-                        </DemoContainer>
-                     </LocalizationProvider>
-                  </StyleBlockDate>
-                  <StyleBlockDate>
-                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DemoContainer components={['TimePicker']}>
-                           <TimePicker
-                              label="End time"
-                              ampm={false}
-                              value={selectedDateTimes}
-                              onChange={handleDateTimeChanges}
-                           />
-                        </DemoContainer>
-                     </LocalizationProvider>
-                  </StyleBlockDate>
-               </CalendarContainer>
-               <StyleBlock>
-                  <UiInput
-                     value={loc}
-                     onChange={onChangeLoc}
-                     colors="#fff"
-                     bordercolor="#fff"
-                     width="26rem"
-                     height="3.125rem"
-                     borderradius="1.25rem"
-                     placeholder="Location"
-                     backgroundColor="rgba(84, 71, 170, 0.93)"
-                  />
-               </StyleBlock>
-               <StyleBlock>
-                  <UiInput
-                     value={desc}
-                     onChange={onChangeDesc}
-                     colors="#fff"
-                     bordercolor="#fff"
-                     className="custom-width-input"
-                     id="outlined-multiline-static"
-                     multiline
-                     rows={6.5}
-                     type="text"
-                     borderradius="1.25rem"
-                     placeholder="Description"
-                     backgroundColor="rgba(84, 71, 170, 0.93)"
-                  />
-               </StyleBlock>
+                     <StyleBlockDate>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                           <DemoContainer components={['TimePicker']}>
+                              <TimePicker
+                                 label="Start time"
+                                 ampm={false}
+                                 value={selectedDateTime}
+                                 onChange={handleDateTimeChange}
+                              />
+                           </DemoContainer>
+                        </LocalizationProvider>
+                     </StyleBlockDate>
+                     <StyleBlockDate>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                           <DemoContainer components={['TimePicker']}>
+                              <TimePicker
+                                 label="End time"
+                                 ampm={false}
+                                 value={selectedDateTimes}
+                                 onChange={handleDateTimeChanges}
+                              />
+                           </DemoContainer>
+                        </LocalizationProvider>
+                     </StyleBlockDate>
+                  </CalendarContainer>
+                  <StyleBlock>
+                     <UiInput
+                        value={loc}
+                        onChange={onChangeLoc}
+                        colors="#fff"
+                        bordercolor="#fff"
+                        width="26rem"
+                        height="3.125rem"
+                        borderradius="1.25rem"
+                        placeholder="Location"
+                        backgroundColor="rgba(84, 71, 170, 0.93)"
+                     />
+                  </StyleBlock>
+                  <StyleBlock>
+                     <UiInput
+                        value={desc}
+                        onChange={onChangeDesc}
+                        colors="#fff"
+                        bordercolor="#fff"
+                        className="custom-width-input"
+                        id="outlined-multiline-static"
+                        multiline
+                        rows={6.5}
+                        type="text"
+                        borderradius="1.25rem"
+                        placeholder="Description"
+                        backgroundColor="rgba(84, 71, 170, 0.93)"
+                     />
+                  </StyleBlock>
+               </Container>
                <ButtonBlock>
                   <UiButton
                      onClick={onClose}
@@ -204,7 +216,7 @@ export const AddInterviewModal = ({ onClose }) => {
                      Save
                   </UiButton>
                </ButtonBlock>
-            </Container>
+            </ContainerOfParrent>
          </UiModal>
          {openIternModal ? (
             <InternData onCloseIternModalHandler={onCloseIternModalHandler} />
@@ -215,8 +227,13 @@ export const AddInterviewModal = ({ onClose }) => {
    )
 }
 
+const ContainerOfParrent = styled('div')`
+   padding-right: 1rem;
+`
 const Container = styled('div')`
-   margin-left: 3rem;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
 `
 
 const CalendarContainer = styled('div')`
@@ -225,8 +242,14 @@ const CalendarContainer = styled('div')`
    gap: 1.7rem;
    margin-top: 1.5rem;
 `
+
+const StyleBlocksContainer = styled('div')`
+   display: flex;
+   justify-content: center;
+`
 const StyleBlocks = styled('div')`
    margin-top: 1rem;
+   width: 72%;
 `
 const StyleBlock = styled('div')`
    margin-top: 2rem;
@@ -252,6 +275,12 @@ const StyleBlockCalendar = styled('div')`
    }
 `
 const StyleBlockDate = styled('div')`
+   .css-1jy569b-MuiFormLabel-root-MuiInputLabel-root {
+      display: none;
+   }
+   .MuiInputLabel-root.Mui-error {
+      display: none;
+   }
    .MuiOutlinedInput-root {
       color: #fff;
       width: 7.625rem;
@@ -269,20 +298,22 @@ const StyleBlockDate = styled('div')`
       display: none;
    }
    .MuiSvgIcon-root {
+      font-size: 1rem;
       color: #fff;
    }
 `
 
 const ButtonBlock = styled('div')`
    display: flex;
-   width: 28.9vw;
-   gap: 2rem;
+   width: 86%;
    justify-content: flex-end;
    margin-top: 2rem;
+   gap: 1rem;
 `
 
 const CloseIconContainer = styled('div')`
    display: flex;
+   margin-top: 1rem;
    justify-content: flex-end;
 `
 const CloseIconBlock = styled('div')`

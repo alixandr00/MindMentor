@@ -1,20 +1,17 @@
-import {
-   FormControl,
-   IconButton,
-   MenuItem,
-   Select,
-   styled,
-} from '@mui/material'
+import { FormControl, MenuItem, Select, styled } from '@mui/material'
 import { useState } from 'react'
-import { DownIcon, SearchIcon, UpIcon } from '../../../assets/icons'
-import { UiInput } from '../input/UiInput'
+import { DownIcon, UpIcon } from '../../../assets/icons'
 import { UiButton } from '../button/UiButton'
 import { AddInterviewModal } from './interviewModal/InterviewModal'
 
-export const NewInterviews = ({ children }) => {
+export const NewInterviews = ({
+   children,
+   selectedValue,
+   setSelectedValue,
+}) => {
    const [isSelectOpen, setIsSelectOpen] = useState(false)
-   const [selectedValue, setSelectedValue] = useState('Tech Stack')
    const [openModal, setOpenModal] = useState(false)
+
    const onOpenHandleModal = () => {
       setOpenModal(true)
    }
@@ -49,16 +46,6 @@ export const NewInterviews = ({ children }) => {
                   </UiButtonStyled>
                </InternBox>
                <InputBox>
-                  <Input>
-                     <UiInputStyled
-                        colors="#FFFF"
-                        placeholder="search name"
-                        type="text"
-                     />
-                     <Icons>
-                        <SearchIcon />
-                     </Icons>
-                  </Input>
                   <div className="contsort">
                      <p className="sort">Sort by</p>
                      <FormControlStyled size="medium">
@@ -81,10 +68,11 @@ export const NewInterviews = ({ children }) => {
                               </SelectIcon>
                            )}
                         >
-                           <MenuItem value="Tech Stack">JavaScript</MenuItem>
-                           <MenuItem value={10}>Java</MenuItem>
-                           <MenuItem value={20}>Python</MenuItem>
-                           <MenuItem value={30}>HR</MenuItem>
+                           <MenuItem value="All">All</MenuItem>
+                           <MenuItem value="JavaScript">JavaScript</MenuItem>
+                           <MenuItem value="Java">Java</MenuItem>
+                           <MenuItem value="Python">Python</MenuItem>
+                           <MenuItem value="HR">HR</MenuItem>
                         </SelectStyled>
                      </FormControlStyled>
                   </div>
@@ -97,15 +85,6 @@ export const NewInterviews = ({ children }) => {
    )
 }
 
-const Input = styled('div')`
-   display: flex;
-`
-const Icons = styled(IconButton)`
-   position: relative;
-   right: 190px;
-   bottom: 3px;
-`
-
 const Container = styled('div')({
    width: '100%',
    height: '100vh',
@@ -117,7 +96,6 @@ const Container = styled('div')({
 const ContIntern = styled('div')({
    width: '100%',
    height: '10rem',
-   //    background: 'blue',
    display: 'flex',
    flexDirection: 'column',
 })
@@ -151,7 +129,7 @@ const InternBox = styled('div')({
 
 const InputBox = styled('div')({
    display: 'flex',
-   justifyContent: 'space-between',
+   justifyContent: 'flex-end',
    '.sort': {
       color: '#FFFFFF',
    },
@@ -161,22 +139,6 @@ const InputBox = styled('div')({
       alignItems: 'center',
       gap: '1rem',
    },
-})
-
-const UiInputStyled = styled(UiInput)({
-   width: '12.25rem',
-   '& .MuiInputBase-input': {
-      height: '2rem',
-      background: 'transparent',
-   },
-   '& .Mui-focused': {
-      '& .MuiInputBase-input': {
-         background: 'transparent',
-      },
-   },
-   border: '1px solid #FFFF',
-   borderRadius: '0.625rem',
-   paddingLeft: '2rem',
 })
 
 const FormControlStyled = styled(FormControl)({

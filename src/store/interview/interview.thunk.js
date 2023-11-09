@@ -25,6 +25,7 @@ export const interviewDetailThunk = createAsyncThunk(
    async (id, { rejectWithValue }) => {
       try {
          const response = await getInterviewDetailRequest(id)
+
          return response.data
       } catch (error) {
          return rejectWithValue(error)
@@ -34,9 +35,10 @@ export const interviewDetailThunk = createAsyncThunk(
 
 export const newInterviewPostThunk = createAsyncThunk(
    'interview/newInterviewPostThunk',
-   async (data, { rejectWithValue }) => {
+   async (data, { dispatch, rejectWithValue }) => {
       try {
          await postNewInterviewRequest(data)
+         dispatch(interviewAllThunk())
       } catch (error) {
          return rejectWithValue(error)
       }
