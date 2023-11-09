@@ -89,7 +89,8 @@ const InputOutlained = styled(OutlinedInput)(
       fontSize: fontsize,
       background,
       borderRadius: borderradius,
-      border: `1px solid ${bordercolor}`,
+      // border: `1px solid ${bordercolor}`,
+      border: props.border || '1px solid #FFFF',
       '.MuiInputBase-input': {
          color: colors,
          padding: props.classpadding === 'true' && '3px 1.5rem 3px 10px',
