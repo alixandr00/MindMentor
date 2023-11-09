@@ -200,6 +200,7 @@ export const mentorSlice = createSlice({
                education: idData[0].education,
                workExperience: idData[0].work_experiance,
                phones: idData[0].phone_number,
+               status: idData[0].status,
             },
          }
       },

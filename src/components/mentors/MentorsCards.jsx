@@ -7,6 +7,7 @@ import {
    openAndCloseCreateMentor,
    openModalEditMentor,
 } from '../../store/mentors/mentor.slice'
+import { ConfirmingModal } from './ConfirmingModal'
 
 export const MentorsCards = ({
    mentor,
@@ -33,11 +34,7 @@ export const MentorsCards = ({
    }
 
    const openResume = valueSearchParams.has('resume')
-
-   const onDeleteMentorHandler = (event) => {
-      event.stopPropagation()
-      deleteMentors(mentor.id)
-   }
+   const openMentorDelete = valueSearchParams.has('delete')
 
    const onEditMentorHandler = (event) => {
       event.stopPropagation()
@@ -52,6 +49,27 @@ export const MentorsCards = ({
       dispatch(openModalEditMentor({ id: mentor.id, mentorData }))
    }
 
+   const closeAndSaveModalHandler = () => {
+      valueSearchParams.delete('delete')
+      setValueSearchParams(valueSearchParams)
+   }
+
+   const onDeleteMentorHandler = () => {
+      deleteMentors(mentor.id)
+      closeAndSaveModalHandler()
+   }
+
+   const onConfirmingModal = (event) => {
+      event.stopPropagation()
+
+      valueSearchParams.set(
+         'delete',
+         `${mentor.first_name}-${mentor.id}-${mentor.stack[0]}`
+      )
+
+      setValueSearchParams(valueSearchParams)
+   }
+
    return (
       <>
          <ContainerCards onClick={onOpenResumeHandler}>
@@ -62,10 +80,7 @@ export const MentorsCards = ({
                         <EditIcon />
                      </IconButton>
 
-                     <IconButton
-                        className="del"
-                        onClick={onDeleteMentorHandler}
-                     >
+                     <IconButton className="del" onClick={onConfirmingModal}>
                         <DeleteIcon />
                      </IconButton>
                   </ContainerActionIcon>
@@ -93,16 +108,22 @@ export const MentorsCards = ({
          </ContainerCards>
 
          <MentorResumeModal open={openResume} onClose={closeResumeHandler} />
+
+         <ConfirmingModal
+            open={openMentorDelete}
+            onClose={closeAndSaveModalHandler}
+            onDeleteMentorHandler={onDeleteMentorHandler}
+         />
       </>
    )
 }
 
 const ContainerCards = styled('div')(() => ({
-   width: '19.2vw',
+   width: '17vw',
    borderRadius: '0.625rem',
    border: '1px solid #FFF',
    transition: 'transform 0.3s, background 0.3s',
-   padding: '26px 32px',
+   padding: '1.625rem 2rem',
 
    '&:hover': {
       background: 'linear-gradient(7.1875deg, #49318C, #3F5FB0)',
@@ -115,7 +136,7 @@ const ContainerCards = styled('div')(() => ({
 
    color: '#FFF',
    fontFamily: 'Bai Jamjuree',
-   fontSize: '13px',
+   fontSize: '0.875rem',
    fontStyle: 'normal',
    fontWeight: '500',
    lineHeight: 'normal',
@@ -139,8 +160,8 @@ const ContainerActionIcon = styled('div')`
 
    .del {
       svg {
-         width: 25px;
-         height: 25px;
+         width: 1.5625rem;
+         height: 1.5625rem;
          margin-top: -4px;
 
          path {
@@ -198,9 +219,11 @@ const MentorTexts = styled('p')({
 })
 
 const MainWrapper = styled('div')({
+   width: '14vw',
    display: 'flex',
    flexDirection: 'column',
    gap: '0.52rem',
    margin: '0',
    marginTop: '1.37rem',
+   overflow: 'hidden',
 })

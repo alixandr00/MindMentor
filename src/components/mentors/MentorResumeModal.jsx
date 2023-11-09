@@ -91,7 +91,7 @@ const WrapperContainer = styled(Modal)`
    width: 100%;
    height: 100vh;
 
-   backdrop-filter: blur(0.25rem);
+   backdrop-filter: blur(0.125rem);
 `
 
 const Container = styled(Box)`
@@ -107,7 +107,7 @@ const Container = styled(Box)`
 const Card = styled('div')`
    display: flex;
    height: 88vh;
-   /* width: 28.5rem; */
+   overflow: hidden;
 `
 
 const MinInfo = styled('div')`
