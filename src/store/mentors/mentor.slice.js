@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import {
    deleteMentor,
+   getMentorDetail,
    getStack,
    getStatusMentors,
    postCVMentor,
@@ -15,6 +16,7 @@ const initialState = {
    missingLanguages: [],
    createAMentorOrConfirm: false,
    deleteResume: false,
+   mentorDetail: {},
 
    createMentorForm: {
       name: '',
@@ -89,6 +91,7 @@ export const mentorSlice = createSlice({
             email: createMentorForm.email,
             workExperience: createMentorForm.workExperience,
             phones: createMentorForm.phones,
+            skills: createMentorForm.skills,
          }
 
          const pageIdentifier = payload === 'one' ? formPartOne : formPartTwo
@@ -200,6 +203,8 @@ export const mentorSlice = createSlice({
                education: idData[0].education,
                workExperience: idData[0].work_experiance,
                phones: idData[0].phone_number,
+               status: idData[0].status,
+               skills: idData[0].skills,
             },
          }
       },
@@ -235,15 +240,15 @@ export const mentorSlice = createSlice({
          .addCase(postCVMentor.fulfilled, (state, { payload }) => {
             state.isLoading = false
             state.deleteResume = true
-            const stackRes = payload.extracted_data.skills
-               .map((item) => item.name)
-               .filter((item) => item.includes('(Programming Language)'))
-               .map((item) => item.replace(' (Programming Language)', ''))
+            const stackRes = payload?.extracted_data?.skills
+               ?.map((item) => item.name)
+               ?.filter((item) => item.includes('(Programming Language)'))
+               ?.map((item) => item.replace(' (Programming Language)', ''))
 
-            const combinedText = stackRes.join(', ')
+            const combinedText = stackRes?.join(', ')
 
             const cleanPhoneNumber =
-               payload.extracted_data.personal_infos.phones[0].substring(4)
+               payload.extracted_data.personal_infos.phones[0]?.substring(4)
 
             const educationText =
                payload.extracted_data.education.total_years_education === null
@@ -257,9 +262,9 @@ export const mentorSlice = createSlice({
                status: state.createMentorForm.status,
                stack: combinedText,
                phones: cleanPhoneNumber,
-               skills: payload.extracted_data.skills
-                  .map((item) => item.name)
-                  .join(', '),
+               skills: payload?.extracted_data?.skills
+                  ?.map((item) => item.name)
+                  ?.join(', '),
                email: payload.extracted_data.personal_infos.mails[0],
                workExperience:
                   payload.extracted_data.personal_infos.self_summary,
@@ -285,9 +290,53 @@ export const mentorSlice = createSlice({
             state.isLoading = false
             state.isError = 'Что то произошло не так'
          })
+
+      builder
+         .addCase(getMentorDetail.fulfilled, (state, { payload }) => {
+            state.isLoading = false
+
+            const payloadSkills = payload.skills
+
+            const matches = payloadSkills?.match(/<p>(.*?)<\/p>/)
+
+            let skillsArray = []
+
+            if (matches) {
+               const content = matches[1]
+               skillsArray = content.split(', ')
+            }
+
+            const data = {
+               stack: payload.stack,
+               first_name: payload.first_name,
+               last_name: payload.last_name,
+               email: payload.email,
+               phone_number: payload.phone_number,
+               work_experiance: payload.work_experiance,
+               education: payload.education,
+               skills: skillsArray,
+            }
+
+            state.mentorDetail = data
+         })
+         .addCase(getMentorDetail.pending, (state) => {
+            state.isLoading = true
+         })
+         .addCase(getMentorDetail.rejected, (state) => {
+            state.isLoading = false
+            state.isError = 'Что то произошло не так'
+         })
    },
 })
+/*
 
+         payload.close()
+
+         payload.snackbar({
+            message: 'Ментор успешно изменён',
+            severity: 'success',
+         })
+*/
 export const {
    statusHandler,
    onChangeDataMentorForm,

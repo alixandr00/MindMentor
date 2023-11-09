@@ -117,28 +117,7 @@ export const putEditMentor = createAsyncThunk(
          await putEditMentorRequest(payload.id, payload.data)
 
          dispatch(payload.get())
-         payload.snackbar({
-            message: 'Ментор успешно изменён',
-            severity: 'success',
-         })
-         payload.close()
       } catch (error) {
-         const { status } = error.request
-         if (status === 500) {
-            payload.close()
-            payload.snackbar({
-               message: 'Ментор успешно изменён',
-               severity: 'success',
-            })
-
-            dispatch(payload.get())
-         } else {
-            payload.snackbar({
-               message: 'Что то произошло не так',
-               severity: 'error',
-            })
-         }
-
          return rejectWithValue(error)
       }
    }
