@@ -16,7 +16,7 @@ const ModalStyle = styled(Box)(({ ...rest }) => ({
    height: rest.height,
    border: rest.border || 'none',
    backgroundColor: rest.backgroundColor || 'white',
-   padding: rest.padding || '16px 20px',
+   padding: rest.padding,
    top: '50%',
    maxHeight: '100vh',
 }))

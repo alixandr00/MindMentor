@@ -1,7 +1,8 @@
 import { TableStudentsDetails } from '../components/UI/table/TabelStudentsDetails'
+import { NewGroups } from '../components/groups/NewGroups'
 import { NewMentors } from '../components/mentors/NewMentors'
 import { Events } from '../components/modules/Events'
-import { Groups } from '../components/modules/Groups'
+// import { Groups } from '../components/modules/Groups'
 import { Interns } from '../components/modules/Interns'
 import { Schedule } from '../components/modules/Schedule'
 import { Vendors } from '../components/modules/Vendors'
@@ -37,7 +38,7 @@ export const adminRoutes = [
    },
    {
       path: 'groups',
-      element: <Groups />,
+      element: <NewGroups />,
    },
    {
       path: 'mentors',
