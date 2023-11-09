@@ -161,11 +161,22 @@ export const MentorModalResume = ({ open, onClose, getMentor }) => {
                putEditMentor({
                   data: dataEdit,
                   get: getMentor,
-                  snackbar: showSnackbar,
-                  close: onCloseHandler,
                   id,
                })
             )
+               .then(() => {
+                  showSnackbar({
+                     message: 'Ментор успешно изменён',
+                     severity: 'success',
+                  })
+                  onCloseHandler()
+               })
+               .catch(() => {
+                  showSnackbar({
+                     message: 'Что-то произошло не так',
+                     severity: 'error',
+                  })
+               })
          } else {
             globalErrorFunc()
          }
@@ -330,7 +341,7 @@ export const MentorModalResume = ({ open, onClose, getMentor }) => {
    )
 }
 
-const WrapperContainer = styled(Modal)(({ ...rest }) => ({
+const WrapperContainer = styled(Modal)(() => ({
    position: 'fixed',
    top: '0',
    left: '0',
@@ -338,8 +349,6 @@ const WrapperContainer = styled(Modal)(({ ...rest }) => ({
    bottom: '0',
    width: '100%',
    height: '100vh',
-   backgroundColor: 'rgba(240, 230, 230, 0.288)',
-   backdropFilter: rest.backdropFilter || 'blur(2px)',
    zIndex: '990',
 }))
 

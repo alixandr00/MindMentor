@@ -2,7 +2,12 @@ import { Box, Modal, styled } from '@mui/material'
 import React from 'react'
 import { UiButton } from '../UI/button/UiButton'
 
-export const ConfirmingModal = ({ open, onClose, onDeleteMentorHandler }) => {
+export const ConfirmingModal = ({
+   open,
+   onClose,
+   onDeleteMentorHandler,
+   id,
+}) => {
    return (
       <WrapperContainer open={open} onClose={onClose}>
          <Container>
@@ -28,7 +33,7 @@ export const ConfirmingModal = ({ open, onClose, onDeleteMentorHandler }) => {
                      background="linear-gradient(180deg, #252335 0%, rgba(37, 35, 53, 0.00) 100%)"
                      border="1px solid #fff"
                      type="button"
-                     onClick={onDeleteMentorHandler}
+                     onClick={() => onDeleteMentorHandler(id)}
                   >
                      Yes
                   </UiButton>

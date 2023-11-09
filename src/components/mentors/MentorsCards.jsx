@@ -1,5 +1,6 @@
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { IconButton, styled } from '@mui/material'
+import { useState } from 'react'
 import { GmailIcon, PhoneIcon, DeleteIcon, EditIcon } from '../../assets/icons'
 import { MentorResumeModal } from './MentorResumeModal'
 import { getMentorDetail } from '../../store/mentors/mentor.thunk'
@@ -8,6 +9,7 @@ import {
    openModalEditMentor,
 } from '../../store/mentors/mentor.slice'
 import { ConfirmingModal } from './ConfirmingModal'
+import { Loading } from '../UI/loading/Loading'
 
 export const MentorsCards = ({
    mentor,
@@ -17,11 +19,18 @@ export const MentorsCards = ({
    mentorData,
 }) => {
    const dispatch = useDispatch()
+   const { isLoading } = useSelector((state) => state.mentor)
+   const [idMentor, setIdMentor] = useState()
+
+   const mentorStackJoin = mentor?.stack?.join(',')
+   const mentorStack = mentorStackJoin
+      ? mentorStackJoin?.replace(/,/g, ', ')
+      : 'undefined'
 
    const onOpenResumeHandler = () => {
       valueSearchParams.set(
          'resume',
-         `${mentor.first_name}-${mentor.id}-${mentor.stack[0]}`
+         `${mentor.first_name}-${mentor.id}-${mentorStack}`
       )
       setValueSearchParams(valueSearchParams)
 
@@ -42,7 +51,7 @@ export const MentorsCards = ({
 
       valueSearchParams.set(
          'edit',
-         `${mentor.first_name}-${mentor.id}-${mentor.stack[0]}`
+         `${mentor.first_name}-${mentor.id}-${mentorStack}`
       )
 
       setValueSearchParams(valueSearchParams)
@@ -54,24 +63,32 @@ export const MentorsCards = ({
       setValueSearchParams(valueSearchParams)
    }
 
-   const onDeleteMentorHandler = () => {
-      deleteMentors(mentor.id)
+   const onDeleteMentorHandler = (id) => {
+      deleteMentors(id)
       closeAndSaveModalHandler()
    }
 
    const onConfirmingModal = (event) => {
       event.stopPropagation()
+      setIdMentor(mentor.id)
 
       valueSearchParams.set(
          'delete',
-         `${mentor.first_name}-${mentor.id}-${mentor.stack[0]}`
+         `${mentor.first_name}-${mentor.id}-${mentorStack}`
       )
 
       setValueSearchParams(valueSearchParams)
    }
 
+   const { email } = mentor
+   const maxLength = 21
+
+   const lengthEmail =
+      email?.length > maxLength ? email?.substring(0, maxLength) : email
+
    return (
       <>
+         {isLoading && <Loading />}
          <ContainerCards onClick={onOpenResumeHandler}>
             <div className="action-icon-container">
                <div className="action-icon-box">
@@ -91,7 +108,7 @@ export const MentorsCards = ({
                {mentor.first_name} {mentor.last_name}
             </MentorNameText>
             <MainWrapper>
-               <MentorTexts>{mentor.stack[0]}</MentorTexts>
+               <MentorTexts>{mentorStack}</MentorTexts>
                <MainContainers>
                   <div>
                      <PhoneIcon />
@@ -102,28 +119,34 @@ export const MentorsCards = ({
                   <div>
                      <GmailIcon />
                   </div>
-                  <MentorTexts>{mentor.email}</MentorTexts>
+                  <MentorTexts>{lengthEmail}</MentorTexts>
                </MainContainers>
             </MainWrapper>
          </ContainerCards>
 
-         <MentorResumeModal open={openResume} onClose={closeResumeHandler} />
+         {!isLoading && (
+            <MentorResumeModal open={openResume} onClose={closeResumeHandler} />
+         )}
 
-         <ConfirmingModal
-            open={openMentorDelete}
-            onClose={closeAndSaveModalHandler}
-            onDeleteMentorHandler={onDeleteMentorHandler}
-         />
+         {idMentor && (
+            <ConfirmingModal
+               open={openMentorDelete}
+               id={idMentor}
+               onClose={closeAndSaveModalHandler}
+               onDeleteMentorHandler={onDeleteMentorHandler}
+            />
+         )}
       </>
    )
 }
 
 const ContainerCards = styled('div')(() => ({
-   width: '17vw',
+   width: '15vw',
+
    borderRadius: '0.625rem',
    border: '1px solid #FFF',
    transition: 'transform 0.3s, background 0.3s',
-   padding: '1.625rem 2rem',
+   padding: '1.625rem 1.5rem',
 
    '&:hover': {
       background: 'linear-gradient(7.1875deg, #49318C, #3F5FB0)',
@@ -145,7 +168,7 @@ const ContainerCards = styled('div')(() => ({
 
    '& .action-icon-container': {
       height: '2rem',
-      margin: '-1.5rem -2rem 0.5rem 0',
+      margin: '-1.5rem -1rem 0.5rem 0',
    },
 
    '& .action-icon-box': {
@@ -213,17 +236,18 @@ const MainContainers = styled('div')({
 
 const MentorTexts = styled('p')({
    color: '#ECECEC',
-
    fontSize: '1rem',
    fontWeight: 500,
 })
 
 const MainWrapper = styled('div')({
-   width: '14vw',
+   maxWidth: '26ch',
+   overflow: 'hidden',
+   whiteSpace: 'nowrap',
+
    display: 'flex',
    flexDirection: 'column',
    gap: '0.52rem',
    margin: '0',
    marginTop: '1.37rem',
-   overflow: 'hidden',
 })
