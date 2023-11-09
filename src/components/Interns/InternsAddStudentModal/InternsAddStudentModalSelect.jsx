@@ -95,7 +95,6 @@ const SelectStyle = styled(Select)(() => ({
    fontSize: '1.125rem',
    fontStyle: 'normal',
    fontWeight: '500',
-   lineHeight: 'normal',
 }))
 
 const MenuItemStyle = styled(MenuItem)`

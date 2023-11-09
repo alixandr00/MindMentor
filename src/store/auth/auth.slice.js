@@ -3,7 +3,7 @@ import {
    LOGIN_USER_KEY,
    USER_ROLE,
 } from '../../utils/common/constants/globalConstants'
-import { logOut, profile, signIn } from './auth.thunk'
+import { profile, signIn } from './auth.thunk'
 
 const GUEST = 0
 
@@ -52,15 +52,6 @@ export const authSlice = createSlice({
          .addCase(signIn.rejected, (state, action) => {
             state.error = action.payload.message
             state.isLoading = false
-         })
-         .addCase(logOut.fulfilled, (state) => {
-            return {
-               ...state,
-               isAuthorization: false,
-               token: '',
-               role: USER_ROLE[GUEST],
-               profileData: '',
-            }
          })
       builder.addCase(profile.fulfilled, (state, { payload }) => {
          state.profileData = payload

@@ -1,6 +1,6 @@
 import { Box, Modal, styled } from '@mui/material'
 
-export const UiModal = ({ open, onClose, children, className, ...rest }) => {
+export const UiModal = ({ open, onClose, children, ...rest }) => {
    return (
       <Backdrop open={open} onClose={onClose}>
          <ModalStyle {...rest}>{children}</ModalStyle>

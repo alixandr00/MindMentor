@@ -17,7 +17,7 @@ export const array = [
       name: 'Pollianna',
       group: 'fanta',
       techStack: 'JavaScript',
-      status: 'in progress',
+      status: 'Java  ',
       mentor: 'Jainak Nurlan uulu',
       image: 'https://expertphotography.b-cdn.net/wp-content/uploads/2018/10/cool-profile-pictures-retouching-1.jpg',
       email: 'nurlanuuluzajnak75@gmail.com',
@@ -211,4 +211,24 @@ export const headerArrayInterview = [
       location: 'Location',
       action: 'Action',
    },
+]
+
+export const status = [
+   // { new: 'New ' },
+   // { paid: 'Paid' },
+   // { pending: 'Pending' },
+   // { validated: 'Validated' },
+   // { graduate: 'Graduate' },
+   {
+      new: 'New',
+      paid: 'Paid',
+   },
+
+   //   paid: 'Selected',
+   //    pending:'Pending',
+   //    validated:'Validated',
+   //    graduate:'Graduate',
+   //    selected:'Selected',
+   //   proposed: 'Proposed',
+   //   onboarded: 'Onboarded',
 ]
