@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React, { useState, useEffect } from 'react'
 import {
    Table,
@@ -24,6 +25,7 @@ import { Loading } from '../loading/Loading'
 
 export const TableStudents = ({ headerArray, onOpenPayModalHandler }) => {
    const dispatch = useDispatch()
+
    const interns = useSelector((state) => state.interns.interns)
    const loading = useSelector((state) => state.interns.isLoading)
    const error = useSelector((state) => state.interns.error)
@@ -168,15 +170,16 @@ export const TableStudents = ({ headerArray, onOpenPayModalHandler }) => {
                   ) : (
                      records?.map((intern) => (
                         <StyledTableRow key={intern.id}>
-                           <StyledTableCellForData
-                              onClick={(e) => {
-                                 onOpenModalHandler(
-                                    e.preventDefault(),
-                                    intern?.id
-                                 )
-                              }}
-                           >
-                              <p className="internName">
+                           <StyledTableCellForData>
+                              <p
+                                 className="internName"
+                                 onClick={(e) => {
+                                    onOpenModalHandler(
+                                       e.preventDefault(),
+                                       intern?.id
+                                    )
+                                 }}
+                              >
                                  {intern.name} {intern.surname}
                               </p>
                            </StyledTableCellForData>
@@ -364,6 +367,11 @@ const StyledTableCellForData = styled(TableCell)`
    border: none;
    .internName {
       cursor: pointer;
+      width: auto;
+      width: fit-content;
+      :hover {
+         text-decoration: underline;
+      }
    }
 `
 

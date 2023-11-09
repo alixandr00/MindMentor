@@ -5,14 +5,27 @@ import {
    Select,
    styled,
 } from '@mui/material'
-import { useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { UiButton } from '../UI/button/UiButton'
 import { UiInput } from '../UI/input/UiInput'
 import { DownIcon, SearchIcon, UpIcon } from '../../assets/icons'
+import { CreateGroupModal } from './CreateGroupModal'
+import { GroupsCards } from './GroupsCards'
+import {
+   getGroupFiltered,
+   getGroups,
+   getGroupsBySearch,
+} from '../../store/groups/groupThunk'
 
-export const NewGroups = ({ children }) => {
+export const NewGroups = () => {
    const [isSelectOpen, setIsSelectOpen] = useState(false)
-   const [selectedValue, setSelectedValue] = useState('Status')
+   const [selectedValue, setSelectedValue] = useState('All')
+   const [searchParams, setSearchParams] = useSearchParams()
+   const [searchGroup, setSearchGroup] = useState('')
+   const { groups } = useSelector((state) => state.groups)
+   const dispatch = useDispatch()
 
    const handleSelectOpen = () => {
       setIsSelectOpen(true)
@@ -23,9 +36,32 @@ export const NewGroups = ({ children }) => {
    }
 
    const handleSelectChange = (event) => {
-      setSelectedValue(event.target.value)
+      const newValue = event.target.value
+      setSelectedValue(newValue)
    }
+   useEffect(() => {
+      const dd = selectedValue === 'All' ? '' : selectedValue
 
+      dispatch(getGroupFiltered(dd))
+   }, [selectedValue])
+   const openModalHandler = () => {
+      setSearchParams({ create: 'Group' })
+   }
+   const closeModalHandler = () => {
+      searchParams.delete('create')
+      setSearchParams(searchParams)
+   }
+   const openModal = searchParams.has('create')
+   const handleSearchGroup = (e) => {
+      const inputText = e.target.value
+      setSearchGroup(inputText)
+
+      if (inputText === '') {
+         dispatch(getGroups())
+      } else {
+         dispatch(getGroupsBySearch(inputText))
+      }
+   }
    return (
       <Container>
          <ContIntern>
@@ -35,7 +71,13 @@ export const NewGroups = ({ children }) => {
             <div>
                <InternBox>
                   <p className="Interns">Groups</p>
-                  <UiButton>+ New group</UiButton>
+                  <UiButton onClick={openModalHandler}>+ New group</UiButton>
+                  {openModal ? (
+                     <CreateGroupModal
+                        openModal={openModalHandler}
+                        oncloseModal={closeModalHandler}
+                     />
+                  ) : null}
                </InternBox>
                <InputBox>
                   <Input>
@@ -43,6 +85,8 @@ export const NewGroups = ({ children }) => {
                         colors="#FFFF"
                         placeholder="search name"
                         type="text"
+                        value={searchGroup}
+                        onChange={handleSearchGroup}
                      />
                      <Icons>
                         <SearchIcon />
@@ -70,17 +114,22 @@ export const NewGroups = ({ children }) => {
                               </SelectIcon>
                            )}
                         >
-                           <MenuItem value="Status">Status</MenuItem>
-                           <MenuItem value={10}>Ten</MenuItem>
-                           <MenuItem value={20}>Twenty</MenuItem>
-                           <MenuItem value={30}>Thirty</MenuItem>
+                           <MenuItem value="All">All</MenuItem>
+                           <MenuItem value="ACTIVE">Active</MenuItem>
+                           <MenuItem value="INACTIVE">Inactive</MenuItem>
+                           <MenuItem value="FINISHED">Finished</MenuItem>
                         </SelectStyled>
                      </FormControlStyled>
                   </div>
                </InputBox>
             </div>
          </ContIntern>
-         {children}
+         <GroupsCards
+            groups={groups}
+            openModal={openModal}
+            openModalHandlerEdit={openModalHandler}
+            closeModalHandlerEdit={closeModalHandler}
+         />
       </Container>
    )
 }

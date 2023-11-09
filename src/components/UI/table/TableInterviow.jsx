@@ -19,20 +19,17 @@ import { ReactComponent as EditIcon } from '../../../assets/icons/editIcon.svg'
 import {
    deleteInterviewThunk,
    internsDetailGetThunk,
+   interviewAllThunk,
    interviewDetailThunk,
-   interviewThunk,
 } from '../../../store/interview/interview.thunk'
 import { EditInterviewModal } from './interviewModal/EditIntervieModal'
 import { DeleteModal } from '../deleteModal/DeleteModal'
 import { showSnackbar } from '../snackbar/Snackbar'
 
-export const TableInterviow = ({ headerArray, intern }) => {
+export const TableInterviow = ({ headerArray, id = 7 }) => {
    const dispatch = useDispatch()
    const navigate = useNavigate()
-   const getInterviews = useSelector((state) => state.interview.getInterview)
-   const { name, email, tech_stack } = useSelector(
-      (state) => state.interview.getDetailInters
-   )
+   const getInterviews = useSelector((state) => state.interview.getInterviewAll)
 
    const [loading, setLoading] = useState(true)
    const [openModal, setOpenModal] = useState(false)
@@ -71,8 +68,9 @@ export const TableInterviow = ({ headerArray, intern }) => {
    }
 
    useEffect(() => {
-      dispatch(interviewThunk())
-      dispatch(internsDetailGetThunk(intern))
+      dispatch(interviewAllThunk())
+      dispatch(interviewDetailThunk(id))
+      dispatch(internsDetailGetThunk())
       const fetchData = () => {
          setTimeout(() => {
             setLoading(false)
@@ -165,78 +163,81 @@ export const TableInterviow = ({ headerArray, intern }) => {
                         </StyledTableRowOne>
                      </>
                   ) : (
-                     getInterviews?.map((el) => (
-                        <StyledTableRow key={el.id}>
-                           <StyledTableCellForData
-                              onClick={() => navigate(`detail/${el.id}`)}
-                           >
-                              <StyledContainerImageName>
-                                 <p>{name}</p>
-                              </StyledContainerImageName>
-                           </StyledTableCellForData>
-                           <StyledTableCellForData
-                              onClick={() => navigate(`detail/${el.id}`)}
-                              align="center"
-                           >
-                              <p>{email}</p>
-                           </StyledTableCellForData>
-                           <StyledTableCellForData
-                              onClick={() => navigate(`detail/${el.id}`)}
-                              align="center"
-                              className="red"
-                           >
-                              <p
-                                 className={
-                                    tech_stack === 'Project Manager'
-                                       ? 'ProjectManager'
-                                       : tech_stack
-                                 }
+                     getInterviews?.map((el) => {
+                        return el.intern.map((item) => (
+                           <StyledTableRow key={el.id}>
+                              <StyledTableCellForData
+                                 onClick={() => navigate(`detail/${el.id}`)}
                               >
-                                 {tech_stack}
-                              </p>
-                           </StyledTableCellForData>
-                           <StyledTableCellForData
-                              onClick={() => navigate(`detail/${el.id}`)}
-                              align="center"
-                           >
-                              <p>{el.start_time}</p>
-                           </StyledTableCellForData>
-                           <StyledTableCellForData
-                              onClick={() => navigate(`detail/${el.id}`)}
-                              align="center"
-                           >
-                              {el.date}
-                           </StyledTableCellForData>
-                           <StyledTableCellForData
-                              onClick={() => navigate(`detail/${el.id}`)}
-                              align="center"
-                           >
-                              {el.location}
-                           </StyledTableCellForData>
-                           <StyledTableCellForDatas align="center">
-                              <IconButton>
-                                 <EditIcon
-                                    onClick={() => {
-                                       onOpenModalHandler()
-                                       dispatch(interviewDetailThunk(el.id))
-                                    }}
-                                 />
-                              </IconButton>
-                              <IconButton>
-                                 <DeleteIcon
-                                    onClick={() => {
-                                       onOpenDeleteModals()
-                                       setGetId(el.id)
-                                    }}
-                                 />
-                              </IconButton>
-                           </StyledTableCellForDatas>
-                        </StyledTableRow>
-                     ))
+                                 <StyledContainerImageName>
+                                    <p>{item.name}</p>
+                                 </StyledContainerImageName>
+                              </StyledTableCellForData>
+                              <StyledTableCellForData
+                                 onClick={() => navigate(`detail/${el.id}`)}
+                                 align="center"
+                              >
+                                 <p>{item.email}</p>
+                              </StyledTableCellForData>
+                              <StyledTableCellForData
+                                 onClick={() => navigate(`detail/${el.id}`)}
+                                 align="center"
+                                 className="red"
+                              >
+                                 <p
+                                    className={
+                                       item.tech_stack === 'Project Manager'
+                                          ? 'ProjectManager'
+                                          : item.tech_stack
+                                    }
+                                 >
+                                    {item.tech_stack}
+                                 </p>
+                              </StyledTableCellForData>
+                              <StyledTableCellForData
+                                 onClick={() => navigate(`detail/${el.id}`)}
+                                 align="center"
+                              >
+                                 <p>{el.start_time}</p>
+                              </StyledTableCellForData>
+                              <StyledTableCellForData
+                                 onClick={() => navigate(`detail/${el.id}`)}
+                                 align="center"
+                              >
+                                 {el.date}
+                              </StyledTableCellForData>
+                              <StyledTableCellForData
+                                 onClick={() => navigate(`detail/${el.id}`)}
+                                 align="center"
+                              >
+                                 {el.location}
+                              </StyledTableCellForData>
+                              <StyledTableCellForDatas align="center">
+                                 <IconButton>
+                                    <EditIcon
+                                       onClick={() => {
+                                          onOpenModalHandler()
+                                          dispatch(interviewDetailThunk(el.id))
+                                       }}
+                                    />
+                                 </IconButton>
+                                 <IconButton>
+                                    <DeleteIcon
+                                       onClick={() => {
+                                          onOpenDeleteModals()
+                                          setGetId(el.id)
+                                       }}
+                                    />
+                                 </IconButton>
+                              </StyledTableCellForDatas>
+                           </StyledTableRow>
+                        ))
+                     })
                   )}
                </StyleTableBody>
             </Table>
          </StyledTableContainer>
+
          {/* <StyledContainer>
             <nav>
                <StyledUl>

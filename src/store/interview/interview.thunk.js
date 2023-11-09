@@ -3,24 +3,23 @@ import {
    deleteInterviewRequest,
    getInternsDetailRequest,
    getInternsRequest,
+   getInterviewAllRequest,
    getInterviewDetailRequest,
-   getInterviewRequest,
    postNewInterviewRequest,
    putInterviewRequest,
 } from '../../api/interview'
 
-export const interviewThunk = createAsyncThunk(
-   'interview/interviewThunk',
+export const interviewAllThunk = createAsyncThunk(
+   'interview/interviewAllThunk',
    async (_, { rejectWithValue }) => {
       try {
-         const response = await getInterviewRequest()
+         const response = await getInterviewAllRequest()
          return response.data
       } catch (error) {
          return rejectWithValue(error)
       }
    }
 )
-
 export const interviewDetailThunk = createAsyncThunk(
    'interview/interviewDetailThunk',
    async (id, { rejectWithValue }) => {
@@ -35,10 +34,9 @@ export const interviewDetailThunk = createAsyncThunk(
 
 export const newInterviewPostThunk = createAsyncThunk(
    'interview/newInterviewPostThunk',
-   async (data, { dispatch, rejectWithValue }) => {
+   async (data, { rejectWithValue }) => {
       try {
          await postNewInterviewRequest(data)
-         dispatch(interviewThunk())
       } catch (error) {
          return rejectWithValue(error)
       }
@@ -46,10 +44,9 @@ export const newInterviewPostThunk = createAsyncThunk(
 )
 export const deleteInterviewThunk = createAsyncThunk(
    'interview/deleteInterviewThunk',
-   async (id, { dispatch, rejectWithValue }) => {
+   async (id, { rejectWithValue }) => {
       try {
          await deleteInterviewRequest(id)
-         dispatch(interviewThunk())
       } catch (error) {
          return rejectWithValue(error)
       }

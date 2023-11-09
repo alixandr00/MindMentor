@@ -50,7 +50,7 @@ export const DetailCart = () => {
    const [getId, setGetId] = useState(null)
    const [getEditId, setGetEditId] = useState(null)
    const [currentPage, setCurrentPage] = useState(1)
-   const itemsPerPage = 3
+   const itemsPerPage = 1
    const startIndex = (currentPage - 1) * itemsPerPage
    const endIndex = startIndex + itemsPerPage
    const visibleVacancies = vacancies?.slice(startIndex, endIndex)
@@ -263,7 +263,7 @@ const Container = styled('div')`
    flex-direction: column;
    margin-top: 2rem;
    width: 31.875rem;
-   height: 43rem;
+   height: 100%;
    border-radius: 0.625rem;
    background-color: #1e1f22;
    border: 1px solid #fff;

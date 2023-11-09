@@ -1,5 +1,5 @@
 /* eslint-disable no-unneeded-ternary */
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { styled } from '@mui/material'
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -12,14 +12,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { UiModal } from '../../modal/UiModal'
 import { UiInput } from '../../input/UiInput'
 import { UiButton } from '../../button/UiButton'
-import {
-   internsDetailGetThunk,
-   newInterviewPostThunk,
-} from '../../../../store/interview/interview.thunk'
 import { showSnackbar } from '../../snackbar/Snackbar'
 import { InternData } from './InternsData'
+import { newInterviewPostThunk } from '../../../../store/interview/interview.thunk'
 
-export const AddInterviewModal = ({ onClose, iD = 8 }) => {
+export const AddInterviewModal = ({ onClose }) => {
    const dispatch = useDispatch()
    const id = useSelector((state) => state.interview.selectedInternId)
    const { name } = useSelector((state) => state.interview.getDetailInters)
@@ -56,10 +53,6 @@ export const AddInterviewModal = ({ onClose, iD = 8 }) => {
    const onChangeDesc = (e) => {
       setDesc(e.target.value)
    }
-
-   useEffect(() => {
-      dispatch(internsDetailGetThunk(iD))
-   }, [iD])
 
    const addNewInterview = () => {
       const data = {

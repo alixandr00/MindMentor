@@ -14,7 +14,7 @@ import { UiInput } from '../../input/UiInput'
 import { UiButton } from '../../button/UiButton'
 import {
    editInterviewThunk,
-   interviewThunk,
+   // interviewThunk,
 } from '../../../../store/interview/interview.thunk'
 import { showSnackbar } from '../../snackbar/Snackbar'
 
@@ -70,7 +70,7 @@ export const EditInterviewModal = ({ onClose }) => {
       }
       dispatch(editInterviewThunk({ id, data }))
       onClose()
-      dispatch(interviewThunk())
+         // dispatch(interviewThunk())
          .unwrap()
          .then(() => {
             showSnackbar({

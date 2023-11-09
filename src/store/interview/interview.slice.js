@@ -2,13 +2,13 @@ import { createSlice } from '@reduxjs/toolkit'
 import {
    internsDetailGetThunk,
    internsGetThunk,
+   interviewAllThunk,
    interviewDetailThunk,
-   interviewThunk,
 } from './interview.thunk'
 
 const initialState = {
-   getInterview: [],
    getInters: [],
+   getInterviewAll: [],
    getInterviewDetail: [],
    getDetailInters: [],
    selectedInternId: null,
@@ -24,8 +24,8 @@ export const interviewSlice = createSlice({
    },
    extraReducers: (builder) => {
       builder
-         .addCase(interviewThunk.fulfilled, (state, action) => {
-            state.getInterview = action.payload
+         .addCase(interviewAllThunk.fulfilled, (state, action) => {
+            state.getInterviewAll = action.payload
          })
          .addCase(interviewDetailThunk.fulfilled, (state, action) => {
             state.getInterviewDetail = action.payload
