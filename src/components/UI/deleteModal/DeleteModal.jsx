@@ -1,5 +1,5 @@
-import { styled } from '@mui/material'
 import React from 'react'
+import { styled } from '@mui/material'
 import { UiModal } from '../modal/UiModal'
 import { UiButton } from '../button/UiButton'
 
@@ -42,6 +42,7 @@ const Modal = styled(UiModal)`
    p {
       width: 350px;
       color: #fffefe;
+
       text-align: center;
       font-size: 1.25rem;
       font-weight: 500;

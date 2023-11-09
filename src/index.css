@@ -53,3 +53,6 @@ body {
       transform: rotate(1turn);
    }
 }
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
