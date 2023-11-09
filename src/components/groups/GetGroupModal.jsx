@@ -25,13 +25,12 @@ import { DeleteInternsModal } from './DeleteInternsModal'
 export const GetGroupModal = ({ openModal, oncloseModal }) => {
    const [deletOpenModal, setDeleteOpenModal] = useState(false)
    const [getInetrnId, setGetIternId] = useState(null)
+   console.log('headerArray: ', headerArray)
 
    const { getGroupId } = useSelector((state) => state.groups)
-   console.log('getGroupId: ', getGroupId)
    const dispatch = useDispatch()
 
    const deleteInternModalOpenHandler = (internId) => {
-      console.log('id', internId)
       setGetIternId(internId)
       setDeleteOpenModal(true)
    }
@@ -95,11 +94,11 @@ export const GetGroupModal = ({ openModal, oncloseModal }) => {
                                  <StyledTableCell align="center">
                                     {headerArray.techStack}
                                  </StyledTableCell>
-                                 <StyledTableCell align="center">
-                                    {headerArray.status}
+                                 <StyledTableCell>
+                                    {headerArray.mentor}
                                  </StyledTableCell>
                                  <StyledTableCell align="center">
-                                    {headerArray.mentor}
+                                    {headerArray.status}
                                  </StyledTableCell>
                                  <StyledTableCell align="center">
                                     {headerArray.pay}

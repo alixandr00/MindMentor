@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, startTransition } from 'react'
 import dayjs from 'dayjs'
 import { useDispatch } from 'react-redux'
 import { getMonth } from '../../util'
@@ -25,7 +25,9 @@ export const Events = () => {
    const dispatch = useDispatch()
 
    useEffect(() => {
-      dispatch(getCalendars())
+      startTransition(() => {
+         dispatch(getCalendars())
+      })
    }, [getCalendars])
 
    useEffect(() => {

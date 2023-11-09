@@ -24,7 +24,6 @@ export const CreateGroupModal = ({ openModal, oncloseModal }) => {
    const [state, setState] = useState({ name: [], internId: [] })
    const [selectedMentors, setSelectedMentors] = useState([])
    const { mentorData } = useSelector((state) => state.mentor)
-   console.log('mentorData: ', mentorData)
 
    const [internName, setInternName] = useState([])
    const [internId, setInternId] = useState([])

@@ -150,7 +150,6 @@ export const getMentors = createAsyncThunk(
    async (_, { rejectWithValue }) => {
       try {
          const response = await axiosInstance.get('/mentor/')
-         console.log('response: ', response)
 
          return response.data
       } catch (error) {
