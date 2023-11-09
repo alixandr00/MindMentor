@@ -1,6 +1,13 @@
+/* eslint-disable react/no-danger */
 import { Box, Modal, styled } from '@mui/material'
+import { useSelector } from 'react-redux'
 
 export const MentorResumeModal = ({ open, onClose }) => {
+   const { mentorDetail } = useSelector((state) => state.mentor)
+
+   const mentorStackJoin = mentorDetail?.stack?.join(',')
+   const mentorStack = mentorStackJoin?.replace(/,/g, ', ')
+
    return (
       <WrapperContainer open={open} onClose={onClose}>
          <Container>
@@ -9,70 +16,54 @@ export const MentorResumeModal = ({ open, onClose }) => {
                   <UserPhoneBox>
                      <div className="box-phone-info">
                         <span className="title-small">Phone</span>
-                        <span>123-456-7890</span>
+                        <span>{mentorDetail?.phone_number}</span>
                      </div>
                      <div className="box-phone-info">
                         <span className="title-small">Email</span>
-                        <span>hello@rellygreatsite.com</span>
+                        <span>{mentorDetail?.email}</span>
                      </div>
                   </UserPhoneBox>
                   <EducationContainer>
                      <span className="title">Education</span>
 
                      <div className="education">
-                        <div className="box-education">
-                           <span>2008</span>
-                           <span className="title-small">
-                              Enter Your Degree
-                           </span>
-                           <span>University/College</span>
-                        </div>
-                        <div className="box-education">
-                           <span>2008</span>
-                           <span className="title-small">
-                              Enter Your Degree
-                           </span>
-                           <span>University/College</span>
-                        </div>
+                        <div
+                           className="title-small"
+                           dangerouslySetInnerHTML={{
+                              __html: mentorDetail?.education,
+                           }}
+                        />
                      </div>
                   </EducationContainer>
                   <ExpertiseContainer>
                      <span className="title">Expertise</span>
                      <ul>
-                        <li>UI/UX</li>
-                        <li>Visual Design</li>
-                        <li>Wiredraws</li>
-                        <li>Storyboards</li>
-                        <li>User Flows</li>
-                        <li>Process Flows</li>
+                        {mentorDetail?.skills?.map((item) => (
+                           <li key={item}>{item}</li>
+                        ))}
                      </ul>
                   </ExpertiseContainer>
                </MinInfo>
                <MaxInfo>
                   <div>
                      <p className="head-title">
-                        <span>Mariana</span>Anderson
+                        <span>{mentorDetail?.first_name}</span>
+                        {mentorDetail?.last_name}
                      </p>
 
-                     <p className="manager">Marketing Manager</p>
+                     <p className="manager">{mentorStack}</p>
                   </div>
 
                   <ExperienceContainer>
                      <p className="experience-title">Experience</p>
 
                      <div className="experience-box">
-                        <p className="experience-year">2019-2022</p>
-                        <p className="experience-address">
-                           Company Name | 123 Anywhere St., Any City
-                        </p>
-                        <p className="experience-position">Job position here</p>
-                        <p className="experience-text">
-                           Lorem ipsum dolor sit, amet consectetur adipisicing
-                           elit. Obcaecati ullam consequuntur omnis eius quasi
-                           dolore voluptates vero impedit, odio aliquam
-                           voluptate possimus dolorum magnam illum commodi
-                           asperiores. Quas, tenetur repellat.
-                        </p>
+                        <p
+                           className="experience-text"
+                           dangerouslySetInnerHTML={{
+                              __html: mentorDetail?.work_experiance,
+                           }}
+                        />
                      </div>
                   </ExperienceContainer>
                </MaxInfo>
@@ -81,7 +72,7 @@ export const MentorResumeModal = ({ open, onClose }) => {
       </WrapperContainer>
    )
 }
-
+// dangerouslySetInnerHTML={{ __html: description }}
 const WrapperContainer = styled(Modal)`
    position: fixed;
    top: 0;
@@ -90,8 +81,6 @@ const WrapperContainer = styled(Modal)`
    bottom: 0;
    width: 100%;
    height: 100vh;
-
-   backdrop-filter: blur(0.25rem);
 `
 
 const Container = styled(Box)`
@@ -107,7 +96,7 @@ const Container = styled(Box)`
 const Card = styled('div')`
    display: flex;
    height: 88vh;
-   /* width: 28.5rem; */
+   overflow: hidden;
 `
 
 const MinInfo = styled('div')`
