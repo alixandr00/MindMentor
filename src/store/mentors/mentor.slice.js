@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import {
    deleteMentor,
+   getMentors,
    getMentorDetail,
    getStack,
    getStatusMentors,
@@ -219,6 +220,17 @@ export const mentorSlice = createSlice({
             state.isLoading = true
          })
          .addCase(getStatusMentors.rejected, (state, action) => {
+            state.isLoading = false
+            state.isError = action.payload
+         })
+         .addCase(getMentors.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.mentorData = action.payload
+         })
+         .addCase(getMentors.pending, (state) => {
+            state.isLoading = true
+         })
+         .addCase(getMentors.rejected, (state, action) => {
             state.isLoading = false
             state.isError = action.payload
          })

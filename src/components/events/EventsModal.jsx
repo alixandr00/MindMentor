@@ -18,7 +18,7 @@ import {
 } from '../../store/calendar/calendar.thunk'
 import { showSnackbar } from '../UI/snackbar/Snackbar'
 import { useEditEventModal } from '../../hooks/useEditEventModal'
-import { validationSchema } from '../../util'
+import { validationSchema } from '../../utils/common/constants/util'
 
 export const EventsModal = ({
    setShowEventModal,

@@ -127,3 +127,26 @@ export const putGroupById = createAsyncThunk(
       }
    }
 )
+
+export const deleteInternInGroup = createAsyncThunk(
+   'groups/deleteIntern',
+   async (data, { rejectWithValue, dispatch }) => {
+      try {
+         const response = await axiosInstance.delete(
+            `/groups/${data.groupId}/remove_intern/${data.internId}`
+         )
+         showSnackbar({
+            severity: 'success',
+            message: 'Successfully deleted intern in group',
+         })
+         dispatch(getGroupById(data.groupId))
+         return response.data
+      } catch (error) {
+         showSnackbar({
+            severity: 'error',
+            message: 'Cannot delete group !',
+         })
+         return rejectWithValue(error)
+      }
+   }
+)

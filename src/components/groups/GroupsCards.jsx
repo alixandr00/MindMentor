@@ -63,7 +63,6 @@ export const GroupsCards = ({
    }
 
    const getGroupsById = (id) => {
-      // console.log('id: ', id)
       dispatch(getGroupById(id))
          .unwrap()
          .then(() => {
@@ -83,7 +82,7 @@ export const GroupsCards = ({
             openModalHandlerEdit()
          })
          .catch((err) => {
-            console.log(err, 'error getting group')
+            return err.message
          })
    }
 
