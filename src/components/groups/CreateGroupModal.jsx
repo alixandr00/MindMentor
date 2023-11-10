@@ -5,7 +5,7 @@ import { IconButton, styled } from '@mui/material'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import dayjs from 'dayjs'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { UiModal } from '../UI/modal/UiModal'
 import { UiInput } from '../UI/input/UiInput'
@@ -15,6 +15,7 @@ import { AddedInternsModal } from './AddedInternsModal'
 import { postGroups } from '../../store/groups/groupThunk'
 import { headerArray } from '../../utils/table-students'
 import { getMentors } from '../../store/mentors/mentor.thunk'
+import { MentorModal } from './MentorModal'
 
 dayjs.extend(customParseFormat)
 dayjs.locale('en')
@@ -22,8 +23,8 @@ dayjs.locale('en')
 export const CreateGroupModal = ({ openModal, oncloseModal }) => {
    const [openModalInterns, setOpenModalInterns] = useState(false)
    const [state, setState] = useState({ name: [], internId: [] })
-   const [selectedMentors, setSelectedMentors] = useState([])
-   const { mentorData } = useSelector((state) => state.mentor)
+   const [mentor, setMentor] = useState(null)
+   const [openMentorModal, setOpenMentorModal] = useState(false)
 
    const [internName, setInternName] = useState([])
    const [internId, setInternId] = useState([])
@@ -39,10 +40,6 @@ export const CreateGroupModal = ({ openModal, oncloseModal }) => {
    const closeModalHandler = () => {
       setOpenModalInterns(false)
    }
-   const handleMentorChange = (event) => {
-      const selectedMentorId = event.target.value
-      setSelectedMentors([...selectedMentors, selectedMentorId])
-   }
 
    const handleFormSubmit = (event) => {
       event.preventDefault()
@@ -55,9 +52,16 @@ export const CreateGroupModal = ({ openModal, oncloseModal }) => {
          start_date: formattedStartData,
          end_date: formattedEndData,
          people: state.internId,
-         mentor: selectedMentors,
+         mentor: mentor ? [mentor.id] : [],
       }
       dispatch(postGroups({ formData, oncloseModal }))
+   }
+
+   const openMentorModalHandler = () => {
+      setOpenMentorModal(true)
+   }
+   const closeMentorhandler = () => {
+      setOpenMentorModal(false)
    }
    useEffect(() => {
       dispatch(getMentors())
@@ -110,18 +114,22 @@ export const CreateGroupModal = ({ openModal, oncloseModal }) => {
                      />
                   ) : null}
                </SecondWrapper>
-               <MentorWrapper>
-                  <SelectBlock onChange={handleMentorChange} defaultValue="">
-                     <option value="" disabled hidden>
-                        Mentor
-                     </option>
-                     {mentorData.map((mentor) => (
-                        <option key={mentor.id} value={mentor.id}>
-                           {mentor.first_name}
-                        </option>
-                     ))}
-                  </SelectBlock>
-               </MentorWrapper>
+               <div className="flex gap-12 text-xl items-center">
+                  <UiButtonStyled onClick={openMentorModalHandler}>
+                     Mentor
+                  </UiButtonStyled>
+                  <div className="text-white">
+                     <span>{mentor?.first_name}</span>{' '}
+                     <span>{mentor?.last_name}</span>
+                  </div>
+               </div>
+               {openMentorModal && (
+                  <MentorModal
+                     setMentor={setMentor}
+                     closeMentorhandler={closeMentorhandler}
+                  />
+               )}
+
                <ThirdWrapper>
                   <StatusText>Status</StatusText>
                   <WrapperButtons>
@@ -188,20 +196,6 @@ export const CreateGroupModal = ({ openModal, oncloseModal }) => {
       </UiModal>
    )
 }
-
-const MentorWrapper = styled('div')({})
-const SelectBlock = styled('select')`
-   width: 6.625rem;
-   height: 2rem;
-   color: #fff;
-   font-family: Bai Jamjuree;
-   font-size: 1rem;
-   border: 1px solid #f9f9f9;
-   border-radius: 0.625rem;
-   background: rgba(84, 71, 170, 0.93);
-   cursor: pointer;
-   margin-top: 0.5rem;
-`
 
 const TextInternName = styled('p')({
    color: '#FFF',

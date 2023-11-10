@@ -1,7 +1,7 @@
 /* eslint-disable react/button-has-type */
 import dayjs from 'dayjs'
 import React, { useEffect, useState } from 'react'
-import { getMonth } from '../../util'
+import { getMonth } from '../../utils/common/constants/util'
 
 export default function SmallCalendar({ monthIndex, setSmallCalendarMonth }) {
    const [currentMonthIdx, setCurrentMonthIdx] = useState(dayjs().month())

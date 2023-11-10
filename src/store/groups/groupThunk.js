@@ -90,7 +90,6 @@ export const getGroupById = createAsyncThunk(
             severity: 'success',
             message: 'Successfully get group',
          })
-         console.log(response.data)
          return response.data
       } catch (error) {
          showSnackbar({

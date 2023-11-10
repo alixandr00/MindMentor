@@ -20,12 +20,10 @@ import { ReactComponent as History } from '../../assets/icons/History.svg'
 import { ReactComponent as DeleteIcon } from '../../assets/icons/deleteicon.svg'
 import { deleteInternInGroup } from '../../store/groups/groupThunk'
 import { DeleteInternsModal } from './DeleteInternsModal'
-// import { DeleteModal } from '../UI/deleteModal/DeleteModal'
 
 export const GetGroupModal = ({ openModal, oncloseModal }) => {
    const [deletOpenModal, setDeleteOpenModal] = useState(false)
    const [getInetrnId, setGetIternId] = useState(null)
-   console.log('headerArray: ', headerArray)
 
    const { getGroupId } = useSelector((state) => state.groups)
    const dispatch = useDispatch()
@@ -157,9 +155,6 @@ export const GetGroupModal = ({ openModal, oncloseModal }) => {
                                     </IconButton>
                                  </StyledTableCellForData>
                                  <StyledTableCellForData align="center">
-                                    {/* <IconButton>
-                                       <EditIcon />
-                                    </IconButton> */}
                                     <IconButton
                                        onClick={() =>
                                           deleteInternModalOpenHandler(
