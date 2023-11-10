@@ -42,6 +42,7 @@ export const ClockComponent = ({
    setSelectedStartTime,
    setClockClear,
    setEndTimeValue,
+   setDayToday,
 }) => {
    const dispatch = useDispatch()
    const [events, setEvents] = useState([])
@@ -100,6 +101,7 @@ export const ClockComponent = ({
             setShowEventModal(true)
             setClockClear(false)
             setEndTimeValue(true)
+            setDayToday(false)
          }
       }
    }

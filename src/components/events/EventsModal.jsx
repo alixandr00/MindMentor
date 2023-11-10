@@ -177,7 +177,7 @@ export const EventsModal = ({
                   width="9.3125rem"
                   height="3.125rem"
                   borderRadius="1.25rem"
-                  placeholder="Intern number"
+                  placeholder="Group name"
                   backgroundColor="rgba(84, 71, 170, 0.93)"
                   hoverBorderColor="#fff"
                   onChange={(e) => setInternName(e.target.value)}
