@@ -318,8 +318,19 @@ export const mentorSlice = createSlice({
                skillsArray = content.split(', ')
             }
 
+            const getStack = payload.stack
+            const getAllStack = state.stack
+
+            const resStackName = []
+
+            getAllStack.forEach((item) => {
+               if (getStack.includes(item.id)) {
+                  resStackName.push(item.name)
+               }
+            })
+
             const data = {
-               stack: payload.stack,
+               stack: resStackName,
                first_name: payload.first_name,
                last_name: payload.last_name,
                email: payload.email,
