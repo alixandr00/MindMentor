@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import React, { useState, useEffect } from 'react'
 import {
    Table,
@@ -16,6 +15,8 @@ import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { ReactComponent as DeleteIcon } from '../../../assets/icons/deleteicon.svg'
 import { ReactComponent as EditIcon } from '../../../assets/icons/editIcon.svg'
+import { ReactComponent as NextIcon } from '../../../assets/icons/NextIcon.svg'
+import { ReactComponent as PrevIcon } from '../../../assets/icons/PrevIcon.svg'
 import {
    deleteInterviewThunk,
    interviewAllThunk,
@@ -25,19 +26,26 @@ import { EditInterviewModal } from './interviewModal/EditIntervieModal'
 import { DeleteModal } from '../deleteModal/DeleteModal'
 import { showSnackbar } from '../snackbar/Snackbar'
 
-export const TableInterviow = ({ selectedValue, headerArray, id = 8 }) => {
+export const TableInterviow = ({ selectedValue, headerArray }) => {
    const dispatch = useDispatch()
    const navigate = useNavigate()
    const getInterviews = useSelector((state) => state.interview.getInterviewAll)
 
-   const filteredInterviewsData = getInterviews?.filter((interview) => {
+   const [currentPage, setCurrentPage] = useState(1)
+   const itemsPerPage = 5
+
+   const filtered = getInterviews?.filter((interview) => {
+      return interview.intern.length > 0
+   })
+
+   const filteredInterviewsData = filtered?.filter((interview) => {
       return interview.intern.some(
          (intern) => intern.tech_stack === selectedValue
       )
    })
 
    const filteredInterviews =
-      selectedValue !== 'All' ? filteredInterviewsData : getInterviews
+      selectedValue !== 'All' ? filteredInterviewsData : filtered
 
    const [loading, setLoading] = useState(true)
    const [openModal, setOpenModal] = useState(false)
@@ -78,7 +86,6 @@ export const TableInterviow = ({ selectedValue, headerArray, id = 8 }) => {
 
    useEffect(() => {
       dispatch(interviewAllThunk())
-      dispatch(interviewDetailThunk(id))
       const fetchData = () => {
          setTimeout(() => {
             setLoading(false)
@@ -87,6 +94,15 @@ export const TableInterviow = ({ selectedValue, headerArray, id = 8 }) => {
       fetchData()
    }, [])
 
+   const startIndex = (currentPage - 1) * itemsPerPage
+   const endIndex = startIndex + itemsPerPage
+   const currentItems = filteredInterviews.slice(startIndex, endIndex)
+
+   const totalPages = Math.ceil(filteredInterviews.length / itemsPerPage)
+
+   const goToPage = (page) => {
+      setCurrentPage(page)
+   }
    return (
       <>
          <StyledTableContainer component={Paper}>
@@ -171,7 +187,7 @@ export const TableInterviow = ({ selectedValue, headerArray, id = 8 }) => {
                         </StyledTableRowOne>
                      </>
                   ) : (
-                     filteredInterviews?.map((el) => {
+                     currentItems?.map((el) => {
                         return el.intern.map((item) => (
                            <StyledTableRow key={el.id}>
                               <StyledTableCellForData
@@ -246,25 +262,31 @@ export const TableInterviow = ({ selectedValue, headerArray, id = 8 }) => {
             </Table>
          </StyledTableContainer>
 
-         {/* <StyledContainer>
+         <StyledContainer>
             <nav>
                <StyledUl>
                   <li>
-                     <IconButton>
+                     <IconButton
+                        onClick={() => goToPage(currentPage - 1)}
+                        disabled={currentPage === 1}
+                     >
                         <PrevIcon />
                         <StyledSpan>Prev</StyledSpan>
                      </IconButton>
                   </li>
 
                   <li>
-                     <IconButton>
+                     <IconButton
+                        onClick={() => goToPage(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                     >
                         <StyledSpan>Next</StyledSpan>
                         <NextIcon />
                      </IconButton>
                   </li>
                </StyledUl>
             </nav>
-         </StyledContainer> */}
+         </StyledContainer>
          {openModal ? <EditInterviewModal onClose={onCloseModalHandler} /> : ''}
          {openDeleteModal ? (
             <DeleteModal
@@ -382,4 +404,17 @@ const StyledContainerImageName = styled('div')`
    display: flex;
    align-items: center;
    gap: 10px;
+`
+const StyledSpan = styled('span')`
+   font-size: 0.9rem;
+   color: #ffff;
+`
+const StyledUl = styled('ul')`
+   display: flex;
+   gap: 0.8rem;
+`
+const StyledContainer = styled('div')`
+   display: flex;
+   justify-content: end;
+   margin-right: 15px;
 `

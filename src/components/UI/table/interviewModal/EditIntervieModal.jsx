@@ -12,7 +12,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { UiModal } from '../../modal/UiModal'
 import { UiInput } from '../../input/UiInput'
 import { UiButton } from '../../button/UiButton'
-import { editInterviewThunk } from '../../../../store/interview/interview.thunk'
+import {
+   editInterviewThunk,
+   interviewAllThunk,
+} from '../../../../store/interview/interview.thunk'
 import { showSnackbar } from '../../snackbar/Snackbar'
 import { InternData } from './InternsData'
 
@@ -32,8 +35,8 @@ export const EditInterviewModal = ({ onClose }) => {
    const [openModal, setOpenModal] = useState(false)
    const [nameInterview, setNameInterview] = useState(name_interview)
    const [selectedDate, setSelectedDate] = useState(dayjs(dates))
-   const [selectedDateTime, setSelectedDateTime] = useState(dayjs(start_time))
-   const [selectedDateTimes, setSelectedDateTimes] = useState(dayjs(end_time))
+   const [selectedDateTime, setSelectedDateTime] = useState(start_time)
+   const [selectedDateTimes, setSelectedDateTimes] = useState(end_time)
    const [loc, setLocation] = useState(location)
    const [desc, setDesc] = useState(descriptions)
    const date = dayjs(selectedDateTime)
@@ -75,20 +78,22 @@ export const EditInterviewModal = ({ onClose }) => {
          location: loc,
          descriptions: desc,
       }
+
       dispatch(editInterviewThunk({ id, data }))
          .unwrap()
          .then(() => {
             showSnackbar({
-               message: 'Данные успешно обновлены!',
-               severity: 'success',
-            })
-            onClose()
-         })
-         .catch(() => {
-            showSnackbar({
                message: 'Произошла ошибка. Пожалуйста, попробуйте еще раз.',
                severity: 'error',
             })
+         })
+         .catch(() => {
+            showSnackbar({
+               message: 'Данные успешно обновлены!',
+               severity: 'success',
+            })
+            dispatch(interviewAllThunk())
+            onClose()
          })
    }
 
@@ -293,8 +298,8 @@ const StyleBlockCalendar = styled('div')`
    }
 `
 const StyleBlockDate = styled('div')`
-   .MuiInputLabel-root {
-      display: none !important;
+   .css-1jy569b-MuiFormLabel-root-MuiInputLabel-root {
+      display: none;
    }
    .MuiInputLabel-root.Mui-error {
       display: none;

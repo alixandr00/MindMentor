@@ -23,13 +23,15 @@ export const AddInterviewModal = ({ onClose }) => {
    const dispatch = useDispatch()
    const id = useSelector((state) => state.interview.selectedInternId)
    const { name } = useSelector((state) => state.interview.getDetailInters)
+   const [selectedDate, setSelectedDate] = useState()
+
    const [openIternModal, setOpenInternModal] = useState(false)
    const [nameInterview, setNameInterview] = useState('')
    const [selectedDateTime, setSelectedDateTime] = useState(null)
    const [selectedDateTimes, setSelectedDateTimes] = useState(null)
    const [loc, setLocation] = useState('')
    const [desc, setDesc] = useState('')
-
+   const formattedDate = dayjs(selectedDate).format('YYYY-MM-DD')
    const date = dayjs(selectedDateTime)
    const timeStart = date.format('HH:mm')
    const dateEnd = dayjs(selectedDateTimes)
@@ -60,7 +62,7 @@ export const AddInterviewModal = ({ onClose }) => {
    const addNewInterview = () => {
       const data = {
          name_interview: nameInterview,
-         date: '2021-12-10',
+         date: formattedDate,
          start_time: timeStart,
          end_time: timeEnd,
          location: loc,
@@ -133,7 +135,10 @@ export const AddInterviewModal = ({ onClose }) => {
                   <CalendarContainer>
                      <StyleBlockCalendar>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-                           <DatePicker />
+                           <DatePicker
+                              value={selectedDate}
+                              onChange={(newDate) => setSelectedDate(newDate)}
+                           />
                         </LocalizationProvider>
                      </StyleBlockCalendar>
 

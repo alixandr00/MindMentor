@@ -1,7 +1,6 @@
 import { styled } from '@mui/material'
 import React from 'react'
 import { NavLink } from 'react-router-dom'
-import { ReactComponent as Settings } from '../../../assets/icons/setting-2.svg'
 import { ReactComponent as LogOut } from '../../../assets/icons/login.svg'
 import { sideBarArray } from '../../../utils/sidebar'
 import { logOut } from '../../../store/auth/auth.thunk'
@@ -38,10 +37,6 @@ export const SideBar = () => {
                <LogOutStyled />
                <p>Log Out</p>
             </BlockLogOut>
-            <BlockSettings>
-               <Settings />
-               <p>Settings</p>
-            </BlockSettings>
          </SettingsAndLogOut>
       </Container>
    )
@@ -77,18 +72,6 @@ const DescriptionContainer = styled('div')`
    }
 `
 
-const BlockSettings = styled('div')`
-   display: flex;
-   align-items: center;
-   cursor: pointer;
-   margin-top: 1.75rem;
-
-   p {
-      position: relative;
-      left: 0.69rem;
-      color: #fff;
-   }
-`
 const BlockLogOut = styled('div')`
    display: flex;
    align-items: center;

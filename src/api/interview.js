@@ -12,13 +12,12 @@ export const postNewInterviewRequest = (data) => {
 export const deleteInterviewRequest = (id) => {
    return axiosInstance.delete(`/interview/${id}/`)
 }
-export const putInterviewRequest = ({ id, data }) => {
-   return axiosInstance.put(`/interview/${id}/`, data)
-}
-
 export const getInternsDetailRequest = (id) => {
    return axiosInstance.get(`/interns/${id}/`)
 }
 export const getInternsRequest = () => {
    return axiosInstance.get(`/interns/`)
+}
+export const putInterviewRequest = ({ id, data }) => {
+   return axiosInstance.put(`/interview/update/${id}/`, data)
 }
