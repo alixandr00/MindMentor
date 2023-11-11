@@ -34,18 +34,18 @@ export const TableInterviow = ({ selectedValue, headerArray }) => {
    const [currentPage, setCurrentPage] = useState(1)
    const itemsPerPage = 5
 
-   const filtered = getInterviews?.filter((interview) => {
+   const filteredData = getInterviews?.filter((interview) => {
       return interview.intern.length > 0
    })
 
-   const filteredInterviewsData = filtered?.filter((interview) => {
+   const filteredInterviewsData = filteredData?.filter((interview) => {
       return interview.intern.some(
          (intern) => intern.tech_stack === selectedValue
       )
    })
 
    const filteredInterviews =
-      selectedValue !== 'All' ? filteredInterviewsData : filtered
+      selectedValue !== 'All' ? filteredInterviewsData : filteredData
 
    const [loading, setLoading] = useState(true)
    const [openModal, setOpenModal] = useState(false)
