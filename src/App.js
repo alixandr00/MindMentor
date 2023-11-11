@@ -10,9 +10,10 @@ function App() {
          {/* Hello world */}
       </div>
    )
+import { AdminLayout } from './layout/AdminLayout'
 
 function App() {
-   return <div>Hello world</div>
+   return <AdminLayout />
 }
 
 export default App

@@ -34,6 +34,7 @@ const StyledDatePicker = styled(DatePicker)(
          marginTop,
          fontSize,
          marginLeft: '1.5rem',
+         marginLeft: '25px',
       },
 
       '& .MuiOutlinedInput-notchedOutline': {
@@ -44,7 +45,6 @@ const StyledDatePicker = styled(DatePicker)(
       '& .MuiOutlinedInput-input': {
          color: '#fff',
       },
-
       '& .MuiOutlinedInput-root': {
          width,
          borderRadius,
@@ -54,6 +54,13 @@ const StyledDatePicker = styled(DatePicker)(
       },
       '& .MuiSvgIcon-root': {
          display: 'none',
+         fontSize: '12px',
+         fontWeight: '600',
+      },
+      '& .MuiSvgIcon-root': {
+         color: '#fff',
+         fontSize: '1rem',
+         marginTop: '0.5rem',
       },
       '& label.Mui-focused': {
          display: 'none',

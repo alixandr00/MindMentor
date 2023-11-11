@@ -10,13 +10,16 @@ export const UiModal = ({ open, onClose, children, ...rest }) => {
 const ModalStyle = styled(Box)(({ ...rest }) => ({
    position: 'fixed',
    left: '50%',
-   borderRadius: '10px',
+   borderRadius: rest.borderRadius || '8px',
    width: rest.width,
    transform: 'translate(-50%, -50%)',
    height: rest.height,
    border: 'none',
    backgroundColor: rest.backgroundColor || 'white',
    padding: rest.padding || '16px 20px',
+   border: rest.border || 'none',
+   backgroundColor: rest.backgroundColor || 'white',
+   padding: rest.padding || 'none',
    top: '50%',
    maxHeight: '100vh',
 }))
