@@ -14,13 +14,27 @@ import { UiButton } from '../UI/button/UiButton'
 import { AddedInternsModal } from './AddedInternsModal'
 import { headerArray } from '../../utils/table-students'
 import { putGroupById } from '../../store/groups/groupThunk'
+import { MentorModal } from './MentorModal'
+import { UiBackdrop } from '../UI/backdrop/UiBackDrop'
 
 dayjs.extend(customParseFormat)
 dayjs.locale('en')
 
-export const EditModal = ({ openEditModal, closeModalHandlerEdit }) => {
+export const EditModal = ({
+   openEditModal,
+   closeModalHandlerEdit,
+   mentorData,
+}) => {
    const { getGroupId } = useSelector((state) => state.groups)
-   console.log('getGroupId: ', getGroupId)
+   const [openMentorModal, setOpenMentorModal] = useState(false)
+
+   const mentorIdInGroup = getGroupId?.mentor?.find((id) => id)
+
+   const mentorInMentorData = mentorData.find(
+      (mentor) => mentor.id === mentorIdInGroup
+   )
+   const [selectedMentor, setSelectedMentor] = useState(mentorInMentorData)
+
    const [groupName, setGroupName] = useState(getGroupId?.name || '')
    const [status, setStatus] = useState(getGroupId?.status || '')
    const peopleId = getGroupId.people?.map((el) => el.id)
@@ -57,9 +71,16 @@ export const EditModal = ({ openEditModal, closeModalHandlerEdit }) => {
          start_date: formattedStartData,
          end_date: formattedEndData,
          people: state.internId,
+         mentor: selectedMentor ? [selectedMentor.id] : [],
       }
       dispatch(putGroupById({ formData, groupId, closeModalHandlerEdit }))
-      console.log(formData)
+   }
+
+   const openMentorModalHandler = () => {
+      setOpenMentorModal(true)
+   }
+   const closeMentorModalHandler = () => {
+      setOpenMentorModal(false)
    }
 
    return (
@@ -82,11 +103,13 @@ export const EditModal = ({ openEditModal, closeModalHandlerEdit }) => {
             <SecondWrapper>
                <UiButtonStyled onClick={openModalHandler}>Group</UiButtonStyled>
                <WrapperInternName>
-                  {internName.map((el) => (
-                     <TextInternName>{el}</TextInternName>
-                  )) ?? (
+                  {internName.length > 0 ? (
+                     internName.map((el) => (
+                        <TextInternName>{el}</TextInternName>
+                     ))
+                  ) : (
                      <TextInternNameNo>
-                        There are no interns here yet .
+                        There are no interns here yet.
                      </TextInternNameNo>
                   )}
                </WrapperInternName>
@@ -104,6 +127,28 @@ export const EditModal = ({ openEditModal, closeModalHandlerEdit }) => {
                   />
                ) : null}
             </SecondWrapper>
+            <div className="flex gap-12 text-xl items-center">
+               <UiButtonStyled onClick={openMentorModalHandler}>
+                  Mentor
+               </UiButtonStyled>
+               <div className="text-white">
+                  <span>{selectedMentor?.first_name}</span>{' '}
+                  <span>{selectedMentor?.last_name}</span>
+               </div>
+            </div>
+            {openMentorModal && (
+               <>
+                  <UiBackdrop
+                     open={openMentorModal}
+                     onClose={closeMentorModalHandler}
+                  />
+                  <MentorModal
+                     setSelectedMentor={setSelectedMentor}
+                     openMentorModalHandler={openMentorModalHandler}
+                     closeMentorhandler={closeMentorModalHandler}
+                  />
+               </>
+            )}
             <ThirdWrapper>
                <StatusText>Status</StatusText>
                <WrapperButtons>
@@ -355,5 +400,5 @@ const ButtonWrapper = styled('div')({
    gap: '2rem',
    justifyContent: 'flex-end',
    marginRight: '11rem',
-   marginTop: '3rem',
+   marginTop: '2rem',
 })

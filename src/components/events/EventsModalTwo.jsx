@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import { styled } from '@mui/material'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
 import {
    CalendarDeleteRequestForId,
    getCalendars,
@@ -11,6 +12,7 @@ import DeleteIcon from '../../assets/icons/deleteicon.svg'
 import EditIcon from '../../assets/icons/editIcon.svg'
 import { showSnackbar } from '../UI/snackbar/Snackbar'
 import { resetCalendarDataForId } from '../../store/calendar/calendar.slice'
+import { getGroups } from '../../store/groups/groupThunk'
 
 export const EventsModalTwo = ({
    open2Modal,
@@ -25,6 +27,16 @@ export const EventsModalTwo = ({
    const startTime = data?.start_time?.slice(0, 5)
 
    const endTime = data?.end_time?.slice(0, 5)
+
+   const { groups } = useSelector((state) => state.groups)
+
+   const groupId = data?.group_name
+
+   const groupObject = groups.find((group) => group.id === groupId)
+
+   useEffect(() => {
+      dispatch(getGroups())
+   }, [dispatch])
 
    const closeHandler = () => {
       setOpen2Modal(false)
@@ -69,7 +81,7 @@ export const EventsModalTwo = ({
                <div onClick={closeHandler} className="flex justify-end">
                   <img className="cursor-pointer" src={ExitIconn} alt="" />
                </div>
-               <p className="text-xl">Group name: {data?.group_name}</p>
+               <p className="text-xl">Group name: {groupObject?.name}</p>
                <p className="text-xl">{data?.title}</p>
                <div>
                   <span className="text-xl">{data?.date}.</span>{' '}
