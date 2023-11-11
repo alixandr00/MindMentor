@@ -73,6 +73,8 @@ export const NewInterviews = ({
                            <MenuItem value="Java">Java</MenuItem>
                            <MenuItem value="Python">Python</MenuItem>
                            <MenuItem value="HR">HR</MenuItem>
+                           <MenuItem value="C#">C#</MenuItem>
+                           <MenuItem value="C++">C++</MenuItem>
                         </SelectStyled>
                      </FormControlStyled>
                   </div>
