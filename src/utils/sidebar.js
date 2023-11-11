@@ -37,7 +37,7 @@ export const sideBarArray = [
       title: 'Events',
    },
    {
-      path: '/admin/schedule',
+      path: '/admin/interview',
       icons: <CustomCalendarIcon />,
       title: 'Interview',
    },

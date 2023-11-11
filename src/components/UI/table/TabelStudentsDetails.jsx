@@ -4,12 +4,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
 import { ReactComponent as DatailsClose } from '../../../assets/icons/DatailsClose.svg'
 import ProfileImage from '../../../assets/images/profileImage.jpg'
-
 import { status } from '../../../utils/table-students'
-// import ProfileImage from '../../../assets/images/profileImage.jpg'
 import Email from '../../../assets/images/Email.png'
 import PhoneNumber from '../../../assets/images/PhoneNumber.png'
-// import ProfileImage from '../../../assets/images/profileImage.jpg'
 import { fetchInternsDetails } from '../../../store/interns/internsThunk'
 
 export const TableStudentsDetails = () => {
@@ -59,15 +56,7 @@ export const TableStudentsDetails = () => {
                         </IconButton>
                      </StyledHeader>
                      <StyledStudentsInformation>
-                        <StyledImage
-                           src={ProfileImage}
-                           // src={
-                           //    internDetail.photo !== 'null'
-                           //       ? internDetail.photo
-                           //       : ProfileImage
-                           // }
-                           alt="photos"
-                        />
+                        <StyledImage src={ProfileImage} alt="photos" />
                         <h3>{`${internDetail.name}  ${internDetail.surname}`}</h3>
                         <p>JS/group****</p>
                         <span>Mentor-Tugolbay</span>
