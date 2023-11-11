@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { IconButton, styled } from '@mui/material'
@@ -14,6 +14,8 @@ import 'dayjs/locale/en'
 import { AddedInternsModal } from './AddedInternsModal'
 import { postGroups } from '../../store/groups/groupThunk'
 import { headerArray } from '../../utils/table-students'
+import { getMentors } from '../../store/mentors/mentor.thunk'
+import { MentorModal } from './MentorModal'
 
 dayjs.extend(customParseFormat)
 dayjs.locale('en')
@@ -21,6 +23,8 @@ dayjs.locale('en')
 export const CreateGroupModal = ({ openModal, oncloseModal }) => {
    const [openModalInterns, setOpenModalInterns] = useState(false)
    const [state, setState] = useState({ name: [], internId: [] })
+   const [mentor, setMentor] = useState(null)
+   const [openMentorModal, setOpenMentorModal] = useState(false)
 
    const [internName, setInternName] = useState([])
    const [internId, setInternId] = useState([])
@@ -48,10 +52,20 @@ export const CreateGroupModal = ({ openModal, oncloseModal }) => {
          start_date: formattedStartData,
          end_date: formattedEndData,
          people: state.internId,
+         mentor: mentor ? [mentor.id] : [],
       }
       dispatch(postGroups({ formData, oncloseModal }))
-      console.log(formData)
    }
+
+   const openMentorModalHandler = () => {
+      setOpenMentorModal(true)
+   }
+   const closeMentorhandler = () => {
+      setOpenMentorModal(false)
+   }
+   useEffect(() => {
+      dispatch(getMentors())
+   }, [])
 
    return (
       <UiModal open={openModal} onClose={oncloseModal}>
@@ -100,9 +114,22 @@ export const CreateGroupModal = ({ openModal, oncloseModal }) => {
                      />
                   ) : null}
                </SecondWrapper>
-               <MentorWrapper>
-                  <h1>hello</h1>
-               </MentorWrapper>
+               <div className="flex gap-12 text-xl items-center">
+                  <UiButtonStyled onClick={openMentorModalHandler}>
+                     Mentor
+                  </UiButtonStyled>
+                  <div className="text-white">
+                     <span>{mentor?.first_name}</span>{' '}
+                     <span>{mentor?.last_name}</span>
+                  </div>
+               </div>
+               {openMentorModal && (
+                  <MentorModal
+                     setMentor={setMentor}
+                     closeMentorhandler={closeMentorhandler}
+                  />
+               )}
+
                <ThirdWrapper>
                   <StatusText>Status</StatusText>
                   <WrapperButtons>
@@ -169,8 +196,6 @@ export const CreateGroupModal = ({ openModal, oncloseModal }) => {
       </UiModal>
    )
 }
-
-const MentorWrapper = styled('div')({})
 
 const TextInternName = styled('p')({
    color: '#FFF',
@@ -279,7 +304,7 @@ const SecondWrapper = styled('div')({
    height: '12rem',
    marginTop: '1rem',
    flexDirection: 'column',
-   border: '1px solid white',
+   // border: '1px solid white',
    gap: '1rem',
    maxHeight: '11rem',
    overflowY: 'auto',

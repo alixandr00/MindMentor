@@ -16,9 +16,6 @@ export function getMonth(month = dayjs().month()) {
    return daysMatrix
 }
 export const validationSchema = Yup.object().shape({
-   internName: Yup.number()
-      .typeError('Intern number must be a number')
-      .required('Intern number is required'),
    interviewName: Yup.string().required('Name of the interview is required'),
    location: Yup.string().required('Location is required'),
 })

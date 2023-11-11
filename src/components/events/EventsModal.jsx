@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { styled } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -18,7 +18,9 @@ import {
 } from '../../store/calendar/calendar.thunk'
 import { showSnackbar } from '../UI/snackbar/Snackbar'
 import { useEditEventModal } from '../../hooks/useEditEventModal'
-import { validationSchema } from '../../util'
+import { validationSchema } from '../../utils/common/constants/util'
+import { GroupsModalSelect } from './GroupsModalSelect'
+import { getGroups } from '../../store/groups/groupThunk'
 
 export const EventsModal = ({
    setShowEventModal,
@@ -30,15 +32,26 @@ export const EventsModal = ({
    dayToday,
    endTimeValue,
    clockClear,
+   setGroupId,
 }) => {
    const dispatch = useDispatch()
 
    const { calendarDataForId } = useSelector((state) => state.calendar)
+   const { groups } = useSelector((state) => state.groups)
+   const [grouppsId, setGrouppsId] = useState()
+   const id = calendarDataForId?.group_name
+   const groupId = groups?.find(
+      (state) => state?.id === id || state?.id === grouppsId
+   )
+
+   useEffect(() => {
+      dispatch(getGroups())
+   }, [])
+   const [openGroupModal, setOpenGroupModal] = useState(false)
 
    const [internNameError, setInternNameError] = useState('')
 
    const {
-      internName,
       setDescription,
       setStartTime,
       setEndTime,
@@ -53,14 +66,12 @@ export const EventsModal = ({
       interviewNameError,
       interviewName,
       setInterviewName,
-      setInternName,
    } = useEditEventModal(calendarDataForId, selectedStartTime)
 
    const onSave = async () => {
       try {
          await validationSchema.validate(
             {
-               internName,
                interviewName,
                location,
             },
@@ -87,7 +98,7 @@ export const EventsModal = ({
             start_time: clockStart,
             location,
             description,
-            group_name: internName,
+            group_name: groupId?.id || grouppsId,
             end_time: clockEnd,
          }
          const formEntries = Object.values({
@@ -149,6 +160,13 @@ export const EventsModal = ({
    const onClose = () => {
       setShowEventModal(false)
    }
+
+   const openGroupModalHandler = () => {
+      setOpenGroupModal(true)
+   }
+   const closeGroupModalHandler = () => {
+      setOpenGroupModal(false)
+   }
    const today = dayjs()
    const todayStartOfTheDay = today.startOf('day')
 
@@ -172,17 +190,17 @@ export const EventsModal = ({
          </div>
          <div className="ml-12">
             <div className="mt-2 ">
-               <UiInputStyled
-                  type="text"
-                  width="9.3125rem"
-                  height="3.125rem"
-                  borderRadius="1.25rem"
-                  placeholder="Intern number"
-                  backgroundColor="rgba(84, 71, 170, 0.93)"
-                  hoverBorderColor="#fff"
-                  onChange={(e) => setInternName(e.target.value)}
-                  value={internName}
-               />
+               <UiButtonStyled onClick={openGroupModalHandler}>
+                  {groupId || grouppsId ? groupId?.name : 'Group'}
+               </UiButtonStyled>
+               {openGroupModal && (
+                  <GroupsModalSelect
+                     setGroupId={setGroupId}
+                     openGroupModalHandler={openGroupModalHandler}
+                     closeGroupModalHandler={closeGroupModalHandler}
+                     setGrouppsId={setGrouppsId}
+                  />
+               )}
                {internNameError && (
                   <div className="text-red-600 text-sm mt-1 absolute">
                      {internNameError}
@@ -382,3 +400,22 @@ const TimeContainer = styled('div')`
       display: none;
    }
 `
+
+const UiButtonStyled = styled('div')({
+   borderRadius: '0.8rem',
+   border: '1px solid #F9F9F9',
+   background: 'transparent',
+   width: '10rem',
+   height: '2.5rem',
+   color: '#FFFFFF',
+   display: 'flex',
+   justifyContent: 'center',
+   alignItems: 'center',
+   cursor: 'pointer',
+   '&:hover': {
+      backgroundColor: 'rgba(67, 56, 136, 0.93)',
+   },
+   '&:active': {
+      backgroundColor: 'rgba(80, 72, 132, 0.93)',
+   },
+})

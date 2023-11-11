@@ -11,8 +11,7 @@ import {
    styled,
 } from '@mui/material'
 import { useSelector, useDispatch } from 'react-redux'
-import CloseIcon from '@mui/icons-material/Close'
-
+import DoneOutlineIcon from '@mui/icons-material/DoneOutline'
 import { ReactComponent as History } from '../../assets/icons/History.svg'
 import { ReactComponent as DeleteIcon } from '../../assets/icons/deleteicon.svg'
 import { ReactComponent as EditIcon } from '../../assets/icons/editIcon.svg'
@@ -67,11 +66,12 @@ export const AddedInternsModal = ({
 
       setState(newState)
    }
+
    return (
       <UiModalStyled open={openModal} onClose={oncloseModal}>
          <IconButtonStyled onClick={oncloseModal}>
             <CloseIconBlock>
-               <CloseIcon />
+               <DoneOutlineIcon />
             </CloseIconBlock>
          </IconButtonStyled>
          {loading && <Loading />}
@@ -207,39 +207,9 @@ const UiModalStyled = styled(UiModal)({
    borderRadius: '0.625rem',
    border: ' 1px solid #FFF',
    backgroundColor: '#1e1f22',
-   // scrollbarWidth: 'thin',
-   // scrollbarColor: ' #b3b3b30 transparent',
-   // '&::-webkit-scrollbar ': {
-   //    width: '0.2rem',
-   // },
-   // '&::-webkit-scrollbar-track': {
-   //    backgroundColor: ' #fff white',
-   // },
-   // '&::-webkit-scrollbar-thumb ': {
-   //    backgroundColor: ' #fff',
-   //    borderRadius: '0.25rem',
-   // },
 })
 
-const StyledContent = styled('div')({
-   // maxHeight: '40rem',
-   // minHeight: '40rem',
-   // backgroundColor: 'red',
-   // borderRadius: '0.625rem',
-   // border: ' 1px solid #FFF',
-   // scrollbarWidth: 'thin',
-   // scrollbarColor: ' #b3b3b30 transparent',
-   // '&::-webkit-scrollbar ': {
-   //    width: '0.2rem',
-   // },
-   // '&::-webkit-scrollbar-track': {
-   //    backgroundColor: ' #fff white',
-   // },
-   // '&::-webkit-scrollbar-thumb ': {
-   //    backgroundColor: ' #fff',
-   //    borderRadius: '0.25rem',
-   // },
-})
+const StyledContent = styled('div')({})
 const StyleTableBody = styled(TableBody)({
    backgroundColor: '#2B2D31',
    border: 'none',
@@ -303,11 +273,14 @@ const StyledTableContainer = styled(TableContainer)({
    marginTop: '2rem',
    maxHeight: '38rem',
    minHeight: '38rem',
-   // border: ' 1px solid #FFF',
    scrollbarWidth: 'thin',
    scrollbarColor: ' #b3b3b30 transparent',
+   backgroundColor: '#1e1f22',
    '&::-webkit-scrollbar ': {
       width: '0.2rem',
+   },
+   '& .css-nkpq2n-MuiPaper-root-MuiTableContainer-root': {
+      backgroundColor: 'red',
    },
    '&::-webkit-scrollbar-track': {
       backgroundColor: ' #fff white',

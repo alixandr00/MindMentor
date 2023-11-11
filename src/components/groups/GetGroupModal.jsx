@@ -9,18 +9,36 @@ import {
    TableRow,
    styled,
 } from '@mui/material'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import CloseIcon from '@mui/icons-material/Close'
-import React from 'react'
+import React, { useState } from 'react'
 import { NotesIcon, ProgressIcon } from '../../assets/icons'
 import { UiModal } from '../UI/modal/UiModal'
 import { headerArray } from '../../utils/table-students'
 import { ReactComponent as CommentIcon } from '../../assets/icons/Comment.svg'
 import { ReactComponent as History } from '../../assets/icons/History.svg'
 import { ReactComponent as DeleteIcon } from '../../assets/icons/deleteicon.svg'
+import { deleteInternInGroup } from '../../store/groups/groupThunk'
+import { DeleteInternsModal } from './DeleteInternsModal'
 
 export const GetGroupModal = ({ openModal, oncloseModal }) => {
+   const [deletOpenModal, setDeleteOpenModal] = useState(false)
+   const [getInetrnId, setGetIternId] = useState(null)
+
    const { getGroupId } = useSelector((state) => state.groups)
+   const dispatch = useDispatch()
+
+   const deleteInternModalOpenHandler = (internId) => {
+      setGetIternId(internId)
+      setDeleteOpenModal(true)
+   }
+   const deleteInternHandler = () => {
+      const data = {
+         internId: getInetrnId,
+         groupId: getGroupId.id,
+      }
+      dispatch(deleteInternInGroup(data))
+   }
 
    return (
       <UiModalStyled open={openModal} onClose={oncloseModal}>
@@ -49,16 +67,20 @@ export const GetGroupModal = ({ openModal, oncloseModal }) => {
                   </CloseIconBlock>
                </IconButtonStyled>
             </WrapperHead>
+
             {getGroupId.people?.length > 0 ? (
                <StyledContent>
                   <StyledTableContainer component={Paper}>
                      <Table>
                         <TableHead>
-                           {/* <TableRow>
+                           <TableRow>
                               <StyledTableCell align="left" colSpan={7}>
-                                 All interns
+                                 Mentor name:{' '}
+                                 {getGroupId.mentor
+                                    ? getGroupId.mentor
+                                    : 'Ментор не назначен'}
                               </StyledTableCell>
-                           </TableRow> */}
+                           </TableRow>
                            {headerArray?.map((headerArray) => (
                               <TableRow>
                                  <StyledTableCell>
@@ -70,11 +92,11 @@ export const GetGroupModal = ({ openModal, oncloseModal }) => {
                                  <StyledTableCell align="center">
                                     {headerArray.techStack}
                                  </StyledTableCell>
-                                 <StyledTableCell align="center">
-                                    {headerArray.status}
+                                 <StyledTableCell>
+                                    {headerArray.mentor}
                                  </StyledTableCell>
                                  <StyledTableCell align="center">
-                                    {headerArray.mentor}
+                                    {headerArray.status}
                                  </StyledTableCell>
                                  <StyledTableCell align="center">
                                     {headerArray.pay}
@@ -133,12 +155,22 @@ export const GetGroupModal = ({ openModal, oncloseModal }) => {
                                     </IconButton>
                                  </StyledTableCellForData>
                                  <StyledTableCellForData align="center">
-                                    {/* <IconButton>
-                                       <EditIcon />
-                                    </IconButton> */}
-                                    <IconButton>
+                                    <IconButton
+                                       onClick={() =>
+                                          deleteInternModalOpenHandler(
+                                             intern.id
+                                          )
+                                       }
+                                    >
                                        <DeleteIcon />
                                     </IconButton>
+                                    {deletOpenModal ? (
+                                       <DeleteInternsModal
+                                          onOpen={deletOpenModal}
+                                          onCloseModal={setDeleteOpenModal}
+                                          deleteInternById={deleteInternHandler}
+                                       />
+                                    ) : null}
                                     <IconButton>
                                        <History />
                                     </IconButton>

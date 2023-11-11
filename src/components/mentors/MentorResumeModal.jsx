@@ -47,8 +47,8 @@ export const MentorResumeModal = ({ open, onClose }) => {
                <MaxInfo>
                   <div>
                      <p className="head-title">
-                        <span>{mentorDetail?.first_name}</span>
-                        {mentorDetail?.last_name}
+                        <span className="name">{mentorDetail?.first_name}</span>
+                        <span>{mentorDetail?.last_name}</span>
                      </p>
 
                      <p className="manager">{mentorStack}</p>
@@ -72,7 +72,7 @@ export const MentorResumeModal = ({ open, onClose }) => {
       </WrapperContainer>
    )
 }
-// dangerouslySetInnerHTML={{ __html: description }}
+
 const WrapperContainer = styled(Modal)`
    position: fixed;
    top: 0;
@@ -88,7 +88,6 @@ const Container = styled(Box)`
    left: 50%;
    border-radius: 0.625rem;
    transform: translate(-50%, 0%);
-   max-width: 36vw;
 
    margin-top: 3.75rem;
 `
@@ -102,6 +101,7 @@ const Card = styled('div')`
 const MinInfo = styled('div')`
    background: linear-gradient(#252335, #5447aa);
    color: #fff;
+   width: 15.4vw;
 
    padding: 4rem 1.25rem 1.875rem 1.25rem;
    border-radius: 0.625rem 0 0 0.625rem;
@@ -125,15 +125,17 @@ const MaxInfo = styled('div')`
    color: #323b4c;
 
    border-radius: 0 0.625rem 0.625rem 0;
+   width: 20.4vw;
 
    .head-title {
       margin-top: 2.25rem;
 
       display: flex;
+      flex-wrap: wrap;
       gap: 0.375rem;
-      font-size: 2.2rem;
+      font-size: 2rem;
 
-      span {
+      .name {
          font-weight: bold;
       }
    }
