@@ -15,22 +15,17 @@ import { Loading } from '../UI/loading/Loading'
 import { DeleteGroupModal } from './DeleteGroupModal'
 import { GetGroupModal } from './GetGroupModal'
 import { showSnackbar } from '../UI/snackbar/Snackbar'
-// import { CreateGroupModal } from './CreateGroupModal'
 import { EditModal } from './EditModal'
 import { fetchInterns } from '../../store/interns/internsThunk'
+import { getMentors } from '../../store/mentors/mentor.thunk'
 
-export const GroupsCards = ({
-   groups,
-   // openModal,
-   // openModalHandlerEdit,
-   // closeModalHandlerEdit,
-}) => {
+export const GroupsCards = ({ groups }) => {
    const [deleteOpenModal, setDeleteOpenModal] = useState(false)
    const [groupOpenModal, setGroupOpenModal] = useState(false)
    const [openEditModal, setOpenEditModal] = useState(false)
-   // const { getGroupId } = useSelector((state) => state.groups)
 
    const { isLoading } = useSelector((state) => state.groups)
+   const { mentorData } = useSelector((state) => state.mentor)
    const [getId, setGetId] = useState(null)
    const dispatch = useDispatch()
 
@@ -86,6 +81,10 @@ export const GroupsCards = ({
          })
    }
 
+   useEffect(() => {
+      dispatch(getMentors())
+   }, [dispatch])
+
    return (
       <Container>
          {isLoading && <Loading />}
@@ -109,6 +108,7 @@ export const GroupsCards = ({
                      closeModalHandlerEdit={closeModalHandlerEdit}
                      openEditModal={openEditModal}
                      // getGroupId={getGroupId}
+                     mentorData={mentorData}
                   />
                ) : null}
                <IconButtonStyled

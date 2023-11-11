@@ -1,6 +1,5 @@
 /* eslint-disable react/button-has-type */
 import dayjs from 'dayjs'
-import React from 'react'
 
 export default function CalendarHeader({ monthIndex, setMonthIndex }) {
    function handlePrevMonth() {

@@ -30,7 +30,7 @@ export default function Day({
       setEndTimeValue(true)
    }
 
-   const isDateInData = dataOfDate?.includes(day.format('YYYY-MM-DD'))
+   const isDateInData = dataOfDate?.includes(day?.format('YYYY-MM-DD'))
 
    return (
       <div>

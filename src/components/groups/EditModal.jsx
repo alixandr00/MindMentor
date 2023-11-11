@@ -15,15 +15,18 @@ import { AddedInternsModal } from './AddedInternsModal'
 import { headerArray } from '../../utils/table-students'
 import { putGroupById } from '../../store/groups/groupThunk'
 import { MentorModal } from './MentorModal'
+import { UiBackdrop } from '../UI/backdrop/UiBackDrop'
 
 dayjs.extend(customParseFormat)
 dayjs.locale('en')
 
-export const EditModal = ({ openEditModal, closeModalHandlerEdit }) => {
+export const EditModal = ({
+   openEditModal,
+   closeModalHandlerEdit,
+   mentorData,
+}) => {
    const { getGroupId } = useSelector((state) => state.groups)
    const [openMentorModal, setOpenMentorModal] = useState(false)
-
-   const { mentorData } = useSelector((state) => state.mentor)
 
    const mentorIdInGroup = getGroupId?.mentor?.find((id) => id)
 
@@ -134,11 +137,17 @@ export const EditModal = ({ openEditModal, closeModalHandlerEdit }) => {
                </div>
             </div>
             {openMentorModal && (
-               <MentorModal
-                  setSelectedMentor={setSelectedMentor}
-                  openMentorModalHandler={openMentorModalHandler}
-                  closeMentorhandler={closeMentorModalHandler}
-               />
+               <>
+                  <UiBackdrop
+                     open={openMentorModal}
+                     onClose={closeMentorModalHandler}
+                  />
+                  <MentorModal
+                     setSelectedMentor={setSelectedMentor}
+                     openMentorModalHandler={openMentorModalHandler}
+                     closeMentorhandler={closeMentorModalHandler}
+                  />
+               </>
             )}
             <ThirdWrapper>
                <StatusText>Status</StatusText>

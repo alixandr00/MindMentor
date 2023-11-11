@@ -1,14 +1,13 @@
-import React, { useState, useEffect, startTransition } from 'react'
+import React, { useState, useEffect } from 'react'
 import dayjs from 'dayjs'
 import { useDispatch } from 'react-redux'
 import { getMonth } from '../../utils/common/constants/util'
 import { EventsModal } from '../events/EventsModal'
 import { getCalendars } from '../../store/calendar/calendar.thunk'
 import { useEventModal } from '../../hooks/useEventModal'
-
-const Header = React.lazy(() => import('../calendar/CalendarHeader'))
-const MonthComponent = React.lazy(() => import('../calendar/Month'))
-const SideBar = React.lazy(() => import('../calendar/Sidebar'))
+import CalendarHeader from '../calendar/CalendarHeader'
+import Sidebar from '../calendar/Sidebar'
+import Month from '../calendar/Month'
 
 export const Events = () => {
    const [currenMonth, setCurrentMonth] = useState(getMonth())
@@ -21,13 +20,12 @@ export const Events = () => {
    const [isRequestSuccess, setIsRequestSuccess] = useState(false)
    const [selectedDay, setSelectedDay] = useState(null)
    const [selectedStartTime, setSelectedStartTime] = useState()
+   const [groupId, setGroupId] = useState()
 
    const dispatch = useDispatch()
 
    useEffect(() => {
-      startTransition(() => {
-         dispatch(getCalendars())
-      })
+      dispatch(getCalendars())
    }, [getCalendars])
 
    useEffect(() => {
@@ -47,13 +45,18 @@ export const Events = () => {
                dayToday={dayToday}
                clockClear={clockClear}
                endTimeValue={endTimeValue}
+               setGroupId={setGroupId}
+               groupId={groupId}
             />
          )}
 
          <div className="h-screen flex flex-col">
-            <Header monthIndex={monthIndex} setMonthIndex={setMonthIndex} />
+            <CalendarHeader
+               monthIndex={monthIndex}
+               setMonthIndex={setMonthIndex}
+            />
             <div className="flex flex-1">
-               <SideBar
+               <Sidebar
                   showEventModal={showEventModal}
                   smallCalendarMonth={smallCalendarMonth}
                   setMonthIndex={setMonthIndex}
@@ -64,7 +67,7 @@ export const Events = () => {
                   setClockClear={setClockClear}
                   setEndTimeValue={setEndTimeValue}
                />
-               <MonthComponent
+               <Month
                   setShowEventModal={setShowEventModal}
                   month={currenMonth}
                   isRequestSuccess={isRequestSuccess}

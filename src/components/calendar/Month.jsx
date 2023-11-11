@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { ClockComponent } from '../events/ClockComponent'
-
-const DayComponent = React.lazy(() => import('./Day'))
+import Day from './Day'
 
 export default function Month({
    month,
@@ -27,7 +26,7 @@ export default function Month({
                {month.map((row, i) => (
                   <React.Fragment key={i}>
                      {row.map((day, idx) => (
-                        <DayComponent
+                        <Day
                            setClockClear={setClockClear}
                            setEndTimeValue={setEndTimeValue}
                            setDayToday={setDayToday}
@@ -44,6 +43,7 @@ export default function Month({
             </>
          ) : (
             <ClockComponent
+               setDayToday={setDayToday}
                setShowEventModal={setShowEventModal}
                setOpenClock={setOpenClock}
                selectedDay={selectedDay}

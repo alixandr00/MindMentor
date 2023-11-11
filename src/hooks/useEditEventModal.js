@@ -2,7 +2,11 @@
 import dayjs from 'dayjs'
 import { useState } from 'react'
 
-export const useEditEventModal = (calendarDataForId, selectedStartTime) => {
+export const useEditEventModal = (
+   calendarDataForId,
+   selectedStartTime
+   // groupId
+) => {
    const [internName, setInternName] = useState(
       calendarDataForId?.group_name ?? ''
    )
