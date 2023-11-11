@@ -8,6 +8,8 @@
       "@hookform/resolvers": "^3.3.2",
       "@material/icon-button": "^14.0.0",
       "@mui/icons-material": "^5.14.13",
+      "@mui/material": "^5.14.13",
+      "@mui/x-date-pickers": "^6.16.2",
       "@mui/lab": "^5.0.0-alpha.149",
       "@mui/material": "^5.14.14",
       "@mui/x-date-pickers": "^6.17.0",

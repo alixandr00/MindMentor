@@ -14,6 +14,7 @@ export const Calendar = forwardRef(function CalendarComponent(
             <StyledDatePicker
                label={placeholder}
                value={value === undefined || null ? '' : value}
+               marginTop="-5px"
                onChange={onChange}
                name={name}
                error={error}
@@ -32,6 +33,7 @@ const StyledDatePicker = styled(DatePicker)(
          color: '#fff',
          marginTop,
          fontSize,
+         marginLeft: '1.5rem',
          marginLeft: '25px',
       },
 
@@ -47,6 +49,11 @@ const StyledDatePicker = styled(DatePicker)(
          width,
          borderRadius,
          height,
+         fontSize: fontSize || '0.8rem',
+         fontWeight: '400',
+      },
+      '& .MuiSvgIcon-root': {
+         display: 'none',
          fontSize: '12px',
          fontWeight: '600',
       },
