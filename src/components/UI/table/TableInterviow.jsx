@@ -11,55 +11,98 @@ import {
    IconButton,
    styled,
 } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 import { ReactComponent as DeleteIcon } from '../../../assets/icons/deleteicon.svg'
 import { ReactComponent as EditIcon } from '../../../assets/icons/editIcon.svg'
 import { ReactComponent as NextIcon } from '../../../assets/icons/NextIcon.svg'
 import { ReactComponent as PrevIcon } from '../../../assets/icons/PrevIcon.svg'
-import ProfileImage from '../../../assets/images/profileImage.jpg'
+import {
+   deleteInterviewThunk,
+   interviewAllThunk,
+   interviewDetailThunk,
+} from '../../../store/interview/interview.thunk'
+import { EditInterviewModal } from './interviewModal/EditIntervieModal'
+import { DeleteModal } from '../deleteModal/DeleteModal'
+import { showSnackbar } from '../snackbar/Snackbar'
 
-export const TableInterviow = ({ array, headerArray }) => {
-   const [data, setData] = useState([])
-   const [loading, setLoading] = useState(true)
+export const TableInterviow = ({ selectedValue, headerArray }) => {
+   const dispatch = useDispatch()
+   const navigate = useNavigate()
+   const getInterviews = useSelector((state) => state.interview.getInterviewAll)
+
    const [currentPage, setCurrentPage] = useState(1)
+   const itemsPerPage = 5
+
+   const filteredData = getInterviews?.filter((interview) => {
+      return interview.intern.length > 0
+   })
+
+   const filteredInterviewsData = filteredData?.filter((interview) => {
+      return interview.intern.some(
+         (intern) => intern.tech_stack === selectedValue
+      )
+   })
+
+   const filteredInterviews =
+      selectedValue !== 'All' ? filteredInterviewsData : filteredData
+
+   const [loading, setLoading] = useState(true)
+   const [openModal, setOpenModal] = useState(false)
+   const [openDeleteModal, setOpenDeleteModal] = useState(false)
+   const [getId, setGetId] = useState(null)
+
+   const onOpenModalHandler = () => {
+      setOpenModal(true)
+   }
+   const onCloseModalHandler = () => {
+      setOpenModal(false)
+   }
+   const onOpenDeleteModals = () => {
+      setOpenDeleteModal(true)
+   }
+   const onCloseDeleteModal = () => {
+      setOpenDeleteModal(false)
+   }
+
+   const deleteInterviewHandler = () => {
+      dispatch(deleteInterviewThunk(getId))
+         .unwrap()
+         .then(() => {
+            dispatch(interviewAllThunk())
+            onCloseDeleteModal()
+            showSnackbar({
+               message: 'Успешно удалено!',
+               severity: 'success',
+            })
+         })
+         .catch(() => {
+            showSnackbar({
+               message: 'Произошла ошибка. Пожалуйста, попробуйте еще раз.',
+               severity: 'warning',
+            })
+         })
+   }
 
    useEffect(() => {
+      dispatch(interviewAllThunk())
       const fetchData = () => {
          setTimeout(() => {
-            // Simulated data
-            const mockData = array
-            setData(mockData)
             setLoading(false)
-         }, 1500) // Simulated delay of 2 seconds
+         }, 1500)
       }
       fetchData()
    }, [])
 
-   const recordsPerPage = 5
-   const lastIndex = currentPage * recordsPerPage
-   const firstIndex = lastIndex - recordsPerPage
-   const records = data.slice(firstIndex, lastIndex)
-   const npage = Math.ceil(data.length / recordsPerPage)
+   const startIndex = (currentPage - 1) * itemsPerPage
+   const endIndex = startIndex + itemsPerPage
+   const currentItems = filteredInterviews.slice(startIndex, endIndex)
 
-   function prevPage() {
-      setLoading(true) // Set loading state to true when starting the loading process
-      setTimeout(() => {
-         if (currentPage !== 1) {
-            setCurrentPage(currentPage - 1)
-         }
-         setLoading(false) // Set loading state to false after loading is done
-      }, 500)
+   const totalPages = Math.ceil(filteredInterviews.length / itemsPerPage)
+
+   const goToPage = (page) => {
+      setCurrentPage(page)
    }
-
-   function nextPage() {
-      setLoading(true) // Set loading state to true when starting the loading process
-      setTimeout(() => {
-         if (currentPage !== npage) {
-            setCurrentPage(currentPage + 1)
-         }
-         setLoading(false) // Set loading state to false after loading is done
-      }, 500)
-   }
-
    return (
       <>
          <StyledTableContainer component={Paper}>
@@ -144,67 +187,87 @@ export const TableInterviow = ({ array, headerArray }) => {
                         </StyledTableRowOne>
                      </>
                   ) : (
-                     records.map((item) => (
-                        <StyledTableRow key={item.id}>
-                           <StyledTableCellForData>
-                              <StyledContainerImageName>
-                                 <StyledImage
-                                    src={
-                                       item.image !== 'null'
-                                          ? item.image
-                                          : ProfileImage
-                                    }
-                                    alt="photo"
-                                 />
-                                 <p>{item.name}</p>
-                              </StyledContainerImageName>
-                           </StyledTableCellForData>
-                           <StyledTableCellForData align="center">
-                              <p>{item.email}</p>
-                           </StyledTableCellForData>
-                           <StyledTableCellForData
-                              align="center"
-                              className="red"
-                           >
-                              <p
-                                 className={
-                                    item.techStack === 'Project Manager'
-                                       ? 'ProjectManager'
-                                       : item.techStack
-                                 }
+                     currentItems?.map((el) => {
+                        return el.intern.map((item) => (
+                           <StyledTableRow key={el.id}>
+                              <StyledTableCellForData
+                                 onClick={() => navigate(`detail/${el.id}`)}
                               >
-                                 {item.techStack}
-                              </p>
-                           </StyledTableCellForData>
-                           <StyledTableCellForData align="center">
-                              <p>{item.time}</p>
-                           </StyledTableCellForData>
-                           <StyledTableCellForData align="center">
-                              {item.date}
-                           </StyledTableCellForData>
-                           <StyledTableCellForData align="center">
-                              {item.location}
-                           </StyledTableCellForData>
-                           <StyledTableCellForData align="center">
-                              <IconButton>
-                                 <EditIcon />
-                              </IconButton>
-                              <IconButton>
-                                 <DeleteIcon />
-                              </IconButton>
-                           </StyledTableCellForData>
-                        </StyledTableRow>
-                     ))
+                                 <StyledContainerImageName>
+                                    <p>{item.name}</p>
+                                 </StyledContainerImageName>
+                              </StyledTableCellForData>
+                              <StyledTableCellForData
+                                 onClick={() => navigate(`detail/${el.id}`)}
+                                 align="center"
+                              >
+                                 <p>{item.email}</p>
+                              </StyledTableCellForData>
+                              <StyledTableCellForData
+                                 onClick={() => navigate(`detail/${el.id}`)}
+                                 align="center"
+                                 className="red"
+                              >
+                                 <p
+                                    className={
+                                       item.tech_stack === 'Project Manager'
+                                          ? 'ProjectManager'
+                                          : item.tech_stack
+                                    }
+                                 >
+                                    {item.tech_stack}
+                                 </p>
+                              </StyledTableCellForData>
+                              <StyledTableCellForData
+                                 onClick={() => navigate(`detail/${el.id}`)}
+                                 align="center"
+                              >
+                                 <p>{el.start_time}</p>
+                              </StyledTableCellForData>
+                              <StyledTableCellForData
+                                 onClick={() => navigate(`detail/${el.id}`)}
+                                 align="center"
+                              >
+                                 {el.date}
+                              </StyledTableCellForData>
+                              <StyledTableCellForData
+                                 onClick={() => navigate(`detail/${el.id}`)}
+                                 align="center"
+                              >
+                                 {el.location}
+                              </StyledTableCellForData>
+                              <StyledTableCellForDatas align="center">
+                                 <IconButton>
+                                    <EditIcon
+                                       onClick={() => {
+                                          onOpenModalHandler()
+                                          dispatch(interviewDetailThunk(el.id))
+                                       }}
+                                    />
+                                 </IconButton>
+                                 <IconButton>
+                                    <DeleteIcon
+                                       onClick={() => {
+                                          onOpenDeleteModals()
+                                          setGetId(el.id)
+                                       }}
+                                    />
+                                 </IconButton>
+                              </StyledTableCellForDatas>
+                           </StyledTableRow>
+                        ))
+                     })
                   )}
                </StyleTableBody>
             </Table>
          </StyledTableContainer>
+
          <StyledContainer>
             <nav>
                <StyledUl>
                   <li>
                      <IconButton
-                        onClick={() => prevPage()}
+                        onClick={() => goToPage(currentPage - 1)}
                         disabled={currentPage === 1}
                      >
                         <PrevIcon />
@@ -214,8 +277,8 @@ export const TableInterviow = ({ array, headerArray }) => {
 
                   <li>
                      <IconButton
-                        disabled={currentPage === npage}
-                        onClick={() => nextPage()}
+                        onClick={() => goToPage(currentPage + 1)}
+                        disabled={currentPage === totalPages}
                      >
                         <StyledSpan>Next</StyledSpan>
                         <NextIcon />
@@ -224,14 +287,18 @@ export const TableInterviow = ({ array, headerArray }) => {
                </StyledUl>
             </nav>
          </StyledContainer>
+         {openModal ? <EditInterviewModal onClose={onCloseModalHandler} /> : ''}
+         {openDeleteModal ? (
+            <DeleteModal
+               onClick={deleteInterviewHandler}
+               unClick={onCloseDeleteModal}
+            />
+         ) : (
+            ''
+         )}
       </>
    )
 }
-
-const StyledUl = styled('ul')`
-   display: flex;
-   gap: 0.8rem;
-`
 
 const StyleTableBody = styled(TableBody)({
    backgroundColor: '#2B2D31',
@@ -326,25 +393,28 @@ const StyledTableCellForData = styled(TableCell)`
    font-size: 1rem;
    border: none;
 `
-
-const StyledSpan = styled('span')`
-   font-size: 0.9rem;
-   color: #ffff;
-`
-
-const StyledContainer = styled('div')`
-   display: flex;
-   justify-content: end;
-   margin-right: 15px;
-`
-const StyledImage = styled('img')`
-   width: 40px;
-   height: 40px;
-   border-radius: 100%;
+const StyledTableCellForDatas = styled(TableCell)`
+   padding: 20px 8px 8px 20px;
+   color: white;
+   font-size: 1rem;
+   border: none;
 `
 
 const StyledContainerImageName = styled('div')`
    display: flex;
    align-items: center;
    gap: 10px;
+`
+const StyledSpan = styled('span')`
+   font-size: 0.9rem;
+   color: #ffff;
+`
+const StyledUl = styled('ul')`
+   display: flex;
+   gap: 0.8rem;
+`
+const StyledContainer = styled('div')`
+   display: flex;
+   justify-content: end;
+   margin-right: 15px;
 `

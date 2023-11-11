@@ -16,7 +16,7 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
          .string()
          .nonempty('Заполните обязательные поля')
          .max(
-            20,
+            25,
             'Длина текста превышает допустимый лимит. Пожалуйста, сократите текст.'
          )
          .regex(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, {
@@ -67,7 +67,7 @@ export const VendorsModal = ({ onCloseModalHandler }) => {
          setEmailError('')
       } catch (error) {
          setEmailError(
-            'Введите корректный адрес эллектронный почты с 15 символами.'
+            'Введите корректный адрес эллектронный почты с 25 символами.'
          )
       }
    }

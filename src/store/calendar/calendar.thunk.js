@@ -47,6 +47,7 @@ export const CalendarPutRequestForId = createAsyncThunk(
             send.data
          )
          dispatch(getCalendarForId(send.id))
+         dispatch(getCalendars())
          return response
       } catch (error) {
          return rejectWithValue(error.message)

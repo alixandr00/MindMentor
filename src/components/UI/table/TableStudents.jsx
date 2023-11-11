@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React, { useState, useEffect } from 'react'
 import {
    Table,
@@ -24,6 +25,7 @@ import { Loading } from '../loading/Loading'
 
 export const TableStudents = ({ headerArray, onOpenPayModalHandler }) => {
    const dispatch = useDispatch()
+
    const interns = useSelector((state) => state.interns.interns)
    const loading = useSelector((state) => state.interns.isLoading)
    const error = useSelector((state) => state.interns.error)

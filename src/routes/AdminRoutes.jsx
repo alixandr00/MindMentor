@@ -1,3 +1,4 @@
+import { InterviewModal } from '../components/UI/table/InterviewModal'
 import { TableStudentsDetails } from '../components/UI/table/TabelStudentsDetails'
 import { NewGroups } from '../components/groups/NewGroups'
 import { NewMentors } from '../components/mentors/NewMentors'
@@ -49,7 +50,13 @@ export const adminRoutes = [
       element: <Events />,
    },
    {
-      path: 'schedule',
+      path: 'interview',
       element: <Schedule />,
+      children: [
+         {
+            path: 'detail/:id',
+            element: <InterviewModal />,
+         },
+      ],
    },
 ]

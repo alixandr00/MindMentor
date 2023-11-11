@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 module.exports = {
    purge: {
       content: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
