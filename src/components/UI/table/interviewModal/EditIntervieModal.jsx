@@ -276,10 +276,13 @@ const StyleBlocks = styled('div')`
 `
 const StyleBlock = styled('div')`
    margin-top: 2rem;
+
    .custom-width-input {
       width: 26rem;
+      overflow: auto;
    }
 `
+
 const StyleBlockCalendar = styled('div')`
    margin-top: 0.5rem;
    .MuiOutlinedInput-root {
@@ -307,7 +310,7 @@ const StyleBlockDate = styled('div')`
    .MuiOutlinedInput-root {
       color: #fff;
       width: 7.625rem;
-      height: 3.125rem;
+      height: 3.5rem;
       border-radius: 1.25rem;
       border: 1px solid #fff;
    }
