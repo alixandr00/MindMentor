@@ -289,7 +289,7 @@ const StyleBlockDate = styled('div')`
    .MuiOutlinedInput-root {
       color: #fff;
       width: 7.625rem;
-      height: 3.125rem;
+      height: 3.5rem;
       border-radius: 1.25rem;
       border: 1px solid #fff;
    }

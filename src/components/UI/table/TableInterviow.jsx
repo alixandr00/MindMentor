@@ -98,11 +98,11 @@ export const TableInterviow = ({ selectedValue, headerArray }) => {
    const endIndex = startIndex + itemsPerPage
    const currentItems = filteredInterviews.slice(startIndex, endIndex)
 
-   const totalPages = Math.ceil(filteredInterviews.length / itemsPerPage)
+   // const totalPages = Math.ceil(filteredInterviews.length / itemsPerPage)
 
-   const goToPage = (page) => {
-      setCurrentPage(page)
-   }
+   // const goToPage = (page) => {
+   //    setCurrentPage(page)
+   // }
    return (
       <>
          <StyledTableContainer component={Paper}>
@@ -261,32 +261,41 @@ export const TableInterviow = ({ selectedValue, headerArray }) => {
                </StyleTableBody>
             </Table>
          </StyledTableContainer>
+         {(currentItems.length >= itemsPerPage || currentPage > 1) && (
+            <StyledContainer>
+               <nav>
+                  <StyledUl>
+                     {currentPage > 1 && (
+                        <li>
+                           <IconButton
+                              onClick={() =>
+                                 setCurrentPage((prevPage) => prevPage - 1)
+                              }
+                              disabled={currentPage === 1}
+                           >
+                              <PrevIcon />
+                              <StyledSpan>Prev</StyledSpan>
+                           </IconButton>
+                        </li>
+                     )}
+                     {currentItems.length >= itemsPerPage && (
+                        <li>
+                           <IconButton
+                              onClick={() =>
+                                 setCurrentPage((prevPage) => prevPage + 1)
+                              }
+                              disabled={endIndex >= filteredInterviews.length}
+                           >
+                              <StyledSpan>Next</StyledSpan>
+                              <NextIcon />
+                           </IconButton>
+                        </li>
+                     )}
+                  </StyledUl>
+               </nav>
+            </StyledContainer>
+         )}
 
-         <StyledContainer>
-            <nav>
-               <StyledUl>
-                  <li>
-                     <IconButton
-                        onClick={() => goToPage(currentPage - 1)}
-                        disabled={currentPage === 1}
-                     >
-                        <PrevIcon />
-                        <StyledSpan>Prev</StyledSpan>
-                     </IconButton>
-                  </li>
-
-                  <li>
-                     <IconButton
-                        onClick={() => goToPage(currentPage + 1)}
-                        disabled={currentPage === totalPages}
-                     >
-                        <StyledSpan>Next</StyledSpan>
-                        <NextIcon />
-                     </IconButton>
-                  </li>
-               </StyledUl>
-            </nav>
-         </StyledContainer>
          {openModal ? <EditInterviewModal onClose={onCloseModalHandler} /> : ''}
          {openDeleteModal ? (
             <DeleteModal
