@@ -9,14 +9,15 @@ export const UiModal = ({ open, onClose, children, ...rest }) => {
 }
 const ModalStyle = styled(Box)(({ ...rest }) => ({
    position: 'fixed',
-   left: '50%',
-   borderRadius: rest.borderRadius || 'none',
+   borderRadius: rest.borderRadius || '1rem',
    backgroundColor: rest.backgroundColor || 'none',
-   top: '50%',
    maxHeight: '100vh',
 }))
 const Backdrop = styled(Modal)(({ ...rest }) => ({
    position: 'fixed',
+   display: 'flex',
+   justifyContent: 'center',
+   alignItems: 'center',
    top: '0',
    left: '0',
    right: '0',
