@@ -18,11 +18,11 @@ export default function CalendarHeader({ monthIndex, setMonthIndex }) {
 
    return (
       <header className="px-4 py-2 flex items-center relative">
-         <p className="mr-10 text-white fond-bold text-[2rem] cursor-pointer mt-8 ml-4">
+         <p className="mr-10 text-white fond-bold text-[2rem] cursor-pointer mt-8 ml-4 ">
             Calendar
          </p>
          <p
-            className="text-white fond-bold text-[2rem] cursor-pointer mt-8 ml-4"
+            className="text-white fond-bold text-[2rem] cursor-pointer mt-8 ml-4 animate-pulse"
             onClick={handleReset}
          >
             Today
