@@ -37,6 +37,7 @@ export const GetGroupModal = ({ openModal, oncloseModal }) => {
          internId: getInetrnId,
          groupId: getGroupId.id,
       }
+      console.log('hello alliiii')
       dispatch(deleteInternInGroup(data))
    }
 
